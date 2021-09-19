@@ -1,0 +1,12 @@
+REG : 
+ADD : 
+SUB : 
+MUL : 
+COMP : 
+MUX2x1 : 
+SHR : 
+SHL : 
+DIV : 
+MOD : 
+INC : 
+DEC : 
