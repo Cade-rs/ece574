@@ -1,16 +1,11 @@
 `timescale 1ns / 1ps
 
-module REG #(parameter DATAWIDTH = 8)(d, Clk, Rst, q); 
-    input [DATAWIDTH-1:0] d;
-    input Clk, Rst;
-    output reg [DATAWIDTH-1:0] q;
+module SHL #(parameter DATAWIDTH = 8)(a, sh_amt, d); 
+    input [DATAWIDTH-1:0] a;
+    input [DATAWIDTH-1:0] sh_amt;
+    output reg [DATAWIDTH-1:0] d;
     
-    always @(posedge Clk) begin
-        if (Rst == 1) begin
-            q <= 0;
-        end
-        else begin
-            q <= d;
-        end 
+    always @(a, sh_amt) begin
+        d <= a << sh_amt;
     end
 endmodule
