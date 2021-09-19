@@ -1,16 +1,24 @@
 `timescale 1ns / 1ps
 
-module REG #(parameter DATAWIDTH = 8)(d, Clk, Rst, q); 
-    input [DATAWIDTH-1:0] d;
-    input Clk, Rst;
-    output reg [DATAWIDTH-1:0] q;
+module COMP #(parameter DATAWIDTH = 8)(a, b, gt, lt, eq);
+    input [DATAWIDTH-1:0] a, b;
+    output wire gt;
     
-    always @(posedge Clk) begin
-        if (Rst == 1) begin
-            q <= 0;
+    always @(a, b) begin
+        if (a > b) begin
+            gt <= 1;
+            lt <= 0;
+            eq <= 0;
+        end        
+        else if (a < b) begin
+            gt <= 0;
+            lt <= 1;
+            eq <= 0;
         end
         else begin
-            q <= d;
+            gt <= 0;
+            lt <= 0;
+            eq <= 1;
         end 
     end
 endmodule

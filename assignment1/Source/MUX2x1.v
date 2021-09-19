@@ -1,16 +1,14 @@
 `timescale 1ns / 1ps
 
-module REG #(parameter DATAWIDTH = 8)(d, Clk, Rst, q); 
-    input [DATAWIDTH-1:0] d;
-    input Clk, Rst;
-    output reg [DATAWIDTH-1:0] q;
-    
-    always @(posedge Clk) begin
-        if (Rst == 1) begin
-            q <= 0;
+module MUX2x1 #(parameter DATAWIDTH = 8)(a, b, sel, d);
+    input [DATAWIDTH-1:0] a, b;
+    output reg [DATAWIDTH-1:0] d;
+
+    always @(a, b, sel)
+        if (sel == 0) begin
+            d <= a;
         end
         else begin
-            q <= d;
-        end 
-    end
+            d<= b;
+        end
 endmodule
