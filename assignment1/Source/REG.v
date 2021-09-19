@@ -14,7 +14,10 @@ module REG #(parameter DATAWIDTH = 8)(d, Clk, Rst, q);
         end 
     end
 endmodule
+<<<<<<< HEAD
 
 
 
 
+=======
+>>>>>>> 9acd9388ba5cf9f6d17c0da52034f561d3c0d724
