@@ -2,7 +2,7 @@
 
 module COMP #(parameter DATAWIDTH = 8)(a, b, gt, lt, eq);
     input [DATAWIDTH-1:0] a, b;
-    output wire gt;
+    output reg gt, lt, eq;
     
     always @(a, b) begin
         if (a > b) begin
