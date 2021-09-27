@@ -1,12 +1,5 @@
 `timescale 1ns / 1ps
 
-`include "ADD.v"
-`include "COMP.v"
-`include "MUX2x1.v"
-`include "MUL.v"
-`include "SUB.v"
-`include "REG.v"
-
 /*
 input Int8 a, b, c
 
