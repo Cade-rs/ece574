@@ -31,7 +31,15 @@ module circuit (a, b, c, z, x);
     wire dLTe, dEQe;
     wire [31:0] zwire, xwire;
     
-    always @() begin
-        
-    end
+    ADD  #(.DATAWIDTH(8))  ADD1(a, b, d);// d = a + b
+    ADD  #(.DATAWIDTH(8))  ADD2(a, c, e);// e = a + c
+    SUB  #(.DATAWIDTH(8))  SUB1(a, b, f);// f = a - b  
+    COMP #(.DATAWIDTH(8))  COMP1(d, e, , );// dEQe = d == e
+    // dLTe = d < e
+    // g = dLTe ? d : e 
+    // h = dEQe ? g : f 
+    // xwire = g << dLTe
+    // zwire = h >> dEQe
+    // x = xwire
+    // z = zwire
 endmodule
