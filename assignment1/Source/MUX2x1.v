@@ -6,10 +6,5 @@ module MUX2x1 #(parameter DATAWIDTH = 8)(a, b, sel, d);
     output reg [DATAWIDTH-1:0] d;
 
     always @(a, b, sel)
-        if (sel == 0) begin
-            d <= a;
-        end
-        else begin
-            d <= b;
-        end
+        d <= sel ? a : b;
 endmodule
