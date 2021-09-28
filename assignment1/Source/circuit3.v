@@ -26,7 +26,7 @@ module circuit3 (a, b, c, d, e, f, g, h, Clk, Rst, sa, avg);
     input [7:0] sa;
     input  Clk, Rst;
     
-    output reg [15:0] avg;
+    output wire [15:0] avg;
     
     wire [31:0] l00, l01, l02, l03, l10, l11, l2, l2div2, l2div4, l2div8;
     

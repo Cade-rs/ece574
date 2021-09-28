@@ -20,7 +20,7 @@ module circuit5 (a, b, c, d, zero, Clk, Rst, z);
     input [63:0] a, b, c, d, zero;
     input  Clk, Rst;
     
-    output reg [63:0] z;
+    output wire [63:0] z;
     
     wire [63:0] e, f, g, zwire;
     wire gEQz;

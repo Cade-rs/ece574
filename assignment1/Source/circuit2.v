@@ -25,7 +25,7 @@ z = zwire
 module circuit2 (a, b, c, Clk, Rst, z, x);
     input [31:0] a, b, c;
     input  Clk, Rst;
-    output reg [31:0] z, x;
+    output wire [31:0] z, x;
     
     wire [31:0] d, e, f, g, h;
     wire dLTe, dEQe;

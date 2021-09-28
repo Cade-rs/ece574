@@ -29,12 +29,12 @@ module circuit4 (a, b, c, Clk, Rst, z, x);
     input [63:0] a, b, c;
     input  Clk, Rst;
     
-    output reg [31:0] z, x;
+    output wire [31:0] z, x;
     
     wire[63:0] d, e, f, g, h;
     wire dLTe, dEQe;
     wire [63:0] xrin, zrin;
-    reg [63:0] greg, hreg;
+    wire [63:0] greg, hreg;
     
     ADD     #(.DATAWIDTH(64)) ADD1(a, b, d);                    // d = a + b
     ADD     #(.DATAWIDTH(64)) ADD2(a, c, e);                    // e = a + c

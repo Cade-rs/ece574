@@ -23,11 +23,10 @@ module circuit1 (a, b, c, Clk, Rst, z, x);
     input [7:0] a, b, c;
     input  Clk, Rst;
     
-    output reg [7:0] z;
-    output reg [15:0] x;
+    output wire [7:0] z;
+    output wire [15:0] x;
     
-    // For some reason synthesis failed if I didn't have this zwire
-    wire [7:0] d, e, zwire;
+    wire [7:0] d, e;
     wire [15:0] f, g;
     wire [15:0] xwire;
     
@@ -35,11 +34,9 @@ module circuit1 (a, b, c, Clk, Rst, z, x);
     ADD     #(.DATAWIDTH(8))  ADD2(a, c, e);            // e = a + c
     COMP    #(.DATAWIDTH(8))  COMP1(d, e, g[0], , );    // g = d > e
     // Added zwire, unsure about order for ternary operator
-    MUX2x1  #(.DATAWIDTH(8))  MUX1(d, e, g[0], zwire);  // z = g ? d : e
+    MUX2x1  #(.DATAWIDTH(8))  MUX1(d, e, g[0], z);  // z = g ? d : e
     MUL     #(.DATAWIDTH(16)) MUL1(a, c, f);            // f = a * c
     SUB     #(.DATAWIDTH(16)) SUB1(f, d, xwire);        // xwire = f - d
     REG     #(.DATAWIDTH(16)) REG1(xwire, Clk, Rst, x); // x = xwire
-    // Added line because of failed synthesis noted above
-    REG     #(.DATAWIDTH(16)) REG2(zwire, Clk, Rst, z); // z = zwire
     
 endmodule
