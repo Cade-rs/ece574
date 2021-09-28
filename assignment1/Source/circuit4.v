@@ -46,7 +46,7 @@ module circuit4 (a, b, c, Clk, Rst, z, x);
     REG     #(.DATAWIDTH(64)) REG1(g, Clk, Rst, greg);          // greg = g
     REG     #(.DATAWIDTH(64)) REG2(h, Clk, Rst, hreg);          // hreg = h
     SHL     #(.DATAWIDTH(64)) SHL1(hreg, dLTe, xrin);           // xrin = hreg << dLTe
-    SHR     #(.DATAWIDTH(64)) SHR1(greg, dLTe, zrin);           // zrin = greg >> dEQe
+    SHR     #(.DATAWIDTH(64)) SHR1(greg, dEQe, zrin);           // zrin = greg >> dEQe
     REG     #(.DATAWIDTH(32)) REG3(xrin[31:0], Clk, Rst, x);    // x = xrin
     REG     #(.DATAWIDTH(32)) REG4(zrin[31:0], Clk, Rst, z);    // z = zrin
     
