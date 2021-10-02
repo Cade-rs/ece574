@@ -1,6 +1,6 @@
-circuit1 : 
-circuit2 : 
-circuit3 : 
-circuit4 : 
-circuit5 : 
-circuit6 : 
+circuit1 : , 8.547ns
+circuit2 : , 5.897ns
+circuit3 : , 7.918ns
+circuit4 : , 6.844ns
+circuit5 : , 223.418ns
+circuit6 : , 223.418ns
