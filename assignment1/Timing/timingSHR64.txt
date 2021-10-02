@@ -1,0 +1,49 @@
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 2 CPUs
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [Timing 38-78] ReportTimingParams: -max_paths 1 -nworst 1 -delay_type max -sort_by slack.
+Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
+------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2020.2 (win64) Build 3064766 Wed Nov 18 09:12:45 MST 2020
+| Date         : Fri Oct  1 20:14:04 2021
+| Host         : DESKTOP-B64TFA4 running 64-bit major release  (build 9200)
+| Command      : report_timing
+| Design       : SHR
+| Device       : 7a100t-csg324
+| Speed File   : -1  PRODUCTION 1.23 2018-06-13
+------------------------------------------------------------------------------------
+
+Timing Report
+
+Slack:                    inf
+  Source:                 sh_amt[19]
+                            (input port)
+  Destination:            d[41]
+                            (output port)
+  Path Group:             (none)
+  Path Type:              Max at Slow Process Corner
+  Data Path Delay:        7.708ns  (logic 4.101ns (53.209%)  route 3.607ns (46.791%))
+  Logic Levels:           6  (IBUF=1 LUT4=3 LUT6=1 OBUF=1)
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                                                      0.000     0.000 f  sh_amt[19] (IN)
+                         net (fo=0)                   0.000     0.000    sh_amt[19]
+                         IBUF (Prop_ibuf_I_O)         0.971     0.971 f  sh_amt_IBUF[19]_inst/O
+                         net (fo=1, unplaced)         0.803     1.774    sh_amt_IBUF[19]
+                         LUT4 (Prop_lut4_I3_O)        0.124     1.898 f  d_OBUF[63]_inst_i_15/O
+                         net (fo=1, unplaced)         0.732     2.630    d_OBUF[63]_inst_i_15_n_0
+                         LUT4 (Prop_lut4_I1_O)        0.124     2.754 f  d_OBUF[63]_inst_i_7/O
+                         net (fo=1, unplaced)         0.732     3.486    d_OBUF[63]_inst_i_7_n_0
+                         LUT6 (Prop_lut6_I3_O)        0.124     3.610 r  d_OBUF[63]_inst_i_2/O
+                         net (fo=64, unplaced)        0.537     4.147    d_OBUF[63]_inst_i_2_n_0
+                         LUT4 (Prop_lut4_I0_O)        0.124     4.271 r  d_OBUF[41]_inst_i_1/O
+                         net (fo=1, unplaced)         0.803     5.074    d_OBUF[41]
+                         OBUF (Prop_obuf_I_O)         2.634     7.708 r  d_OBUF[41]_inst/O
+                         net (fo=0)                   0.000     7.708    d[41]
+                                                                      r  d[41] (OUT)
+  -------------------------------------------------------------------    -------------------
+
+
+
+

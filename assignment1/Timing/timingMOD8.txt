@@ -1,0 +1,109 @@
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 2 CPUs
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [Timing 38-78] ReportTimingParams: -max_paths 1 -nworst 1 -delay_type max -sort_by slack.
+Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
+------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2020.2 (win64) Build 3064766 Wed Nov 18 09:12:45 MST 2020
+| Date         : Fri Oct  1 19:58:50 2021
+| Host         : DESKTOP-B64TFA4 running 64-bit major release  (build 9200)
+| Command      : report_timing
+| Design       : MOD
+| Device       : 7a100t-csg324
+| Speed File   : -1  PRODUCTION 1.23 2018-06-13
+------------------------------------------------------------------------------------
+
+Timing Report
+
+Slack:                    inf
+  Source:                 b[4]
+                            (input port)
+  Destination:            rem[5]
+                            (output port)
+  Path Group:             (none)
+  Path Type:              Max at Slow Process Corner
+  Data Path Delay:        19.867ns  (logic 11.776ns (59.276%)  route 8.091ns (40.724%))
+  Logic Levels:           27  (CARRY4=18 IBUF=1 LUT2=1 LUT3=1 LUT4=2 LUT5=1 LUT6=2 OBUF=1)
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                                                      0.000     0.000 f  b[4] (IN)
+                         net (fo=0)                   0.000     0.000    b[4]
+                         IBUF (Prop_ibuf_I_O)         0.971     0.971 f  b_IBUF[4]_inst/O
+                         net (fo=13, unplaced)        0.803     1.774    b_IBUF[4]
+                         LUT6 (Prop_lut6_I5_O)        0.124     1.898 r  rem_OBUF[7]_inst_i_85/O
+                         net (fo=5, unplaced)         0.477     2.375    rem_OBUF[7]_inst_i_85_n_0
+                         LUT4 (Prop_lut4_I3_O)        0.124     2.499 r  rem_OBUF[7]_inst_i_77/O
+                         net (fo=12, unplaced)        0.497     2.996    rem_OBUF[7]_inst_i_77_n_0
+                         LUT2 (Prop_lut2_I1_O)        0.124     3.120 r  rem_OBUF[7]_inst_i_71/O
+                         net (fo=1, unplaced)         0.469     3.589    rem_OBUF[7]_inst_i_71_n_0
+                         CARRY4 (Prop_carry4_DI[1]_CO[3])
+                                                      0.520     4.109 r  rem_OBUF[7]_inst_i_56/CO[3]
+                         net (fo=1, unplaced)         0.000     4.109    rem_OBUF[7]_inst_i_56_n_0
+                         CARRY4 (Prop_carry4_CI_CO[0])
+                                                      0.281     4.390 r  rem_OBUF[7]_inst_i_55/CO[0]
+                         net (fo=11, unplaced)        0.357     4.747    rem_OBUF[7]_inst_i_55_n_3
+                         LUT3 (Prop_lut3_I0_O)        0.367     5.114 r  rem_OBUF[7]_inst_i_66/O
+                         net (fo=1, unplaced)         0.000     5.114    rem_OBUF[7]_inst_i_66_n_0
+                         CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.533     5.647 r  rem_OBUF[7]_inst_i_47/CO[3]
+                         net (fo=1, unplaced)         0.000     5.647    rem_OBUF[7]_inst_i_47_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117     5.764 r  rem_OBUF[7]_inst_i_44/CO[3]
+                         net (fo=1, unplaced)         0.000     5.764    rem_OBUF[7]_inst_i_44_n_0
+                         CARRY4 (Prop_carry4_CI_CO[1])
+                                                      0.179     5.943 r  rem_OBUF[7]_inst_i_43/CO[1]
+                         net (fo=11, unplaced)        0.571     6.514    rem_OBUF[7]_inst_i_43_n_2
+                         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.803     7.317 r  rem_OBUF[7]_inst_i_35/CO[3]
+                         net (fo=1, unplaced)         0.000     7.317    rem_OBUF[7]_inst_i_35_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117     7.434 r  rem_OBUF[7]_inst_i_32/CO[3]
+                         net (fo=1, unplaced)         0.000     7.434    rem_OBUF[7]_inst_i_32_n_0
+                         CARRY4 (Prop_carry4_CI_CO[1])
+                                                      0.179     7.613 r  rem_OBUF[7]_inst_i_31/CO[1]
+                         net (fo=11, unplaced)        0.571     8.184    rem_OBUF[7]_inst_i_31_n_2
+                         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.803     8.987 r  rem_OBUF[7]_inst_i_23/CO[3]
+                         net (fo=1, unplaced)         0.000     8.987    rem_OBUF[7]_inst_i_23_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117     9.104 r  rem_OBUF[7]_inst_i_20/CO[3]
+                         net (fo=1, unplaced)         0.000     9.104    rem_OBUF[7]_inst_i_20_n_0
+                         CARRY4 (Prop_carry4_CI_CO[1])
+                                                      0.179     9.283 r  rem_OBUF[7]_inst_i_19/CO[1]
+                         net (fo=11, unplaced)        0.571     9.854    rem_OBUF[7]_inst_i_19_n_2
+                         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.803    10.657 r  rem_OBUF[7]_inst_i_14/CO[3]
+                         net (fo=1, unplaced)         0.000    10.657    rem_OBUF[7]_inst_i_14_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117    10.774 r  rem_OBUF[7]_inst_i_11/CO[3]
+                         net (fo=1, unplaced)         0.000    10.774    rem_OBUF[7]_inst_i_11_n_0
+                         CARRY4 (Prop_carry4_CI_CO[1])
+                                                      0.179    10.953 r  rem_OBUF[7]_inst_i_10/CO[1]
+                         net (fo=11, unplaced)        0.571    11.524    rem_OBUF[7]_inst_i_10_n_2
+                         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.803    12.327 r  rem_OBUF[6]_inst_i_4/CO[3]
+                         net (fo=1, unplaced)         0.000    12.327    rem_OBUF[6]_inst_i_4_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117    12.444 r  rem_OBUF[7]_inst_i_6/CO[3]
+                         net (fo=1, unplaced)         0.000    12.444    rem_OBUF[7]_inst_i_6_n_0
+                         CARRY4 (Prop_carry4_CI_CO[1])
+                                                      0.179    12.623 r  rem_OBUF[7]_inst_i_5/CO[1]
+                         net (fo=11, unplaced)        0.571    13.194    rem_OBUF[7]_inst_i_5_n_2
+                         CARRY4 (Prop_carry4_CYINIT_O[1])
+                                                      0.852    14.046 r  rem_OBUF[2]_inst_i_2/O[1]
+                         net (fo=5, unplaced)         0.627    14.673    rem_OBUF[2]_inst_i_2_n_6
+                         LUT6 (Prop_lut6_I0_O)        0.306    14.979 r  rem_OBUF[3]_inst_i_2/O
+                         net (fo=2, unplaced)         0.743    15.722    rem_OBUF[3]_inst_i_2_n_0
+                         LUT5 (Prop_lut5_I0_O)        0.124    15.846 r  rem_OBUF[6]_inst_i_3/O
+                         net (fo=2, unplaced)         0.460    16.306    rem_OBUF[6]_inst_i_3_n_0
+                         LUT4 (Prop_lut4_I2_O)        0.124    16.430 r  rem_OBUF[5]_inst_i_1/O
+                         net (fo=1, unplaced)         0.803    17.233    rem_OBUF[5]
+                         OBUF (Prop_obuf_I_O)         2.634    19.867 r  rem_OBUF[5]_inst/O
+                         net (fo=0)                   0.000    19.867    rem[5]
+                                                                      r  rem[5] (OUT)
+  -------------------------------------------------------------------    -------------------
+
+
+
+
