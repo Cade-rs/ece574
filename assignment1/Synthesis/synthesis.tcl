@@ -21,8 +21,6 @@ read_verilog  {
   C:/Users/bmkra/Documents/GIT/ece574/assignment1/Source/circuit6.v
 }
 
-
-
 synth_design -top circuit1 -part xc7a100tcsg324-1
 write_checkpoint -force C:/Users/bmkra/Documents/GIT/ece574/assignment1/post_synth
 report_utilization -file C:/Users/bmkra/Documents/GIT/ece574/assignment1/Timing/utilization1.txt

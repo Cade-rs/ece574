@@ -21,7 +21,6 @@ read_verilog  {
   C:/Users/bmkra/Documents/GIT/ece574/assignment1/Source/circuit6.v
 }
 
-
 synth_design -top COMP -part xc7a100tcsg324-1 -generic DATAWIDTH=2
 write_checkpoint -force -noxdef C:/Users/bmkra/Documents/GIT/ece574/assignment1/post_synth
 report_utilization -file C:/Users/bmkra/Documents/GIT/ece574/assignment1/Timing/utilizationCOMP2.txt
@@ -46,4 +45,3 @@ synth_design -top COMP -part xc7a100tcsg324-1 -generic DATAWIDTH=64
 write_checkpoint -force -noxdef C:/Users/bmkra/Documents/GIT/ece574/assignment1/post_synth
 report_utilization -file C:/Users/bmkra/Documents/GIT/ece574/assignment1/Timing/utilizationCOMP64.txt
 report_timing > C:/Users/bmkra/Documents/GIT/ece574/assignment1/Timing/timingCOMP64.txt
-
