@@ -25,11 +25,12 @@ read_verilog -library xil_defaultlib {
 synth_design -top circuit1 -part xc7a100tcsg324-1
 
 #Write Design Checkpoints
-write_checkpoint -force $outputDir/post_synth
+write_checkpoint -force C:/Users/alexa/Documents/Arizona/ECE 574-Computer Aided Logic Design/Assignment_1/post_synth
 
 #with report utilization and timing estimates
-report_utilization -file C:/Users/bmkra/Documents/GIT/ece574/assignment1/Timing/utilization.txt
-report_timing > C:/Users/bmkra/Documents/GIT/ece574/assignment1/Timing/timing.txt
+report_utilization -file C:Users/alexa/Documents/Arizona/ECE 574-Computer Aided Logic Design/Assignment_1/timing/utilization.txt
+report_timing > C:/Users/alexa/Documents/Arizona/ECE 574-Computer Aided Logic Design/Assignment_1/timing/timing.txt
+synth_design -top circuit1 -part xc7a100tcsg324-1
 synth_design -top circuit2 -part xc7a100tcsg324-1
 synth_design -top circuit3 -part xc7a100tcsg324-1
 synth_design -top circuit4 -part xc7a100tcsg324-1
