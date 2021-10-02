@@ -1,0 +1,66 @@
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 2 CPUs
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [Timing 38-78] ReportTimingParams: -max_paths 1 -nworst 1 -delay_type max -sort_by slack.
+Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
+------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2020.2 (win64) Build 3064766 Wed Nov 18 09:12:45 MST 2020
+| Date         : Fri Oct  1 20:03:04 2021
+| Host         : DESKTOP-B64TFA4 running 64-bit major release  (build 9200)
+| Command      : report_timing
+| Design       : MUL
+| Device       : 7a100t-csg324
+| Speed File   : -1  PRODUCTION 1.23 2018-06-13
+------------------------------------------------------------------------------------
+
+Timing Report
+
+Slack:                    inf
+  Source:                 a[33]
+                            (input port)
+  Destination:            prod[62]
+                            (output port)
+  Path Group:             (none)
+  Path Type:              Max at Slow Process Corner
+  Data Path Delay:        17.103ns  (logic 14.235ns (83.234%)  route 2.868ns (16.766%))
+  Logic Levels:           11  (CARRY4=3 DSP48E1=4 IBUF=1 LUT3=1 LUT4=1 OBUF=1)
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                                                      0.000     0.000 r  a[33] (IN)
+                         net (fo=0)                   0.000     0.000    a[33]
+                         IBUF (Prop_ibuf_I_O)         0.971     0.971 r  a_IBUF[33]_inst/O
+                         net (fo=3, unplaced)         0.803     1.774    a_IBUF[33]
+                         DSP48E1 (Prop_dsp48e1_A[16]_PCOUT[47])
+                                                      4.036     5.810 r  prod0__1/PCOUT[47]
+                         net (fo=1, unplaced)         0.000     5.810    prod0__1_n_106
+                         DSP48E1 (Prop_dsp48e1_PCIN[47]_PCOUT[47])
+                                                      1.713     7.523 r  prod0__2/PCOUT[47]
+                         net (fo=1, unplaced)         0.000     7.523    prod0__2_n_106
+                         DSP48E1 (Prop_dsp48e1_PCIN[47]_PCOUT[47])
+                                                      1.713     9.236 r  prod0__3/PCOUT[47]
+                         net (fo=1, unplaced)         0.000     9.236    prod0__3_n_106
+                         DSP48E1 (Prop_dsp48e1_PCIN[47]_P[1])
+                                                      1.518    10.754 r  prod0__4/P[1]
+                         net (fo=3, unplaced)         0.803    11.557    prod0__4_n_104
+                         LUT3 (Prop_lut3_I1_O)        0.149    11.706 r  prod_OBUF[56]_inst_i_5/O
+                         net (fo=2, unplaced)         0.459    12.165    prod_OBUF[56]_inst_i_5_n_0
+                         LUT4 (Prop_lut4_I3_O)        0.355    12.520 r  prod_OBUF[56]_inst_i_9/O
+                         net (fo=1, unplaced)         0.000    12.520    prod_OBUF[56]_inst_i_9_n_0
+                         CARRY4 (Prop_carry4_S[0]_CO[3])
+                                                      0.513    13.033 r  prod_OBUF[56]_inst_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000    13.033    prod_OBUF[56]_inst_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117    13.150 r  prod_OBUF[60]_inst_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000    13.150    prod_OBUF[60]_inst_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.337    13.487 r  prod_OBUF[63]_inst_i_1/O[1]
+                         net (fo=1, unplaced)         0.803    14.290    prod_OBUF[62]
+                         OBUF (Prop_obuf_I_O)         2.813    17.103 r  prod_OBUF[62]_inst/O
+                         net (fo=0)                   0.000    17.103    prod[62]
+                                                                      r  prod[62] (OUT)
+  -------------------------------------------------------------------    -------------------
+
+
+
+

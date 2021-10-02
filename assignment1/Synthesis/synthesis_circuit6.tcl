@@ -1,6 +1,6 @@
 
 
-read_verilog -library xil_defaultlib {
+read_verilog  {
   C:/Users/bmkra/Documents/GIT/ece574/assignment1/Source/ADD.v
   C:/Users/bmkra/Documents/GIT/ece574/assignment1/Source/COMP.v
   C:/Users/bmkra/Documents/GIT/ece574/assignment1/Source/DEC.v
@@ -21,12 +21,7 @@ read_verilog -library xil_defaultlib {
   C:/Users/bmkra/Documents/GIT/ece574/assignment1/Source/circuit6.v
 }
 
-synth_design -top circuit1 -part xc7a100tcsg324-1
-write_checkpoint -force $outputDir/post_synth
-report_utilization -file C:/Users/bmkra/Documents/GIT/ece574/assignment1/Timing/utilization.txt
-report_timing > C:/Users/bmkra/Documents/GIT/ece574/assignment1/Timing/timing.txt
-synth_design -top circuit2 -part xc7a100tcsg324-1
-synth_design -top circuit3 -part xc7a100tcsg324-1
-synth_design -top circuit4 -part xc7a100tcsg324-1
-synth_design -top circuit5 -part xc7a100tcsg324-1
 synth_design -top circuit6 -part xc7a100tcsg324-1
+write_checkpoint -force C:/Users/bmkra/Documents/GIT/ece574/assignment1/post_synth
+report_utilization -file C:/Users/bmkra/Documents/GIT/ece574/assignment1/Timing/utilization6.txt
+report_timing > C:/Users/bmkra/Documents/GIT/ece574/assignment1/Timing/timing6.txt

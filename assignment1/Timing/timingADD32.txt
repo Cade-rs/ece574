@@ -1,0 +1,67 @@
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 2 CPUs
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [Timing 38-78] ReportTimingParams: -max_paths 1 -nworst 1 -delay_type max -sort_by slack.
+Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
+------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2020.2 (win64) Build 3064766 Wed Nov 18 09:12:45 MST 2020
+| Date         : Fri Oct  1 19:35:37 2021
+| Host         : DESKTOP-B64TFA4 running 64-bit major release  (build 9200)
+| Command      : report_timing
+| Design       : ADD
+| Device       : 7a100t-csg324
+| Speed File   : -1  PRODUCTION 1.23 2018-06-13
+------------------------------------------------------------------------------------
+
+Timing Report
+
+Slack:                    inf
+  Source:                 b[1]
+                            (input port)
+  Destination:            sum[29]
+                            (output port)
+  Path Group:             (none)
+  Path Type:              Max at Slow Process Corner
+  Data Path Delay:        7.086ns  (logic 5.480ns (77.340%)  route 1.606ns (22.660%))
+  Logic Levels:           11  (CARRY4=8 IBUF=1 LUT2=1 OBUF=1)
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                                                      0.000     0.000 r  b[1] (IN)
+                         net (fo=0)                   0.000     0.000    b[1]
+                         IBUF (Prop_ibuf_I_O)         0.971     0.971 r  b_IBUF[1]_inst/O
+                         net (fo=1, unplaced)         0.803     1.774    b_IBUF[1]
+                         LUT2 (Prop_lut2_I1_O)        0.124     1.898 r  sum_OBUF[3]_inst_i_4/O
+                         net (fo=1, unplaced)         0.000     1.898    sum_OBUF[3]_inst_i_4_n_0
+                         CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.533     2.431 r  sum_OBUF[3]_inst_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000     2.431    sum_OBUF[3]_inst_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117     2.548 r  sum_OBUF[7]_inst_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000     2.548    sum_OBUF[7]_inst_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117     2.665 r  sum_OBUF[11]_inst_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000     2.665    sum_OBUF[11]_inst_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117     2.782 r  sum_OBUF[15]_inst_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000     2.782    sum_OBUF[15]_inst_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117     2.899 r  sum_OBUF[19]_inst_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000     2.899    sum_OBUF[19]_inst_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117     3.016 r  sum_OBUF[23]_inst_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000     3.016    sum_OBUF[23]_inst_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117     3.133 r  sum_OBUF[27]_inst_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000     3.133    sum_OBUF[27]_inst_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.337     3.470 r  sum_OBUF[31]_inst_i_1/O[1]
+                         net (fo=1, unplaced)         0.803     4.273    sum_OBUF[29]
+                         OBUF (Prop_obuf_I_O)         2.813     7.086 r  sum_OBUF[29]_inst/O
+                         net (fo=0)                   0.000     7.086    sum[29]
+                                                                      r  sum[29] (OUT)
+  -------------------------------------------------------------------    -------------------
+
+
+
+

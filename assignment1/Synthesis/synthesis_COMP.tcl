@@ -22,28 +22,28 @@ read_verilog  {
 }
 
 
-synth_design -top DEC -part xc7a100tcsg324-1 -generic DATAWIDTH=2
+synth_design -top COMP -part xc7a100tcsg324-1 -generic DATAWIDTH=2
 write_checkpoint -force -noxdef C:/Users/bmkra/Documents/GIT/ece574/assignment1/post_synth
-report_utilization -file C:/Users/bmkra/Documents/GIT/ece574/assignment1/Timing/utilizationDEC2.txt
-report_timing > C:/Users/bmkra/Documents/GIT/ece574/assignment1/Timing/timingDEC2.txt
+report_utilization -file C:/Users/bmkra/Documents/GIT/ece574/assignment1/Timing/utilizationCOMP2.txt
+report_timing > C:/Users/bmkra/Documents/GIT/ece574/assignment1/Timing/timingCOMP2.txt
 
-synth_design -top DEC -part xc7a100tcsg324-1 -generic DATAWIDTH=8
+synth_design -top COMP -part xc7a100tcsg324-1 -generic DATAWIDTH=8
 write_checkpoint -force -noxdef C:/Users/bmkra/Documents/GIT/ece574/assignment1/post_synth
-report_utilization -file C:/Users/bmkra/Documents/GIT/ece574/assignment1/Timing/utilizationDEC8.txt
-report_timing > C:/Users/bmkra/Documents/GIT/ece574/assignment1/Timing/timingDEC8.txt
+report_utilization -file C:/Users/bmkra/Documents/GIT/ece574/assignment1/Timing/utilizationCOMP8.txt
+report_timing > C:/Users/bmkra/Documents/GIT/ece574/assignment1/Timing/timingCOMP8.txt
 
-synth_design -top DEC -part xc7a100tcsg324-1 -generic DATAWIDTH=16
+synth_design -top COMP -part xc7a100tcsg324-1 -generic DATAWIDTH=16
 write_checkpoint -force -noxdef C:/Users/bmkra/Documents/GIT/ece574/assignment1/post_synth
-report_utilization -file C:/Users/bmkra/Documents/GIT/ece574/assignment1/Timing/utilizationDEC16.txt
-report_timing > C:/Users/bmkra/Documents/GIT/ece574/assignment1/Timing/timingDEC16.txt
+report_utilization -file C:/Users/bmkra/Documents/GIT/ece574/assignment1/Timing/utilizationCOMP16.txt
+report_timing > C:/Users/bmkra/Documents/GIT/ece574/assignment1/Timing/timingCOMP16.txt
 
-synth_design -top DEC -part xc7a100tcsg324-1 -generic DATAWIDTH=32
+synth_design -top COMP -part xc7a100tcsg324-1 -generic DATAWIDTH=32
 write_checkpoint -force -noxdef C:/Users/bmkra/Documents/GIT/ece574/assignment1/post_synth
-report_utilization -file C:/Users/bmkra/Documents/GIT/ece574/assignment1/Timing/utilizationDEC32.txt
-report_timing > C:/Users/bmkra/Documents/GIT/ece574/assignment1/Timing/timingDEC32.txt
+report_utilization -file C:/Users/bmkra/Documents/GIT/ece574/assignment1/Timing/utilizationCOMP32.txt
+report_timing > C:/Users/bmkra/Documents/GIT/ece574/assignment1/Timing/timingCOMP32.txt
 
-synth_design -top DEC -part xc7a100tcsg324-1 -generic DATAWIDTH=64
+synth_design -top COMP -part xc7a100tcsg324-1 -generic DATAWIDTH=64
 write_checkpoint -force -noxdef C:/Users/bmkra/Documents/GIT/ece574/assignment1/post_synth
-report_utilization -file C:/Users/bmkra/Documents/GIT/ece574/assignment1/Timing/utilizationDEC64.txt
-report_timing > C:/Users/bmkra/Documents/GIT/ece574/assignment1/Timing/timingDEC64.txt
+report_utilization -file C:/Users/bmkra/Documents/GIT/ece574/assignment1/Timing/utilizationCOMP64.txt
+report_timing > C:/Users/bmkra/Documents/GIT/ece574/assignment1/Timing/timingCOMP64.txt
 

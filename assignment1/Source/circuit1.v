@@ -34,7 +34,7 @@ module circuit1 (a, b, c, Clk, Rst, z, x);
     ADD     #(.DATAWIDTH(8))  ADD2(a, c, e);            // e = a + c
     COMP    #(.DATAWIDTH(8))  COMP1(d, e, g[0], , );    // g = d > e
     // Added zwire, unsure about order for ternary operator
-    MUX2x1  #(.DATAWIDTH(8))  MUX1(d, e, g[0], z);  // z = g ? d : e
+    MUX2x1  #(.DATAWIDTH(8))  MUX1(d, e, g[0], z);      // z = g ? d : e
     MUL     #(.DATAWIDTH(16)) MUL1(a, c, f);            // f = a * c
     SUB     #(.DATAWIDTH(16)) SUB1(f, d, xwire);        // xwire = f - d
     REG     #(.DATAWIDTH(16)) REG1(xwire, Clk, Rst, x); // x = xwire
