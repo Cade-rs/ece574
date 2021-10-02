@@ -1,0 +1,105 @@
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 2 CPUs
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [Timing 38-78] ReportTimingParams: -max_paths 1 -nworst 1 -delay_type max -sort_by slack.
+Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
+------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2020.2 (win64) Build 3064766 Wed Nov 18 09:12:45 MST 2020
+| Date         : Fri Oct  1 19:51:37 2021
+| Host         : DESKTOP-B64TFA4 running 64-bit major release  (build 9200)
+| Command      : report_timing
+| Design       : DIV
+| Device       : 7a100t-csg324
+| Speed File   : -1  PRODUCTION 1.23 2018-06-13
+------------------------------------------------------------------------------------
+
+Timing Report
+
+Slack:                    inf
+  Source:                 b[4]
+                            (input port)
+  Destination:            quot[0]
+                            (output port)
+  Path Group:             (none)
+  Path Type:              Max at Slow Process Corner
+  Data Path Delay:        18.104ns  (logic 11.780ns (65.070%)  route 6.324ns (34.930%))
+  Logic Levels:           25  (CARRY4=18 IBUF=1 LUT2=1 LUT3=2 LUT4=1 LUT6=1 OBUF=1)
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                                                      0.000     0.000 f  b[4] (IN)
+                         net (fo=0)                   0.000     0.000    b[4]
+                         IBUF (Prop_ibuf_I_O)         0.971     0.971 f  b_IBUF[4]_inst/O
+                         net (fo=10, unplaced)        0.803     1.774    b_IBUF[4]
+                         LUT6 (Prop_lut6_I5_O)        0.124     1.898 r  quot_OBUF[7]_inst_i_2/O
+                         net (fo=5, unplaced)         0.477     2.375    quot_OBUF[7]_inst_i_2_n_0
+                         LUT4 (Prop_lut4_I1_O)        0.124     2.499 r  quot_OBUF[7]_inst_i_1/O
+                         net (fo=13, unplaced)        0.499     2.998    quot_OBUF[7]
+                         LUT2 (Prop_lut2_I1_O)        0.124     3.122 r  quot_OBUF[6]_inst_i_8/O
+                         net (fo=1, unplaced)         0.469     3.591    quot_OBUF[6]_inst_i_8_n_0
+                         CARRY4 (Prop_carry4_DI[1]_CO[3])
+                                                      0.520     4.111 r  quot_OBUF[6]_inst_i_2/CO[3]
+                         net (fo=1, unplaced)         0.000     4.111    quot_OBUF[6]_inst_i_2_n_0
+                         CARRY4 (Prop_carry4_CI_CO[0])
+                                                      0.281     4.392 r  quot_OBUF[6]_inst_i_1/CO[0]
+                         net (fo=12, unplaced)        0.359     4.751    quot_OBUF[6]
+                         LUT3 (Prop_lut3_I0_O)        0.367     5.118 r  quot_OBUF[5]_inst_i_12/O
+                         net (fo=1, unplaced)         0.000     5.118    quot_OBUF[5]_inst_i_12_n_0
+                         CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.533     5.651 r  quot_OBUF[5]_inst_i_5/CO[3]
+                         net (fo=1, unplaced)         0.000     5.651    quot_OBUF[5]_inst_i_5_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117     5.768 r  quot_OBUF[5]_inst_i_2/CO[3]
+                         net (fo=1, unplaced)         0.000     5.768    quot_OBUF[5]_inst_i_2_n_0
+                         CARRY4 (Prop_carry4_CI_CO[1])
+                                                      0.179     5.947 r  quot_OBUF[5]_inst_i_1/CO[1]
+                         net (fo=12, unplaced)        0.573     6.520    quot_OBUF[5]
+                         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.803     7.323 r  quot_OBUF[4]_inst_i_5/CO[3]
+                         net (fo=1, unplaced)         0.000     7.323    quot_OBUF[4]_inst_i_5_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117     7.440 r  quot_OBUF[4]_inst_i_2/CO[3]
+                         net (fo=1, unplaced)         0.000     7.440    quot_OBUF[4]_inst_i_2_n_0
+                         CARRY4 (Prop_carry4_CI_CO[1])
+                                                      0.179     7.619 r  quot_OBUF[4]_inst_i_1/CO[1]
+                         net (fo=12, unplaced)        0.573     8.192    quot_OBUF[4]
+                         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.803     8.995 r  quot_OBUF[3]_inst_i_5/CO[3]
+                         net (fo=1, unplaced)         0.000     8.995    quot_OBUF[3]_inst_i_5_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117     9.112 r  quot_OBUF[3]_inst_i_2/CO[3]
+                         net (fo=1, unplaced)         0.000     9.112    quot_OBUF[3]_inst_i_2_n_0
+                         CARRY4 (Prop_carry4_CI_CO[1])
+                                                      0.179     9.291 r  quot_OBUF[3]_inst_i_1/CO[1]
+                         net (fo=12, unplaced)        0.573     9.864    quot_OBUF[3]
+                         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.803    10.667 r  quot_OBUF[2]_inst_i_5/CO[3]
+                         net (fo=1, unplaced)         0.000    10.667    quot_OBUF[2]_inst_i_5_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117    10.784 r  quot_OBUF[2]_inst_i_2/CO[3]
+                         net (fo=1, unplaced)         0.000    10.784    quot_OBUF[2]_inst_i_2_n_0
+                         CARRY4 (Prop_carry4_CI_CO[1])
+                                                      0.179    10.963 r  quot_OBUF[2]_inst_i_1/CO[1]
+                         net (fo=12, unplaced)        0.573    11.536    quot_OBUF[2]
+                         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.803    12.339 r  quot_OBUF[1]_inst_i_5/CO[3]
+                         net (fo=1, unplaced)         0.000    12.339    quot_OBUF[1]_inst_i_5_n_0
+                         CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.337    12.676 r  quot_OBUF[1]_inst_i_2/O[1]
+                         net (fo=2, unplaced)         0.622    13.298    quot_OBUF[1]_inst_i_2_n_6
+                         LUT3 (Prop_lut3_I2_O)        0.306    13.604 r  quot_OBUF[0]_inst_i_7/O
+                         net (fo=1, unplaced)         0.000    13.604    quot_OBUF[0]_inst_i_7_n_0
+                         CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.533    14.137 r  quot_OBUF[0]_inst_i_2/CO[3]
+                         net (fo=1, unplaced)         0.000    14.137    quot_OBUF[0]_inst_i_2_n_0
+                         CARRY4 (Prop_carry4_CI_CO[0])
+                                                      0.281    14.418 r  quot_OBUF[0]_inst_i_1/CO[0]
+                         net (fo=1, unplaced)         0.803    15.221    quot_OBUF[0]
+                         OBUF (Prop_obuf_I_O)         2.883    18.104 r  quot_OBUF[0]_inst/O
+                         net (fo=0)                   0.000    18.104    quot[0]
+                                                                      r  quot[0] (OUT)
+  -------------------------------------------------------------------    -------------------
+
+
+
+

@@ -1,0 +1,40 @@
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 2 CPUs
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [Timing 38-78] ReportTimingParams: -max_paths 1 -nworst 1 -delay_type max -sort_by slack.
+Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
+------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2020.2 (win64) Build 3064766 Wed Nov 18 09:12:45 MST 2020
+| Date         : Fri Oct  1 20:07:16 2021
+| Host         : DESKTOP-B64TFA4 running 64-bit major release  (build 9200)
+| Command      : report_timing
+| Design       : REG
+| Device       : 7a100t-csg324
+| Speed File   : -1  PRODUCTION 1.23 2018-06-13
+------------------------------------------------------------------------------------
+
+Timing Report
+
+Slack:                    inf
+  Source:                 q_reg[0]/C
+                            (rising edge-triggered cell FDRE)
+  Destination:            q[0]
+                            (output port)
+  Path Group:             (none)
+  Path Type:              Max at Slow Process Corner
+  Data Path Delay:        4.090ns  (logic 3.287ns (80.370%)  route 0.803ns (19.630%))
+  Logic Levels:           2  (FDRE=1 OBUF=1)
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         FDRE                         0.000     0.000 r  q_reg[0]/C
+                         FDRE (Prop_fdre_C_Q)         0.478     0.478 r  q_reg[0]/Q
+                         net (fo=1, unplaced)         0.803     1.281    q_OBUF[0]
+                         OBUF (Prop_obuf_I_O)         2.809     4.090 r  q_OBUF[0]_inst/O
+                         net (fo=0)                   0.000     4.090    q[0]
+                                                                      r  q[0] (OUT)
+  -------------------------------------------------------------------    -------------------
+
+
+
+

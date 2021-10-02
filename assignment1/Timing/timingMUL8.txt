@@ -1,0 +1,58 @@
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 2 CPUs
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [Timing 38-78] ReportTimingParams: -max_paths 1 -nworst 1 -delay_type max -sort_by slack.
+Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
+------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2020.2 (win64) Build 3064766 Wed Nov 18 09:12:45 MST 2020
+| Date         : Fri Oct  1 20:01:40 2021
+| Host         : DESKTOP-B64TFA4 running 64-bit major release  (build 9200)
+| Command      : report_timing
+| Design       : MUL
+| Device       : 7a100t-csg324
+| Speed File   : -1  PRODUCTION 1.23 2018-06-13
+------------------------------------------------------------------------------------
+
+Timing Report
+
+Slack:                    inf
+  Source:                 b[2]
+                            (input port)
+  Destination:            prod[7]
+                            (output port)
+  Path Group:             (none)
+  Path Type:              Max at Slow Process Corner
+  Data Path Delay:        8.624ns  (logic 5.361ns (62.168%)  route 3.263ns (37.832%))
+  Logic Levels:           9  (CARRY4=3 IBUF=1 LUT2=1 LUT4=1 LUT6=2 OBUF=1)
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                                                      0.000     0.000 r  b[2] (IN)
+                         net (fo=0)                   0.000     0.000    b[2]
+                         IBUF (Prop_ibuf_I_O)         0.971     0.971 r  b_IBUF[2]_inst/O
+                         net (fo=12, unplaced)        0.803     1.774    b_IBUF[2]
+                         LUT2 (Prop_lut2_I1_O)        0.124     1.898 r  prod_OBUF[2]_inst_i_9/O
+                         net (fo=1, unplaced)         0.449     2.347    prod_OBUF[2]_inst_i_9_n_0
+                         LUT6 (Prop_lut6_I4_O)        0.124     2.471 r  prod_OBUF[2]_inst_i_5/O
+                         net (fo=1, unplaced)         0.000     2.471    prod_OBUF[2]_inst_i_5_n_0
+                         CARRY4 (Prop_carry4_S[3]_CO[3])
+                                                      0.376     2.847 r  prod_OBUF[2]_inst_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000     2.847    prod_OBUF[2]_inst_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_O[2])
+                                                      0.256     3.103 r  prod_OBUF[6]_inst_i_3/O[2]
+                         net (fo=4, unplaced)         0.759     3.862    prod_OBUF[6]_inst_i_3_n_5
+                         LUT4 (Prop_lut4_I0_O)        0.325     4.187 r  prod_OBUF[7]_inst_i_4/O
+                         net (fo=1, unplaced)         0.449     4.636    prod_OBUF[7]_inst_i_4_n_0
+                         LUT6 (Prop_lut6_I5_O)        0.124     4.760 r  prod_OBUF[7]_inst_i_2/O
+                         net (fo=1, unplaced)         0.000     4.760    prod_OBUF[7]_inst_i_2_n_0
+                         CARRY4 (Prop_carry4_S[0]_O[0])
+                                                      0.252     5.012 r  prod_OBUF[7]_inst_i_1/O[0]
+                         net (fo=1, unplaced)         0.803     5.815    prod_OBUF[7]
+                         OBUF (Prop_obuf_I_O)         2.809     8.624 r  prod_OBUF[7]_inst/O
+                         net (fo=0)                   0.000     8.624    prod[7]
+                                                                      r  prod[7] (OUT)
+  -------------------------------------------------------------------    -------------------
+
+
+
+
