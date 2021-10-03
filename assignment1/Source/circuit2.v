@@ -31,9 +31,9 @@ module circuit2 (a, b, c, Clk, Rst, z, x);
     wire dLTe, dEQe;
     wire [31:0] zwire, xwire;
     
-    ADD     #(.DATAWIDTH(32)) ADD1(a, b, d);            // d = a + b, 0 + 7.086
-    ADD     #(.DATAWIDTH(32)) ADD2(a, c, e);            // e = a + c, 0 + 7.086
-    SUB     #(.DATAWIDTH(32)) SUB1(a, b, f);            // f = a - b, 0 + 7.086
+    ADD     #(.DATAWIDTH(32)) ADD1(a, b, d);            // d = a + b, 0 + 7.086 = 7.086
+    ADD     #(.DATAWIDTH(32)) ADD2(a, c, e);            // e = a + c, 0 + 7.086 = 7.086
+    SUB     #(.DATAWIDTH(32)) SUB1(a, b, f);            // f = a - b, 0 + 7.086 = 7.086
     COMP    #(.DATAWIDTH(32)) COMP1(d, e, , dLTe, dEQe);// dEQe = d == e
                                                         // dLTe = d < e, 7.086 + 7.171 = 14.257
     MUX2x1  #(.DATAWIDTH(32)) MUX1(d, e, dLTe, g);      // g = dLTe ? d : e, 14.257 + 5.361 = 19.618
