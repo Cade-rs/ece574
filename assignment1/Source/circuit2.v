@@ -31,16 +31,16 @@ module circuit2 (a, b, c, Clk, Rst, z, x);
     wire dLTe, dEQe;
     wire [31:0] zwire, xwire;
     
-    ADD     #(.DATAWIDTH(32)) ADD1(a, b, d);            // d = a + b
-    ADD     #(.DATAWIDTH(32)) ADD2(a, c, e);            // e = a + c
-    SUB     #(.DATAWIDTH(32)) SUB1(a, b, f);            // f = a - b
+    ADD     #(.DATAWIDTH(32)) ADD1(a, b, d);            // d = a + b, 0 + 7.086 = 7.086
+    ADD     #(.DATAWIDTH(32)) ADD2(a, c, e);            // e = a + c, 0 + 7.086 = 7.086
+    SUB     #(.DATAWIDTH(32)) SUB1(a, b, f);            // f = a - b, 0 + 7.086 = 7.086
     COMP    #(.DATAWIDTH(32)) COMP1(d, e, , dLTe, dEQe);// dEQe = d == e
-                                                        // dLTe = d < e
-    MUX2x1  #(.DATAWIDTH(32)) MUX1(d, e, dLTe, g);      // g = dLTe ? d : e
-    MUX2x1  #(.DATAWIDTH(32)) MUX2(g, f, dEQe, h);      // h = dEQe ? g : f
-    SHL     #(.DATAWIDTH(32)) SHL1(g, dLTe, xwire);     // xwire = g << dLTe
-    SHR     #(.DATAWIDTH(32)) SHR1(h, dEQe, zwire);     // zwire = h >> dEQe
-    REG     #(.DATAWIDTH(32)) REG1(xwire, Clk, Rst, x); // x = xwire
-    REG     #(.DATAWIDTH(32)) REG2(zwire, Clk, Rst, z); // z = zwire
+                                                        // dLTe = d < e, 7.086 + 7.171 = 14.257
+    MUX2x1  #(.DATAWIDTH(32)) MUX1(d, e, dLTe, g);      // g = dLTe ? d : e, 14.257 + 5.361 = 19.618
+    MUX2x1  #(.DATAWIDTH(32)) MUX2(g, f, dEQe, h);      // h = dEQe ? g : f, 19.618 + 5.361 = 24.979
+    SHL     #(.DATAWIDTH(32)) SHL1(g, dLTe, xwire);     // xwire = g << dLTe, 19.618 + 7.044 = 26.662
+    SHR     #(.DATAWIDTH(32)) SHR1(h, dEQe, zwire);     // zwire = h >> dEQe, 24.979 + 7.044 = 32.023
+    REG     #(.DATAWIDTH(32)) REG1(xwire, Clk, Rst, x); // x = xwire, 26.662 + 4.090 = 30.752
+    REG     #(.DATAWIDTH(32)) REG2(zwire, Clk, Rst, z); // z = zwire, 32.023 + 4.090 = 36.113
     
 endmodule
