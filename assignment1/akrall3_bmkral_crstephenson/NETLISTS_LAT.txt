@@ -1,6 +1,6 @@
 circuit1 : 19.76 8.547
 circuit2 : 36.113 5.897
-circuit3 :  7.918
-circuit4 :  6.844
-circuit5 :  223.418
-circuit6 :  223.418
+circuit3 : 46.48 7.918
+circuit4 : 40.121 6.844
+circuit5 : 241.519 223.418
+circuit6 : 241.519 223.418
