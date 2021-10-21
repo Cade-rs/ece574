@@ -1,6 +1,8 @@
 #include <iostream>
 #include <fstream>
 
+void handleLines(std::string line);
+
 int main(int argc, char *argv[])
 {
     std::string inFile  = argv[1];
@@ -28,14 +30,42 @@ int main(int argc, char *argv[])
         std::cout << inFile << " going to " << outFile << "\n";
     }
 
+    bool inBlockComment = 0;
+
     while( getline(fin, line) )
     {
-        std::cout << line << "\n";
-        // Strip out comments
+        // Strip comments
+        handleLines(line);
 
-        // Hardcode the different key words or characters
-        
     }
 
     return 0;
+}
+
+void handleLines(std::string line)
+{
+    // Search keywords/chars and send to proper handler
+    if( line.rfind("//") == 0)
+    {
+        return;
+    }
+    else if( line.find("input") != std::string::npos )
+    {
+        //Handle inputs
+    }
+    else if( line.find("output") != std::string::npos )
+    {
+        //Handle outputs
+    }
+    else if( line.find("wire") != std::string::npos )
+    {
+        //Handle wire
+    }
+    else if( line.find("+") != std::string::npos )
+    {
+        //Handle add/increment
+    }
+
+
+
 }
