@@ -1,6 +1,7 @@
 #ifndef COMPONENT_H
 #define COMPONENT_H
 #include <string>
+#include "latency.h"
 
 class component {
 public:
