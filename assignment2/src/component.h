@@ -14,6 +14,7 @@ using std::vector;
 class component {
 public:
     component(comp_type type, comp_size datawidth, vector<variable> in, vector<variable> out);
+    component(const component& in_comp);
     double findLatency(void);
 
     comp_type type_;
