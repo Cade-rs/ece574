@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
 {
     // You can run this by changing the name from main2 to main
     // then using the following command from the build folder:
-    // ./pleaseWork.exe ..\assignment_2_circuits\474a_circuit1.txt ../testfile.txt
+    // ./pleaseWork.exe ../assignment_2_circuits/474a_circuit1.txt ../testfile.txt
 
     std::string infile  = argv[1];
     std::string outfile = argv[2];

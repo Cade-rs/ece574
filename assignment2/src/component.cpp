@@ -50,7 +50,7 @@ component::component(const component& in_comp)
 
 double component::findLatency(void)
 {
-    if (dw_ >=0)
+    if (type_ >=comp_type::REG)
     {
         lat_ = latlist[type_][dw_];
     }
