@@ -1,0 +1,3 @@
+"C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E rm -f CMakeFiles\pleaseWork.dir/objects.a
+C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\ar.exe cr CMakeFiles\pleaseWork.dir/objects.a @CMakeFiles\pleaseWork.dir\objects1.rsp
+C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\G__~1.EXE -Wl,--whole-archive CMakeFiles\pleaseWork.dir/objects.a -Wl,--no-whole-archive -o pleaseWork.exe -Wl,--out-implib,libpleaseWork.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\pleaseWork.dir\linklibs.rsp
