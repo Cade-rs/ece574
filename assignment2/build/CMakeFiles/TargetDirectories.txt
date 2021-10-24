@@ -1,3 +1,0 @@
-C:/Users/cader/Documents/school/ECE574/workspace/git/ece574/assignment2/crstephenson/build/CMakeFiles/pleaseWork.dir
-C:/Users/cader/Documents/school/ECE574/workspace/git/ece574/assignment2/crstephenson/build/CMakeFiles/edit_cache.dir
-C:/Users/cader/Documents/school/ECE574/workspace/git/ece574/assignment2/crstephenson/build/CMakeFiles/rebuild_cache.dir
