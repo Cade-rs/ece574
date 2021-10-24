@@ -10,6 +10,7 @@ class variable {
 public:
     variable(std::string name, int size);
     variable(std::string name, comp_size size);
+    variable(const variable& in_var);
     bool operator== (std::string param);
 
     std::string name_;
