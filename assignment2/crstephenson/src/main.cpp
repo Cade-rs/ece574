@@ -15,7 +15,7 @@ int main(void){
     std::cout << in[0] << ", " << out[0] << "\n";
 
     component 
-        comp1(COMPONENT MUL,SIZE TWO,in,out);
+        comp1(3,2,in,out);
 
     return 0;
 }

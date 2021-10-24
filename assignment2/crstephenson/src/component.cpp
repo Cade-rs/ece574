@@ -1,17 +1,30 @@
 #include "component.h"
 #include "latency.h"
 #include <string>
+#include <iostream>
+#include <vector>
+using namespace std;
+using std::vector;
 
-int main(void){
-    return 0;
-}
+//int main(void){
+//    return 0;
+//}
 
-component::component(COMPONENT type, SIZE datawidth, std::string in, std::string out)
+component::component(int type, int datawidth, vector<string> in, vector<string> out)
 {
     type_ = type;
     dw_ = datawidth;
-    in_ = in;
-    out_ = out;
+
+    for (int i=0; i<in.size(); i++)
+    {
+        in_ = in;
+    }
+
+    for (int i=0; i<out.size(); i++)
+    {
+        out_ = out;
+    }
+
     lat_ = findLatency();
 }
 
