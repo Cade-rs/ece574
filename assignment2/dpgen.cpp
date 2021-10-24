@@ -3,7 +3,7 @@
 
 #include "fileparser.h"
 
-int main2(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
     std::string infile  = argv[1];
     std::string outfile = argv[2];
@@ -20,4 +20,3 @@ int main2(int argc, char *argv[])
 
     return 0;
 }
-
