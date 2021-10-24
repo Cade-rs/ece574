@@ -16,13 +16,13 @@ component::component(comp_type type, comp_size datawidth, vector<variable> in, v
 
     for (int i=0; i<in.size(); i++)
     {
-        in_.push_back( variable(in[i].name_, in[i].size_) ) ;
+        in_.push_back( variable(in[i]) ) ;
         std::cout << in_[i].name_ << ", ";
     }
 
     for (int i=0; i<out.size(); i++)
     {
-        out_.push_back( out[i] );
+        out_.push_back( variable(out[i]) );
         std::cout << out_[i].name_ << ", ";
     }
 
@@ -30,7 +30,7 @@ component::component(comp_type type, comp_size datawidth, vector<variable> in, v
 }
 
 // Copy constructor
-component::component(const component & in_comp)
+component::component(const component& in_comp)
 {
     type_ = in_comp.type_;
     dw_ = in_comp.dw_;
