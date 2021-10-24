@@ -1,7 +1,11 @@
 #ifndef LATENCY_H
 #define LATENCY_H
 
+
+
 enum comp_type{
+    Inputs = -20,
+    Outputs = -10,
     REG = 0,
     ADD,
     SUB,
@@ -25,8 +29,10 @@ enum comp_size{
     SIXTYFOUR
 };
 
+comp_size int2size(int size);
+
 const double latlist[12][6] = 
-{
+{//      1      2      8     16     32     64
     {2.616, 2.644, 2.879, 3.061, 3.602, 3.966},      //REG
     {2.704, 3.713, 4.924, 5.638, 7.270, 9.566},      //ADD
     {3.024, 3.412, 4.890, 5.569, 7.253, 9.566},      //SUB
@@ -40,4 +46,20 @@ const double latlist[12][6] =
     {1.792, 2.218, 3.111, 3.471, 4.347, 6.200},      //INC
     {1.792, 2.218, 3.108, 3.701, 4.685, 6.503}       //DEC
 };
+
+inline comp_size int2size(int size)
+{
+    switch( size )
+    {
+        case 1  : return comp_size::ONE;
+        case 2  : return comp_size::TWO;
+        //case 4  : return comp_size::FOUR;
+        case 8  : return comp_size::EIGHT;
+        case 16 : return comp_size::SIXTEEN;
+        case 32 : return comp_size::THIRTYTWO;
+        case 64 : return comp_size::SIXTYFOUR;
+        default : return comp_size::ONE;
+    }
+}
+
 #endif
