@@ -17,14 +17,16 @@ component::component(comp_type type, comp_size datawidth, vector<variable> in, v
     for (int i=0; i<in.size(); i++)
     {
         in_.push_back( variable(in[i]) ) ;
-        std::cout << in_[i].name_ << ", ";
+        //std::cout << in_[i].name_ << ", ";
     }
 
     for (int i=0; i<out.size(); i++)
     {
         out_.push_back( variable(out[i]) );
-        std::cout << out_[i].name_ << ", ";
+        //std::cout << out_[i].name_ << ", ";
     }
+
+    //std::cout << std::endl;
 
     lat_ = findLatency();
 }
