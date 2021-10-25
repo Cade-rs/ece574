@@ -13,7 +13,7 @@ using std::vector;
 
 class component {
 public:
-    component(comp_type type, comp_size datawidth, vector<variable> in, vector<variable> out);
+    component(comp_type type, comp_size datawidth, vector<variable> in, vector<variable> out, bool isSigned=false);
     component(const component& in_comp);
     bool containsInput(std::string var);
     bool containsInput(variable& var);
@@ -23,6 +23,7 @@ public:
 
     comp_type type_;
     comp_size dw_;
+    bool isSigned_;
     vector<variable> in_;
     vector<variable> out_;
     double lat_;
