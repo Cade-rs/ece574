@@ -7,6 +7,7 @@
 #include "fileparser.h"
 #include "latency.h"
 #include "variable.h"
+#include "latencycalculator.h"
 
 int main2(void){
     std::vector<variable> in, out;
@@ -26,11 +27,15 @@ int main(int argc, char *argv[])
     // You can run this by changing the name from main2 to main
     // then using the following command from the build folder:
     // ./pleaseWork.exe ../assignment_2_circuits/474a_circuit1.txt ../testfile.txt
+    
+    // critical path calculations (and test component list)
+    latencycalculator lc;
 
     std::string infile  = argv[1];
     std::string outfile = argv[2];
     
     fileparser fp(infile, outfile);
+
 
     bool error = fp.run();
 

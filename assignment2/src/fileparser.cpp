@@ -46,7 +46,7 @@ void fileparser::parseLine(std::string line)
 {
     // Remove comments
     line = line.substr(0, line.find("//"));
-    std::cout << line << "\n";
+    //std::cout << line << "\n";
 
     // Search keywords/chars and send to proper handler
     if( line.find("input") != std::string::npos )
