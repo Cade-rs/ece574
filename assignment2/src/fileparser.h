@@ -12,8 +12,6 @@
 
 class fileparser {
 private:
-
-    bool containsVariable(string var);
     void parseLine(std::string line);
 
     std::ifstream fin_;
@@ -23,6 +21,8 @@ private:
 
 public:
     fileparser(std::string infile, std::string outfile);
+    bool containsVariable(std::string var);
+    bool containsVariable(variable& var);
     bool run();
 
     std::vector<component> compVec_;

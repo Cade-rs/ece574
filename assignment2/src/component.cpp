@@ -50,6 +50,54 @@ component::component(const component& in_comp)
     lat_ = in_comp.lat_;
 }
 
+bool component::containsInput(std::string var)
+{
+    for( int i=0; i < in_.size(); i++ )
+    {
+        if (in_[i] == var)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool component::containsInput(variable& var)
+{
+    for( int i=0; i < in_.size(); i++ )
+    {
+        if (in_[i] == var)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool component::containsOutput(std::string var)
+{
+    for( int i=0; i < out_.size(); i++ )
+    {
+        if (out_[i] == var)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool component::containsOutput(variable& var)
+{
+    for( int i=0; i < out_.size(); i++ )
+    {
+        if (out_[i] == var)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 double component::findLatency(void)
 {
     if (type_ >=comp_type::REG)

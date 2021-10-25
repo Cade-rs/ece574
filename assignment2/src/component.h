@@ -15,6 +15,10 @@ class component {
 public:
     component(comp_type type, comp_size datawidth, vector<variable> in, vector<variable> out);
     component(const component& in_comp);
+    bool containsInput(std::string var);
+    bool containsInput(variable& var);
+    bool containsOutput(std::string var);
+    bool containsOutput(variable& var);
     double findLatency(void);
 
     comp_type type_;
