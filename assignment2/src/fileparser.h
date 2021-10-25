@@ -23,6 +23,8 @@ private:
 
 public:
     fileparser(std::string infile, std::string outfile);
+    bool containsVariable(std::string var);
+    bool containsVariable(variable& var);
     bool run();
 
     std::vector<component> compVec_;

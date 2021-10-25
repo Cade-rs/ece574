@@ -24,3 +24,8 @@ bool variable::operator== (std::string param)
 {
     return name_ == param;
 }
+
+bool variable::operator== (variable param)
+{
+    return name_ == param.name_;
+}

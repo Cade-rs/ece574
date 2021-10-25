@@ -12,6 +12,7 @@ public:
     variable(std::string name, comp_size size);
     variable(const variable& in_var);
     bool operator== (std::string param);
+    bool operator== (variable param);
 
     std::string name_;
     comp_size size_;

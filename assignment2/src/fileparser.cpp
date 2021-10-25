@@ -27,6 +27,30 @@ fileparser::fileparser(std::string infile, std::string outfile)
     }
 }
 
+bool fileparser::containsVariable(std::string var)
+{
+    for( int i=0; i < varVec_.size(); i++ )
+    {
+        if (varVec_[i] == var)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool fileparser::containsVariable(variable& var)
+{
+    for( int i=0; i < varVec_.size(); i++ )
+    {
+        if (varVec_[i] == var)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 bool fileparser::run()
 {
     
