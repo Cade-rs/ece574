@@ -12,8 +12,6 @@
 
 class fileparser {
 private:
-
-    bool containsVariable(string var);
     void parseLine(std::string line);
 
     std::ifstream fin_;
