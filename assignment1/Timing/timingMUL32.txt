@@ -1,0 +1,61 @@
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 2 CPUs
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [Timing 38-78] ReportTimingParams: -max_paths 1 -nworst 1 -delay_type max -sort_by slack.
+Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
+------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2020.2 (win64) Build 3064766 Wed Nov 18 09:12:45 MST 2020
+| Date         : Fri Oct  1 20:02:35 2021
+| Host         : DESKTOP-B64TFA4 running 64-bit major release  (build 9200)
+| Command      : report_timing
+| Design       : MUL
+| Device       : 7a100t-csg324
+| Speed File   : -1  PRODUCTION 1.23 2018-06-13
+------------------------------------------------------------------------------------
+
+Timing Report
+
+Slack:                    inf
+  Source:                 a[16]
+                            (input port)
+  Destination:            prod[29]
+                            (output port)
+  Path Group:             (none)
+  Path Type:              Max at Slow Process Corner
+  Data Path Delay:        12.975ns  (logic 10.566ns (81.437%)  route 2.409ns (18.563%))
+  Logic Levels:           9  (CARRY4=4 DSP48E1=2 IBUF=1 LUT2=1 OBUF=1)
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                                                      0.000     0.000 r  a[16] (IN)
+                         net (fo=0)                   0.000     0.000    a[16]
+                         IBUF (Prop_ibuf_I_O)         0.971     0.971 r  a_IBUF[16]_inst/O
+                         net (fo=1, unplaced)         0.803     1.774    a_IBUF[16]
+                         DSP48E1 (Prop_dsp48e1_A[16]_PCOUT[47])
+                                                      4.036     5.810 r  prod0__0/PCOUT[47]
+                         net (fo=1, unplaced)         0.000     5.810    prod0__0_n_106
+                         DSP48E1 (Prop_dsp48e1_PCIN[47]_P[0])
+                                                      1.518     7.328 r  prod0__1/P[0]
+                         net (fo=2, unplaced)         0.803     8.131    prod0__1_n_105
+                         LUT2 (Prop_lut2_I0_O)        0.124     8.255 r  prod_OBUF[19]_inst_i_4/O
+                         net (fo=1, unplaced)         0.000     8.255    prod_OBUF[19]_inst_i_4_n_0
+                         CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.533     8.788 r  prod_OBUF[19]_inst_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000     8.788    prod_OBUF[19]_inst_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117     8.905 r  prod_OBUF[23]_inst_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000     8.905    prod_OBUF[23]_inst_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117     9.022 r  prod_OBUF[27]_inst_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000     9.022    prod_OBUF[27]_inst_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.337     9.359 r  prod_OBUF[31]_inst_i_1/O[1]
+                         net (fo=1, unplaced)         0.803    10.162    prod_OBUF[29]
+                         OBUF (Prop_obuf_I_O)         2.813    12.975 r  prod_OBUF[29]_inst/O
+                         net (fo=0)                   0.000    12.975    prod[29]
+                                                                      r  prod[29] (OUT)
+  -------------------------------------------------------------------    -------------------
+
+
+
+

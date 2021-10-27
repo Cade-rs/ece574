@@ -1,0 +1,284 @@
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 2 CPUs
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [Timing 38-78] ReportTimingParams: -max_paths 1 -nworst 1 -delay_type max -sort_by slack.
+Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
+------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2020.2 (win64) Build 3064766 Wed Nov 18 09:12:45 MST 2020
+| Date         : Fri Oct  1 19:59:14 2021
+| Host         : DESKTOP-B64TFA4 running 64-bit major release  (build 9200)
+| Command      : report_timing
+| Design       : MOD
+| Device       : 7a100t-csg324
+| Speed File   : -1  PRODUCTION 1.23 2018-06-13
+------------------------------------------------------------------------------------
+
+Timing Report
+
+Slack:                    inf
+  Source:                 b[1]
+                            (input port)
+  Destination:            rem[13]
+                            (output port)
+  Path Group:             (none)
+  Path Type:              Max at Slow Process Corner
+  Data Path Delay:        38.268ns  (logic 25.504ns (66.647%)  route 12.764ns (33.353%))
+  Logic Levels:           85  (CARRY4=77 IBUF=1 LUT1=1 LUT3=1 LUT4=2 LUT6=2 OBUF=1)
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                                                      0.000     0.000 f  b[1] (IN)
+                         net (fo=0)                   0.000     0.000    b[1]
+                         IBUF (Prop_ibuf_I_O)         0.971     0.971 f  b_IBUF[1]_inst/O
+                         net (fo=19, unplaced)        0.803     1.774    b_IBUF[1]
+                         LUT1 (Prop_lut1_I0_O)        0.117     1.891 r  rem_OBUF[15]_inst_i_328/O
+                         net (fo=1, unplaced)         0.000     1.891    rem_OBUF[15]_inst_i_328_n_0
+                         CARRY4 (Prop_carry4_DI[1]_CO[3])
+                                                      0.547     2.438 r  rem_OBUF[15]_inst_i_294/CO[3]
+                         net (fo=1, unplaced)         0.000     2.438    rem_OBUF[15]_inst_i_294_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117     2.555 r  rem_OBUF[15]_inst_i_289/CO[3]
+                         net (fo=1, unplaced)         0.000     2.555    rem_OBUF[15]_inst_i_289_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117     2.672 r  rem_OBUF[15]_inst_i_284/CO[3]
+                         net (fo=1, unplaced)         0.000     2.672    rem_OBUF[15]_inst_i_284_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117     2.789 r  rem_OBUF[15]_inst_i_281/CO[3]
+                         net (fo=1, unplaced)         0.000     2.789    rem_OBUF[15]_inst_i_281_n_0
+                         CARRY4 (Prop_carry4_CI_CO[0])
+                                                      0.281     3.070 r  rem_OBUF[15]_inst_i_280/CO[0]
+                         net (fo=19, unplaced)        0.370     3.440    rem_OBUF[15]_inst_i_280_n_3
+                         LUT3 (Prop_lut3_I0_O)        0.367     3.807 r  rem_OBUF[15]_inst_i_301/O
+                         net (fo=1, unplaced)         0.000     3.807    rem_OBUF[15]_inst_i_301_n_0
+                         CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.533     4.340 r  rem_OBUF[15]_inst_i_272/CO[3]
+                         net (fo=1, unplaced)         0.000     4.340    rem_OBUF[15]_inst_i_272_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117     4.457 r  rem_OBUF[15]_inst_i_267/CO[3]
+                         net (fo=1, unplaced)         0.000     4.457    rem_OBUF[15]_inst_i_267_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117     4.574 r  rem_OBUF[15]_inst_i_262/CO[3]
+                         net (fo=1, unplaced)         0.000     4.574    rem_OBUF[15]_inst_i_262_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117     4.691 r  rem_OBUF[15]_inst_i_259/CO[3]
+                         net (fo=1, unplaced)         0.000     4.691    rem_OBUF[15]_inst_i_259_n_0
+                         CARRY4 (Prop_carry4_CI_CO[1])
+                                                      0.179     4.870 r  rem_OBUF[15]_inst_i_258/CO[1]
+                         net (fo=19, unplaced)        0.584     5.454    rem_OBUF[15]_inst_i_258_n_2
+                         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.803     6.257 r  rem_OBUF[15]_inst_i_250/CO[3]
+                         net (fo=1, unplaced)         0.000     6.257    rem_OBUF[15]_inst_i_250_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117     6.374 r  rem_OBUF[15]_inst_i_245/CO[3]
+                         net (fo=1, unplaced)         0.000     6.374    rem_OBUF[15]_inst_i_245_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117     6.491 r  rem_OBUF[15]_inst_i_240/CO[3]
+                         net (fo=1, unplaced)         0.000     6.491    rem_OBUF[15]_inst_i_240_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117     6.608 r  rem_OBUF[15]_inst_i_237/CO[3]
+                         net (fo=1, unplaced)         0.000     6.608    rem_OBUF[15]_inst_i_237_n_0
+                         CARRY4 (Prop_carry4_CI_CO[1])
+                                                      0.179     6.787 r  rem_OBUF[15]_inst_i_236/CO[1]
+                         net (fo=19, unplaced)        0.584     7.371    rem_OBUF[15]_inst_i_236_n_2
+                         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.803     8.174 r  rem_OBUF[15]_inst_i_228/CO[3]
+                         net (fo=1, unplaced)         0.000     8.174    rem_OBUF[15]_inst_i_228_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117     8.291 r  rem_OBUF[15]_inst_i_223/CO[3]
+                         net (fo=1, unplaced)         0.000     8.291    rem_OBUF[15]_inst_i_223_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117     8.408 r  rem_OBUF[15]_inst_i_218/CO[3]
+                         net (fo=1, unplaced)         0.000     8.408    rem_OBUF[15]_inst_i_218_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117     8.525 r  rem_OBUF[15]_inst_i_215/CO[3]
+                         net (fo=1, unplaced)         0.000     8.525    rem_OBUF[15]_inst_i_215_n_0
+                         CARRY4 (Prop_carry4_CI_CO[1])
+                                                      0.179     8.704 r  rem_OBUF[15]_inst_i_214/CO[1]
+                         net (fo=19, unplaced)        0.584     9.288    rem_OBUF[15]_inst_i_214_n_2
+                         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.803    10.091 r  rem_OBUF[15]_inst_i_206/CO[3]
+                         net (fo=1, unplaced)         0.000    10.091    rem_OBUF[15]_inst_i_206_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117    10.208 r  rem_OBUF[15]_inst_i_201/CO[3]
+                         net (fo=1, unplaced)         0.000    10.208    rem_OBUF[15]_inst_i_201_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117    10.325 r  rem_OBUF[15]_inst_i_196/CO[3]
+                         net (fo=1, unplaced)         0.000    10.325    rem_OBUF[15]_inst_i_196_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117    10.442 r  rem_OBUF[15]_inst_i_193/CO[3]
+                         net (fo=1, unplaced)         0.000    10.442    rem_OBUF[15]_inst_i_193_n_0
+                         CARRY4 (Prop_carry4_CI_CO[1])
+                                                      0.179    10.621 r  rem_OBUF[15]_inst_i_192/CO[1]
+                         net (fo=19, unplaced)        0.584    11.205    rem_OBUF[15]_inst_i_192_n_2
+                         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.803    12.008 r  rem_OBUF[15]_inst_i_184/CO[3]
+                         net (fo=1, unplaced)         0.000    12.008    rem_OBUF[15]_inst_i_184_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117    12.125 r  rem_OBUF[15]_inst_i_179/CO[3]
+                         net (fo=1, unplaced)         0.000    12.125    rem_OBUF[15]_inst_i_179_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117    12.242 r  rem_OBUF[15]_inst_i_174/CO[3]
+                         net (fo=1, unplaced)         0.000    12.242    rem_OBUF[15]_inst_i_174_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117    12.359 r  rem_OBUF[15]_inst_i_171/CO[3]
+                         net (fo=1, unplaced)         0.000    12.359    rem_OBUF[15]_inst_i_171_n_0
+                         CARRY4 (Prop_carry4_CI_CO[1])
+                                                      0.179    12.538 r  rem_OBUF[15]_inst_i_170/CO[1]
+                         net (fo=19, unplaced)        0.584    13.122    rem_OBUF[15]_inst_i_170_n_2
+                         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.803    13.925 r  rem_OBUF[15]_inst_i_162/CO[3]
+                         net (fo=1, unplaced)         0.000    13.925    rem_OBUF[15]_inst_i_162_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117    14.042 r  rem_OBUF[15]_inst_i_157/CO[3]
+                         net (fo=1, unplaced)         0.000    14.042    rem_OBUF[15]_inst_i_157_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117    14.159 r  rem_OBUF[15]_inst_i_152/CO[3]
+                         net (fo=1, unplaced)         0.000    14.159    rem_OBUF[15]_inst_i_152_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117    14.276 r  rem_OBUF[15]_inst_i_149/CO[3]
+                         net (fo=1, unplaced)         0.000    14.276    rem_OBUF[15]_inst_i_149_n_0
+                         CARRY4 (Prop_carry4_CI_CO[1])
+                                                      0.179    14.455 r  rem_OBUF[15]_inst_i_148/CO[1]
+                         net (fo=19, unplaced)        0.584    15.039    rem_OBUF[15]_inst_i_148_n_2
+                         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.803    15.842 r  rem_OBUF[15]_inst_i_140/CO[3]
+                         net (fo=1, unplaced)         0.000    15.842    rem_OBUF[15]_inst_i_140_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117    15.959 r  rem_OBUF[15]_inst_i_135/CO[3]
+                         net (fo=1, unplaced)         0.000    15.959    rem_OBUF[15]_inst_i_135_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117    16.076 r  rem_OBUF[15]_inst_i_130/CO[3]
+                         net (fo=1, unplaced)         0.000    16.076    rem_OBUF[15]_inst_i_130_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117    16.193 r  rem_OBUF[15]_inst_i_127/CO[3]
+                         net (fo=1, unplaced)         0.000    16.193    rem_OBUF[15]_inst_i_127_n_0
+                         CARRY4 (Prop_carry4_CI_CO[1])
+                                                      0.179    16.372 r  rem_OBUF[15]_inst_i_126/CO[1]
+                         net (fo=19, unplaced)        0.584    16.956    rem_OBUF[15]_inst_i_126_n_2
+                         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.803    17.759 r  rem_OBUF[15]_inst_i_118/CO[3]
+                         net (fo=1, unplaced)         0.000    17.759    rem_OBUF[15]_inst_i_118_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117    17.876 r  rem_OBUF[15]_inst_i_113/CO[3]
+                         net (fo=1, unplaced)         0.000    17.876    rem_OBUF[15]_inst_i_113_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117    17.993 r  rem_OBUF[15]_inst_i_108/CO[3]
+                         net (fo=1, unplaced)         0.000    17.993    rem_OBUF[15]_inst_i_108_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117    18.110 r  rem_OBUF[15]_inst_i_105/CO[3]
+                         net (fo=1, unplaced)         0.000    18.110    rem_OBUF[15]_inst_i_105_n_0
+                         CARRY4 (Prop_carry4_CI_CO[1])
+                                                      0.179    18.289 r  rem_OBUF[15]_inst_i_104/CO[1]
+                         net (fo=19, unplaced)        0.584    18.873    rem_OBUF[15]_inst_i_104_n_2
+                         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.803    19.676 r  rem_OBUF[15]_inst_i_96/CO[3]
+                         net (fo=1, unplaced)         0.000    19.676    rem_OBUF[15]_inst_i_96_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117    19.793 r  rem_OBUF[15]_inst_i_91/CO[3]
+                         net (fo=1, unplaced)         0.000    19.793    rem_OBUF[15]_inst_i_91_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117    19.910 r  rem_OBUF[15]_inst_i_86/CO[3]
+                         net (fo=1, unplaced)         0.000    19.910    rem_OBUF[15]_inst_i_86_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117    20.027 r  rem_OBUF[15]_inst_i_83/CO[3]
+                         net (fo=1, unplaced)         0.000    20.027    rem_OBUF[15]_inst_i_83_n_0
+                         CARRY4 (Prop_carry4_CI_CO[1])
+                                                      0.179    20.206 r  rem_OBUF[15]_inst_i_82/CO[1]
+                         net (fo=19, unplaced)        0.584    20.790    rem_OBUF[15]_inst_i_82_n_2
+                         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.803    21.593 r  rem_OBUF[15]_inst_i_74/CO[3]
+                         net (fo=1, unplaced)         0.000    21.593    rem_OBUF[15]_inst_i_74_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117    21.710 r  rem_OBUF[15]_inst_i_69/CO[3]
+                         net (fo=1, unplaced)         0.000    21.710    rem_OBUF[15]_inst_i_69_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117    21.827 r  rem_OBUF[15]_inst_i_64/CO[3]
+                         net (fo=1, unplaced)         0.000    21.827    rem_OBUF[15]_inst_i_64_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117    21.944 r  rem_OBUF[15]_inst_i_61/CO[3]
+                         net (fo=1, unplaced)         0.000    21.944    rem_OBUF[15]_inst_i_61_n_0
+                         CARRY4 (Prop_carry4_CI_CO[1])
+                                                      0.179    22.123 r  rem_OBUF[15]_inst_i_60/CO[1]
+                         net (fo=19, unplaced)        0.584    22.707    rem_OBUF[15]_inst_i_60_n_2
+                         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.803    23.510 r  rem_OBUF[15]_inst_i_55/CO[3]
+                         net (fo=1, unplaced)         0.000    23.510    rem_OBUF[15]_inst_i_55_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117    23.627 r  rem_OBUF[15]_inst_i_50/CO[3]
+                         net (fo=1, unplaced)         0.000    23.627    rem_OBUF[15]_inst_i_50_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117    23.744 r  rem_OBUF[15]_inst_i_45/CO[3]
+                         net (fo=1, unplaced)         0.000    23.744    rem_OBUF[15]_inst_i_45_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117    23.861 r  rem_OBUF[15]_inst_i_42/CO[3]
+                         net (fo=1, unplaced)         0.000    23.861    rem_OBUF[15]_inst_i_42_n_0
+                         CARRY4 (Prop_carry4_CI_CO[1])
+                                                      0.179    24.040 r  rem_OBUF[15]_inst_i_41/CO[1]
+                         net (fo=19, unplaced)        0.584    24.624    rem_OBUF[15]_inst_i_41_n_2
+                         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.803    25.427 r  rem_OBUF[14]_inst_i_13/CO[3]
+                         net (fo=1, unplaced)         0.000    25.427    rem_OBUF[14]_inst_i_13_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117    25.544 r  rem_OBUF[15]_inst_i_36/CO[3]
+                         net (fo=1, unplaced)         0.000    25.544    rem_OBUF[15]_inst_i_36_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117    25.661 r  rem_OBUF[15]_inst_i_31/CO[3]
+                         net (fo=1, unplaced)         0.000    25.661    rem_OBUF[15]_inst_i_31_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117    25.778 r  rem_OBUF[15]_inst_i_28/CO[3]
+                         net (fo=1, unplaced)         0.000    25.778    rem_OBUF[15]_inst_i_28_n_0
+                         CARRY4 (Prop_carry4_CI_CO[1])
+                                                      0.179    25.957 r  rem_OBUF[15]_inst_i_27/CO[1]
+                         net (fo=19, unplaced)        0.584    26.541    rem_OBUF[15]_inst_i_27_n_2
+                         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.803    27.344 r  rem_OBUF[11]_inst_i_9/CO[3]
+                         net (fo=1, unplaced)         0.000    27.344    rem_OBUF[11]_inst_i_9_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117    27.461 r  rem_OBUF[14]_inst_i_8/CO[3]
+                         net (fo=1, unplaced)         0.000    27.461    rem_OBUF[14]_inst_i_8_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117    27.578 r  rem_OBUF[15]_inst_i_18/CO[3]
+                         net (fo=1, unplaced)         0.000    27.578    rem_OBUF[15]_inst_i_18_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117    27.695 r  rem_OBUF[15]_inst_i_15/CO[3]
+                         net (fo=1, unplaced)         0.000    27.695    rem_OBUF[15]_inst_i_15_n_0
+                         CARRY4 (Prop_carry4_CI_CO[1])
+                                                      0.179    27.874 r  rem_OBUF[15]_inst_i_14/CO[1]
+                         net (fo=19, unplaced)        0.584    28.458    rem_OBUF[15]_inst_i_14_n_2
+                         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.803    29.261 r  rem_OBUF[6]_inst_i_3/CO[3]
+                         net (fo=1, unplaced)         0.000    29.261    rem_OBUF[6]_inst_i_3_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117    29.378 r  rem_OBUF[11]_inst_i_4/CO[3]
+                         net (fo=1, unplaced)         0.000    29.378    rem_OBUF[11]_inst_i_4_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117    29.495 r  rem_OBUF[14]_inst_i_3/CO[3]
+                         net (fo=1, unplaced)         0.000    29.495    rem_OBUF[14]_inst_i_3_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117    29.612 r  rem_OBUF[15]_inst_i_7/CO[3]
+                         net (fo=1, unplaced)         0.000    29.612    rem_OBUF[15]_inst_i_7_n_0
+                         CARRY4 (Prop_carry4_CI_CO[1])
+                                                      0.179    29.791 r  rem_OBUF[15]_inst_i_6/CO[1]
+                         net (fo=19, unplaced)        0.584    30.375    rem_OBUF[15]_inst_i_6_n_2
+                         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.803    31.178 r  rem_OBUF[3]_inst_i_2/CO[3]
+                         net (fo=1, unplaced)         0.000    31.178    rem_OBUF[3]_inst_i_2_n_0
+                         CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.337    31.515 f  rem_OBUF[6]_inst_i_2/O[1]
+                         net (fo=7, unplaced)         0.646    32.161    rem_OBUF[6]_inst_i_2_n_6
+                         LUT4 (Prop_lut4_I0_O)        0.332    32.493 r  rem_OBUF[9]_inst_i_4/O
+                         net (fo=2, unplaced)         0.743    33.236    rem_OBUF[9]_inst_i_4_n_0
+                         LUT6 (Prop_lut6_I0_O)        0.124    33.360 f  rem_OBUF[15]_inst_i_12/O
+                         net (fo=4, unplaced)         0.756    34.116    rem_OBUF[15]_inst_i_12_n_0
+                         LUT6 (Prop_lut6_I4_O)        0.124    34.240 r  rem_OBUF[15]_inst_i_3/O
+                         net (fo=3, unplaced)         0.467    34.707    rem_OBUF[15]_inst_i_3_n_0
+                         LUT4 (Prop_lut4_I2_O)        0.124    34.831 r  rem_OBUF[13]_inst_i_1/O
+                         net (fo=1, unplaced)         0.803    35.634    rem_OBUF[13]
+                         OBUF (Prop_obuf_I_O)         2.634    38.268 r  rem_OBUF[13]_inst/O
+                         net (fo=0)                   0.000    38.268    rem[13]
+                                                                      r  rem[13] (OUT)
+  -------------------------------------------------------------------    -------------------
+
+
+
+

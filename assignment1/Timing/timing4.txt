@@ -1,0 +1,92 @@
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 2 CPUs
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [Timing 38-78] ReportTimingParams: -max_paths 1 -nworst 1 -delay_type max -sort_by slack.
+Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
+------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2020.2 (win64) Build 3064766 Wed Nov 18 09:12:45 MST 2020
+| Date         : Fri Oct  1 20:20:33 2021
+| Host         : DESKTOP-B64TFA4 running 64-bit major release  (build 9200)
+| Command      : report_timing
+| Design       : circuit4
+| Device       : 7a100t-csg324
+| Speed File   : -1  PRODUCTION 1.23 2018-06-13
+------------------------------------------------------------------------------------
+
+Timing Report
+
+Slack:                    inf
+  Source:                 c[1]
+                            (input port)
+  Destination:            REG1/q_reg[0]/D
+  Path Group:             (none)
+  Path Type:              Max at Slow Process Corner
+  Data Path Delay:        6.844ns  (logic 4.400ns (64.293%)  route 2.444ns (35.707%))
+  Logic Levels:           20  (CARRY4=16 IBUF=1 LUT2=1 LUT4=2)
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                                                      0.000     0.000 r  c[1] (IN)
+                         net (fo=0)                   0.000     0.000    c[1]
+                         IBUF (Prop_ibuf_I_O)         0.971     0.971 r  c_IBUF[1]_inst/O
+                         net (fo=1, unplaced)         0.803     1.774    ADD2/c_IBUF[1]
+                         LUT2 (Prop_lut2_I1_O)        0.124     1.898 r  ADD2/sum0_carry_i_3__0/O
+                         net (fo=1, unplaced)         0.000     1.898    ADD2/sum0_carry_i_3__0_n_0
+                         CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.533     2.431 r  ADD2/sum0_carry/CO[3]
+                         net (fo=1, unplaced)         0.000     2.431    ADD2/sum0_carry_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117     2.548 r  ADD2/sum0_carry__0/CO[3]
+                         net (fo=1, unplaced)         0.000     2.548    ADD2/sum0_carry__0_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117     2.665 r  ADD2/sum0_carry__1/CO[3]
+                         net (fo=1, unplaced)         0.000     2.665    ADD2/sum0_carry__1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117     2.782 r  ADD2/sum0_carry__2/CO[3]
+                         net (fo=1, unplaced)         0.000     2.782    ADD2/sum0_carry__2_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117     2.899 r  ADD2/sum0_carry__3/CO[3]
+                         net (fo=1, unplaced)         0.000     2.899    ADD2/sum0_carry__3_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117     3.016 r  ADD2/sum0_carry__4/CO[3]
+                         net (fo=1, unplaced)         0.000     3.016    ADD2/sum0_carry__4_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117     3.133 r  ADD2/sum0_carry__5/CO[3]
+                         net (fo=1, unplaced)         0.000     3.133    ADD2/sum0_carry__5_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117     3.250 r  ADD2/sum0_carry__6/CO[3]
+                         net (fo=1, unplaced)         0.000     3.250    ADD2/sum0_carry__6_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117     3.367 r  ADD2/sum0_carry__7/CO[3]
+                         net (fo=1, unplaced)         0.000     3.367    ADD2/sum0_carry__7_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117     3.484 r  ADD2/sum0_carry__8/CO[3]
+                         net (fo=1, unplaced)         0.000     3.484    ADD2/sum0_carry__8_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117     3.601 r  ADD2/sum0_carry__9/CO[3]
+                         net (fo=1, unplaced)         0.000     3.601    ADD2/sum0_carry__9_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117     3.718 r  ADD2/sum0_carry__10/CO[3]
+                         net (fo=1, unplaced)         0.000     3.718    ADD2/sum0_carry__10_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117     3.835 r  ADD2/sum0_carry__11/CO[3]
+                         net (fo=1, unplaced)         0.000     3.835    ADD2/sum0_carry__11_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117     3.952 r  ADD2/sum0_carry__12/CO[3]
+                         net (fo=1, unplaced)         0.000     3.952    ADD2/sum0_carry__12_n_0
+                         CARRY4 (Prop_carry4_CI_O[0])
+                                                      0.232     4.184 f  ADD2/sum0_carry__13/O[0]
+                         net (fo=4, unplaced)         0.787     4.971    ADD1/e[56]
+                         LUT4 (Prop_lut4_I1_O)        0.319     5.290 r  ADD1/gt0_carry__6_i_4/O
+                         net (fo=1, unplaced)         0.000     5.290    COMP1/q_reg[0][0]
+                         CARRY4 (Prop_carry4_DI[0]_CO[3])
+                                                      0.576     5.866 r  COMP1/gt0_carry__6/CO[3]
+                         net (fo=129, unplaced)       0.854     6.720    MUX1/CO[0]
+                         LUT4 (Prop_lut4_I3_O)        0.124     6.844 r  MUX1/q[0]_i_1/O
+                         net (fo=1, unplaced)         0.000     6.844    REG1/D[0]
+                         FDRE                                         r  REG1/q_reg[0]/D
+  -------------------------------------------------------------------    -------------------
+
+
+
+
