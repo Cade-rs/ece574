@@ -9,11 +9,12 @@
 using namespace std;
 
 
-component::component(comp_type type, comp_size datawidth, vector<variable> in, vector<variable> out, bool isSigned)
+component::component(comp_type type, comp_size datawidth, vector<variable> in, vector<variable> out, bool isSigned, int compNum)
 {
     type_ = type;
     dw_ = datawidth;
     isSigned_ = isSigned;
+    compNum_ = compNum;
 
     for (int i=0; i<in.size(); i++)
     {
@@ -38,6 +39,7 @@ component::component(const component& in_comp)
     type_ = in_comp.type_;
     dw_ = in_comp.dw_;
     isSigned_ = in_comp.isSigned_;
+    compNum_ = in_comp.compNum_;
 
     for (int i=0; i<in_comp.in_.size(); i++)
     {
@@ -114,3 +116,7 @@ double component::findLatency(void)
     return(0);
 }
 
+std::string component::writeLine()
+{
+
+}

@@ -4,6 +4,8 @@
 
 
 enum comp_type{
+    Registers = -40,
+    Wires = -30,
     Inputs = -20,
     Outputs = -10,
     REG = 0,
