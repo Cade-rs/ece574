@@ -19,16 +19,12 @@ component::component(comp_type type, comp_size datawidth, vector<variable> in, v
     for (int i=0; i<in.size(); i++)
     {
         in_.push_back( variable(in[i]) ) ;
-        //std::cout << in_[i].name_ << ", ";
     }
 
     for (int i=0; i<out.size(); i++)
     {
         out_.push_back( variable(out[i]) );
-        //std::cout << out_[i].name_ << ", ";
     }
-
-    //std::cout << std::endl;
 
     lat_ = findLatency();
 }
@@ -104,16 +100,18 @@ bool component::containsOutput(variable& var)
 
 double component::findLatency(void)
 {
+    double lat = 0;
     if (type_ >=comp_type::REG)
     {
-        lat_ = latlist[type_][dw_];
+        lat = latlist[type_][dw_];
+        std::cout << std::to_string(lat) << std::endl;   
     }
     else
     {
-        lat_ = 0;
+        lat = 0;
     }
     
-    return(0);
+    return(lat);
 }
 
 std::string component::writeLine()
