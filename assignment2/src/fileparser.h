@@ -13,6 +13,7 @@
 class fileparser {
 private:
     void parseLine(std::string line);
+    void writeFile();
 
     std::ifstream fin_;
     std::ofstream fout_;

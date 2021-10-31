@@ -13,13 +13,14 @@ using std::vector;
 
 class component {
 public:
-    component(comp_type type, comp_size datawidth, vector<variable> in, vector<variable> out, bool isSigned=false);
+    component(comp_type type, comp_size datawidth, vector<variable> in, vector<variable> out, bool isSigned=false, int compNum=0);
     component(const component& in_comp);
     bool containsInput(std::string var);
     bool containsInput(variable& var);
     bool containsOutput(std::string var);
     bool containsOutput(variable& var);
     double findLatency(void);
+    std::string writeLine();
 
     comp_type type_;
     comp_size dw_;
@@ -27,5 +28,6 @@ public:
     vector<variable> in_;
     vector<variable> out_;
     double lat_;
+    int compNum_;
 };
 #endif
