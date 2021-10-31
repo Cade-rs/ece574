@@ -24,6 +24,10 @@ latencycalculator::latencycalculator(){
     std::cout << "The critical path is " << std::to_string(criticalpath_) << std::endl;
 }
 
+
+/*
+The idea of the critical path calculation is to loop through each component, defining a path as the mapping of each component's output to another component's input. Whenever we come to a split( one component maps to multiple other components), there is a branch-off. We use recursion to fully map out a path before returning to the split to pursue the next path
+*/
 void latencycalculator::sumPathLatencies(std::vector<component> complist){
 
     int branch = 0;
@@ -31,7 +35,6 @@ void latencycalculator::sumPathLatencies(std::vector<component> complist){
     //loop through each component
     for(int i=0; i < complist.size(); i++)
     {   
-        //std::cout << "branch = " << std::to_string(branch) << "delay size = " << std::to_string(delays_.size()) << std::endl;
 
         recursivesearch(complist, i, branch);
 
@@ -42,12 +45,12 @@ void latencycalculator::sumPathLatencies(std::vector<component> complist){
             branch = delays_.size()-1;
         }
 
-        //std::cout << "Done w component, branch = " << std::to_string(branch) << "delay size = " << std::to_string(delays_.size()) << std::endl;
     }
 
+    //Temporary cout for displaying all paths to provide confidence in calculation as we continue
     for(int i=0; i<delays_.size(); i++)
     {
-        std::cout << std::endl << std::to_string(delays_[i]) << std::endl;
+        std::cout << "Path" << i << ": " << std::to_string(delays_[i]) << std::endl;
     }
 }
 
@@ -55,22 +58,15 @@ void latencycalculator::recursivesearch(std::vector<component> complist, int com
     double currentlat;
     vector<int> matches;    
 
-    //std::cout << "Recurse, branch = " << std::to_string(branch) << "delay size = " << std::to_string(delays_.size()) << std::endl;
-
     //Update branch number if necessary (OBE: this was primarily for debugging)
     if (delays_.back() <= 0.0)
     {
         delays_[branch] = 0.0;
     }
-    
-    //std::cout << "updating lat, branch = " << std::to_string(branch) << "delay size = " << std::to_string(delays_.size()) << std::endl;
 
     //add component delay and store off for recursive purposes later
     delays_[branch] += complist[compnum].lat_;
     currentlat = delays_[branch];
-
-    //std::cout << std::to_string(complist[compnum].lat_) << std::endl;
-    //std::cout << complist[compnum].type_ << "   " << std::to_string(delays_[branch]) << std::endl;
 
     //Find components that uses output as input?
     for(int i=0; i<complist.size(); i++)
@@ -91,27 +87,19 @@ void latencycalculator::recursivesearch(std::vector<component> complist, int com
     //is matches empty? If so, done with path
     if( matches.size() == 0)
     {
-        //std::cout << "empty matches, branch = " << std::to_string(branch) << "delay size = " << std::to_string(delays_.size()) << std::endl;
-
         return;
     }
 
     //Recurse!
     for (int branchiter = 0; branchiter < matches.size(); branchiter++)
     {
-        //std::cout << "got here 20" << std::endl;
-        //std::cout << "Recurse further1, branch = " << std::to_string(branch) << "delay size = " << std::to_string(delays_.size()) << std::endl;
-        
-        //new branch
+        //if more than one path available, need to branch off but retain previous latency
         if( branchiter > 0)
         {
             //copy current branchs delay and update branch number
             delays_.push_back( currentlat );
             branch = delays_.size()-1;
-            //std::cout << "copying lat to new branch" << std::endl;
         }
-        
-        //std::cout << "Recurse further2, branch = " << std::to_string(branch) << "delay size = " << std::to_string(delays_.size()) << std::endl;
 
         recursivesearch(complist, matches[branchiter], branch);
     }
@@ -124,8 +112,8 @@ void latencycalculator::recursivesearch(std::vector<component> complist, int com
 // 474_circuit1.txt
 std::vector<component> latencycalculator::examplecomps(){
 
-    //Define in, out and use vector::clear to clear and reset vector size. Although,
-    // memory reallocation isn't guarunteed
+    //Define in and out. Use vector::clear to clear and reset vector size and content.
+    // --Although, memory reallocation isn't guarunteed
     std::vector<variable> in, out;
     std::vector<component> complist;
 
@@ -137,10 +125,6 @@ std::vector<component> latencycalculator::examplecomps(){
     component temp1(comp_type::ADD,comp_size::EIGHT,in,out);
     complist.push_back(temp1);
 
-    //example accessing vector info
-    //std::cout << complist[0].type_ << std::endl;
-    //std::cout << complist[0].in_[0].name_ << std::endl;
-    
     //e = a + c
     in.clear(); out.clear();
     in.push_back (variable("a", 8));
@@ -190,10 +174,13 @@ std::vector<component> latencycalculator::examplecomps(){
     component temp7(comp_type::REG,comp_size::SIXTEEN,in,out);
     complist.push_back(temp7);
 
-    //std::cout << complist[4].in_[1].name_ << std::endl << std::endl;
+    //example accessing vector info
+    //std::cout << complist[0].type_ << std::endl;
+    //std::cout << complist[0].in_[0].name_ << std::endl;
+    //std::cout << complist[4].in_[1].name_ << std::endl;
     //std::cout << in[0].name_ << std::endl;
-    //std::cout << complist.size() << std::endl;
-    //std::cout << complist[4].findLatency() << std::endl;
+    //std::cout << complist.size() << std::endl;  //probably needs std::to_string()
+    //std::cout << complist[4].lat_ << std::endl; //probably needs std::to_string()
 
     return complist;
 }
