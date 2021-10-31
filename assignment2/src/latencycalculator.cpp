@@ -12,6 +12,8 @@ latencycalculator::latencycalculator(){
     criticalpath_ = 0.00;
     delays_.push_back( 0.0 );
 
+    std::cout << "initial size = " << std::to_string(delays_.size() ) << std::endl;
+
     std::vector<component> complist {examplecomps()};
     sumPathLatencies(complist);
 }
@@ -23,7 +25,12 @@ void latencycalculator::sumPathLatencies(std::vector<component> complist){
     //loop through each component
     for(int i=0; i < complist.size(); i++)
     {   
+        std::cout << "branch = " << std::to_string(branch) << "delay size = " << std::to_string(delays_.size()) << std::endl;
+
         recursivesearch(complist, i, branch);
+
+        //for each new component, declare new branch. zero-based so set new branch to size
+        branch = delays_.size();
     }
 
     //determine critical path
