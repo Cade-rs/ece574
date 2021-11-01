@@ -95,6 +95,17 @@ void fileparser::parseLine(std::string line)
     {
         //Handle add/increment
     }
+    else if( line.find("==") != std::string::npos ) //or > or <
+    {
+        //Handle comparator
+        
+        //for (int i=0; i<in_.size(); i++)
+        //{
+        //    largestinput = (in_[i].size_ > largestinput) ? i : largestinput;
+        //}
+
+        //largestsize = in_[largestinput].size_;
+    }
 }
 
 void fileparser::writeFile()
