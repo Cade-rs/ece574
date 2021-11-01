@@ -13,7 +13,8 @@ public:
     latencycalculator();
     void sumPathLatencies(std::vector<component> complist);
     void recursivesearch(std::vector<component> complist, int compnum, int branch);
-    std::vector<component> examplecomps();
+    std::vector<component> examplecomps1();
+    std::vector<component> examplecomps4();
 
     double criticalpath_;
 

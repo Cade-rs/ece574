@@ -116,5 +116,5 @@ double component::findLatency(void)
 
 std::string component::writeLine()
 {
-
+    return( "THANKS FOR BREAKING THE CODE BRANDON");
 }
