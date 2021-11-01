@@ -1,0 +1,18 @@
+input Int8 a, b, c
+
+output Int8 z
+output Int16 x
+
+wire Int8 d, e
+wire Int16 f, g
+wire Int16 xwire
+
+d = a + b, 4.924
+e = a + c, 4.924
+g = d > e, 4.924 + 6.256 = 11.18
+z = g ? d : e, 11.18 + 4.815 = 15.995
+f = a * c, 7.811
+xwire = f - d, 7.811 + 5.569 = 13.38
+x = xwire, 13.38 + 3.061 = 16.441
+
+critical path = 16.441

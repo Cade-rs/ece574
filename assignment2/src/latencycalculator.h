@@ -11,14 +11,15 @@
 class latencycalculator {
 public:
     latencycalculator();
-    void sumPathLatencies(const std::vector<component> complist);
-    //double recursivesearch(std::vector<component> complist);
-    std::vector<component> examplecomps();
+    void sumPathLatencies(std::vector<component> complist);
+    void recursivesearch(std::vector<component> complist, int compnum, int branch);
+    std::vector<component> examplecomps1();
+    std::vector<component> examplecomps4();
 
     double criticalpath_;
 
 private:
-    //std::vector<component> complist_;
+    vector<double> delays_;
 };
 
 #endif

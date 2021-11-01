@@ -63,6 +63,11 @@ bool fileparser::run()
         if (error_) break;
     }
     
+    if (!error_)
+    {
+        writeFile();
+    }
+
     return error_;
 }
 
@@ -70,7 +75,8 @@ void fileparser::parseLine(std::string line)
 {
     // Remove comments
     line = line.substr(0, line.find("//"));
-    //std::cout << line << "\n";
+
+
 
     // Search keywords/chars and send to proper handler
     if( line.find("input") != std::string::npos )
@@ -88,5 +94,24 @@ void fileparser::parseLine(std::string line)
     else if( line.find("+") != std::string::npos )
     {
         //Handle add/increment
+    }
+    else if( line.find("==") != std::string::npos ) //or > or <
+    {
+        //Handle comparator
+        
+        //for (int i=0; i<in_.size(); i++)
+        //{
+        //    largestinput = (in_[i].size_ > largestinput) ? i : largestinput;
+        //}
+
+        //largestsize = in_[largestinput].size_;
+    }
+}
+
+void fileparser::writeFile()
+{
+    for (int i=0; i<compVec_.size(); i++)
+    {
+        fout_ << compVec_[i].writeLine();
     }
 }
