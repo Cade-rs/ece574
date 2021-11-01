@@ -8,13 +8,14 @@
 #include "latency.h"
 
 latencycalculator::latencycalculator(){
-    
+
     criticalpath_ = 0.00;
     delays_.push_back( -1.0 );
 
     //build the test component list
-    std::vector<component> complist {examplecomps()};
-    
+    //std::vector<component> complist {examplecomps1()};
+    std::vector<component> complist {examplecomps4()};
+
     //Find 
     sumPathLatencies(complist);
 
@@ -83,7 +84,7 @@ void latencycalculator::recursivesearch(std::vector<component> complist, int com
             }
         }
     }
-    
+
     //is matches empty? If so, done with path
     if( matches.size() == 0)
     {
@@ -110,7 +111,7 @@ void latencycalculator::recursivesearch(std::vector<component> complist, int com
 
 //build test vector of components for building latency calculator using
 // 474_circuit1.txt
-std::vector<component> latencycalculator::examplecomps(){
+std::vector<component> latencycalculator::examplecomps1(){
 
     //Define in and out. Use vector::clear to clear and reset vector size and content.
     // --Although, memory reallocation isn't guarunteed
@@ -185,3 +186,123 @@ std::vector<component> latencycalculator::examplecomps(){
     return complist;
 }
 
+//build test vector of components for building latency calculator using
+// 474_circuit4.txt
+std::vector<component> latencycalculator::examplecomps4(){
+
+    //Define in and out. Use vector::clear to clear and reset vector size and content.
+    // --Although, memory reallocation isn't guarunteed
+    std::vector<variable> in, out;
+    std::vector<component> complist;
+
+
+    //d = a + b
+    in.push_back (variable("a", 64));
+    in.push_back (variable("b", 64));
+    out.push_back (variable("d", 64));
+    component temp1(comp_type::ADD,comp_size::SIXTYFOUR,in,out);
+    complist.push_back(temp1);
+
+    //e = a + c
+    in.clear(); out.clear();
+    in.push_back (variable("a", 64));
+    in.push_back (variable("c", 64));
+    out.push_back (variable("e", 64));
+    component temp2(comp_type::ADD,comp_size::SIXTYFOUR,in,out);
+    complist.push_back(temp2);
+
+    //f = a - c
+    in.clear(); out.clear();
+    in.push_back (variable("a", 64));
+    in.push_back (variable("b", 64));
+    out.push_back (variable("f", 64));
+    component temp3(comp_type::SUB,comp_size::SIXTYFOUR,in,out);
+    complist.push_back(temp3);
+
+    //NOTE: STRANGE THAT G IS 16b
+    //dEQe = d == e
+    in.clear(); out.clear();
+    in.push_back (variable("d", 64));
+    in.push_back (variable("e", 64));
+    out.push_back (variable("dEQe", 1));
+    component temp4(comp_type::COMP,comp_size::SIXTYFOUR,in,out);
+    complist.push_back(temp4);
+
+    //dLTe = d < e
+    in.clear(); out.clear();
+    in.push_back (variable("d", 64));
+    in.push_back (variable("e", 64));
+    out.push_back (variable("dLTe", 1));
+    component temp5(comp_type::COMP,comp_size::SIXTYFOUR,in,out);
+    complist.push_back(temp5);
+
+    //g = dLTe ? d : e
+    in.clear(); out.clear();
+    in.push_back (variable("d", 64));
+    in.push_back (variable("e", 64));
+    out.push_back (variable("g", 64));
+    component temp6(comp_type::COMP,comp_size::SIXTYFOUR,in,out);
+    complist.push_back(temp6);
+
+    //h = dEQe ? g : f
+    in.clear(); out.clear();
+    in.push_back (variable("g", 64));
+    in.push_back (variable("f", 64));
+    out.push_back (variable("h", 64));
+    component temp7(comp_type::COMP,comp_size::SIXTYFOUR,in,out);
+    complist.push_back(temp7);
+
+    //greg = g
+    in.clear(); out.clear();
+    in.push_back (variable("g", 64));
+    out.push_back (variable("greg", 64));
+    component temp8(comp_type::REG,comp_size::SIXTYFOUR,in,out);
+    complist.push_back(temp8);
+
+    //hreg = h
+    in.clear(); out.clear();
+    in.push_back (variable("h", 64));
+    out.push_back (variable("hreg", 64));
+    component temp9(comp_type::REG,comp_size::SIXTYFOUR,in,out);
+    complist.push_back(temp9);
+
+    //xrin = hreg << dLTe
+    in.clear(); out.clear();
+    in.push_back (variable("hreg", 64));
+    in.push_back (variable("dLTe", 64));
+    out.push_back (variable("xrin", 64));
+    component temp10(comp_type::SHL,comp_size::SIXTYFOUR,in,out);
+    complist.push_back(temp10);
+
+    //zrin = greg << dEQe
+    in.clear(); out.clear();
+    in.push_back (variable("ghreg", 64));
+    in.push_back (variable("dEQe", 64));
+    out.push_back (variable("zrin", 64));
+    component temp11(comp_type::SHR,comp_size::SIXTYFOUR,in,out);
+    complist.push_back(temp11);
+
+    //x = xrin
+    in.clear(); out.clear();
+    in.push_back (variable("xrin", 64));
+    out.push_back (variable("x", 32));
+    component temp12(comp_type::REG,comp_size::THIRTYTWO,in,out);
+    complist.push_back(temp12);
+
+    //z = zrin
+    in.clear(); out.clear();
+    in.push_back (variable("zrin", 64));
+    out.push_back (variable("z", 32));
+    component temp13(comp_type::REG,comp_size::THIRTYTWO,in,out);
+    complist.push_back(temp13);
+
+    //example accessing vector info
+    //std::cout << complist[0].type_ << std::endl;
+    //std::cout << complist[0].in_[0].name_ << std::endl;
+    //std::cout << complist[4].in_[1].name_ << std::endl;
+    //std::cout << in[0].name_ << std::endl;
+    //std::cout << complist.size() << std::endl;  //probably needs std::to_string()
+    //std::cout << complist[4].lat_ << std::endl; //probably needs std::to_string()
+
+    return complist;
+}
