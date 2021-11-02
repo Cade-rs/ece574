@@ -9,12 +9,13 @@
 using namespace std;
 
 
-component::component(comp_type type, comp_size datawidth, vector<variable> in, vector<variable> out, bool isSigned, int compNum)
+component::component(comp_type type, comp_size datawidth, vector<variable> in, vector<variable> out, bool isSigned, int compNum, int outputPos)
 {
     type_ = type;
     dw_ = datawidth;
     isSigned_ = isSigned;
     compNum_ = compNum;
+    outputPos_ = outputPos;
 
     for (int i=0; i<in.size(); i++)
     {
@@ -36,6 +37,7 @@ component::component(const component& in_comp)
     dw_ = in_comp.dw_;
     isSigned_ = in_comp.isSigned_;
     compNum_ = in_comp.compNum_;
+    outputPos_ = in_comp.outputPos_;
 
     for (int i=0; i<in_comp.in_.size(); i++)
     {

@@ -13,7 +13,9 @@ using std::vector;
 
 class component {
 public:
-    component(comp_type type, comp_size datawidth, vector<variable> in, vector<variable> out, bool isSigned=false, int compNum=0);
+    component(comp_type type, comp_size datawidth, 
+              vector<variable> in, vector<variable> out, 
+              bool isSigned=false, int compNum=0, int outputPos=0);
     component(const component& in_comp);
     bool containsInput(std::string var);
     bool containsInput(variable& var);
@@ -29,5 +31,6 @@ public:
     vector<variable> out_;
     double lat_;
     int compNum_;
+    int outputPos_;
 };
 #endif

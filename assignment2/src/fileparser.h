@@ -12,8 +12,34 @@
 
 class fileparser {
 private:
-    void parseLine(std::string line);
+    void parseLine(std::string& line);
     void writeFile();
+
+    void constructInputs(std::string& line);
+    void constructOutputs(std::string& line);
+    void constructWires(std::string& line);
+    void constructRegisters(std::string& line);
+    void constructSHR(std::string& line);
+    void constructSHL(std::string& line);
+    void constructCOMP(std::string& line);
+    void constructADDorINC(std::string& line);
+    void constructSUBorDEC(std::string& line);
+    void constructMUL(std::string& line);
+    void constructDIV(std::string& line);
+    void constructMOD(std::string& line);
+    void constructMUX(std::string& line);
+    void constructREG(std::string& line);
+    
+    // Helpers
+    std::vector<std::string> stringSplit(std::string line, std::string re = "\\s+");
+    comp_size findSize(std::string var);
+    bool finalizeComponent(comp_type type, comp_size datawidth, 
+              vector<variable> in, vector<variable> out, int outputPos=0);
+    int findVariableIndex(std::string& varName);
+    bool checkForSignedVariable(std::string& varName);
+
+    // I don't know what needs to go into these yet
+    void handleRegOutput(); 
 
     std::ifstream fin_;
     std::ofstream fout_;
@@ -22,8 +48,6 @@ private:
 
 public:
     fileparser(std::string infile, std::string outfile);
-    bool containsVariable(std::string var);
-    bool containsVariable(variable& var);
     bool run();
 
     std::vector<component> compVec_;
