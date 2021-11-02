@@ -81,23 +81,33 @@ void fileparser::parseLine(std::string line)
     // Search keywords/chars and send to proper handler
     if( line.find("input") != std::string::npos )
     {
-        //Handle inputs
+        // Input
     }
     else if( line.find("output") != std::string::npos )
     {
-        //Handle outputs
+        // Output
     }
     else if( line.find("wire") != std::string::npos )
     {
-        //Handle wire
+        // Wire
     }
-    else if( line.find("+") != std::string::npos )
+    else if( line.find("register") != std::string::npos )
     {
-        //Handle add/increment
+        // Register
     }
-    else if( line.find("==") != std::string::npos ) //or > or <
+    else if( line.find(">>") != std::string::npos )
     {
-        //Handle comparator
+        // Shift Right
+    }
+    else if( line.find("<<") != std::string::npos )
+    {
+        // Shift Left
+    }
+    else if( line.find(">") != std::string::npos 
+             || line.find("<") != std::string::npos 
+             || line.find("==") != std::string::npos ) //or > or <
+    {
+        // Comparator
         
         //for (int i=0; i<in_.size(); i++)
         //{
@@ -106,7 +116,43 @@ void fileparser::parseLine(std::string line)
 
         //largestsize = in_[largestinput].size_;
     }
+    else if( line.find("+") != std::string::npos )
+    {
+        // Add/Increment
+    }
+    else if( line.find("-") != std::string::npos )
+    {
+        // Subtract/Decrement
+    }
+    else if( line.find("*") != std::string::npos )
+    {
+        // Multiply
+    }
+    else if( line.find("/") != std::string::npos )
+    {
+        // Divide
+    }
+    else if( line.find("%") != std::string::npos )
+    {
+        // Modulo
+    }
+    else if( line.find("?") != std::string::npos )
+    {
+        // Mux
+    }
+    else if( line.find("=") != std::string::npos )
+    {
+        // Register
+    }
 }
+
+
+
+
+
+
+
+
 
 void fileparser::writeFile()
 {
