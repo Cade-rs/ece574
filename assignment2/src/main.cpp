@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
     // ./pleaseWork.exe ../assignment_2_circuits/474a_circuit1.txt ../testfile.txt
     
     // critical path calculations (and test component list)
-    latencycalculator lc;
+    //latencycalculator lc;
 
     std::string infile  = argv[1];
     std::string outfile = argv[2];
