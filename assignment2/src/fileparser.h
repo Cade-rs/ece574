@@ -32,7 +32,10 @@ private:
     
     // Helpers
     std::vector<std::string> stringSplit(std::string line, std::string re = "\\s+");
-    bool checkIfVariableExists(std::string& varName);
+    comp_size findSize(std::string var);
+    bool finalizeComponent(comp_type type, comp_size datawidth, 
+              vector<variable> in, vector<variable> out, int outputPos=0);
+    int findVariableIndex(std::string& varName);
     bool checkForSignedVariable(std::string& varName);
 
     // I don't know what needs to go into these yet

@@ -173,8 +173,84 @@ void fileparser::constructRegisters(std::string& line)
 
 void fileparser::constructSHR(std::string& line)
 {
+    // Example line:
+    // out = in1 >> in2
+
     std::cout << "I got to SHR!" << std::endl << line << std::endl;
+
+    std::vector<std::string> splitLine = stringSplit(line);
+
+    if( splitLine.size() != 5)
+    {
+        std::cout << "ERROR: Received different number of values than expected: " << line << std::endl;
+        error_ = true;
+        return;
+    }
+
+    // Instantiate variables
+    vector<variable> outputs;
+    vector<variable> inputs;
+    int varIdx = -1;
+    std::string varName = "";
+
+    // Set type
+    comp_type type = comp_type::SHR;
+
+    // Find output
+    // Output is first token in splitLine
+    varName = splitLine[0];
+    varIdx = findVariableIndex(varName);
+    if( varIdx >= 0 )
+    {
+        outputs.push_back( variable( varVec_[varIdx] ) );
+    }
+    else
+    {
+        std::cout << "ERROR: Output variable used but not defined: " << varName << std::endl;
+        std::cout << "    On line: " << line << std::endl;
+        error_ = true;
+        return;
+    }
+    
+    // Find  inputs
+    //  Inputs are 3rd and 5th token
+    varName = splitLine[2];
+    varIdx = findVariableIndex(varName);
+    if( varIdx >= 0 )
+    {
+        inputs.push_back( variable( varVec_[varIdx] ) );
+    }
+    else
+    {
+        std::cout << "ERROR: Input variable used but not defined: " << varName << std::endl;
+        std::cout << "    On line: " << line << std::endl;
+        error_ = true;
+        return;
+    }
+
+    varName = splitLine[4];
+    varIdx = findVariableIndex(varName);
+    if( varIdx >= 0 )
+    {
+        inputs.push_back( variable( varVec_[varIdx] ) );
+    }
+    else
+    {
+        std::cout << "ERROR: Input variable used but not defined: " << varName << std::endl;
+        std::cout << "    On line: " << line << std::endl;
+        error_ = true;
+        return;
+    }
+
+    // Determine size
+    comp_size datawidth = outputs[0].size_;
+
+    // Call finalizeComponent to determine signed/unsigned, compNum, handle register creation
+    bool didItWork = finalizeComponent(type, datawidth, inputs, outputs);
+    
+    return;
 }
+
 void fileparser::constructSHL(std::string& line)
 {
     std::cout << "I got to SHL!" << std::endl << line << std::endl;
@@ -231,7 +307,17 @@ std::vector<std::string> fileparser::stringSplit(std::string line, std::string r
     return result;
 }
 
-bool fileparser::checkIfVariableExists(std::string& varName)
+bool fileparser::finalizeComponent(comp_type type, comp_size datawidth, 
+              vector<variable> in, vector<variable> out, int outputPos)
+{
+    // Find what number component this should be
+
+    // If output is a register and the component is not REG, call handleRegOutput
+
+    return true;
+}
+
+int fileparser::findVariableIndex(std::string& varName)
 {
     // Loop through existing variables
     for( int i=0; i< varVec_.size(); i++ )
@@ -239,12 +325,12 @@ bool fileparser::checkIfVariableExists(std::string& varName)
         if( varVec_[i] == varName )
         {
             // Variable exists
-            return true;
+            return i;
         }
     }
 
     // All variables searched, variable does not exist
-    return false;
+    return -1;
 }
 
 bool fileparser::checkForSignedVariable(std::string& varName)
