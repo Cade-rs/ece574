@@ -180,9 +180,9 @@ void fileparser::constructSHR(std::string& line)
 
     std::vector<std::string> splitLine = stringSplit(line);
 
-    if( splitLine.size() > 5)
+    if( splitLine.size() != 5)
     {
-        std::cout << "ERROR: Received more values than expected: " << line << std::endl;
+        std::cout << "ERROR: Received different number of values than expected: " << line << std::endl;
         error_ = true;
         return;
     }
