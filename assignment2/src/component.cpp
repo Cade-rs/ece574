@@ -114,7 +114,10 @@ double component::findLatency(void)
     return(lat);
 }
 
-std::string component::writeLine()
+std::string component::writeLine(const component& in_comp)
 {
+    std::string c_type = in_comp.type_;
+    std::string d_width= in_comp.dw_;
+
     return( "THANKS FOR BREAKING THE CODE BRANDON");
 }

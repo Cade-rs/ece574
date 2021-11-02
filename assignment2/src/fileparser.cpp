@@ -1,5 +1,6 @@
 #include "fileparser.h"
 
+
 #include <iostream>
 #include <string>
 
@@ -82,6 +83,7 @@ void fileparser::parseLine(std::string line)
     if( line.find("input") != std::string::npos )
     {
         //Handle inputs
+        return l_inputs;
     }
     else if( line.find("output") != std::string::npos )
     {
@@ -110,8 +112,18 @@ void fileparser::parseLine(std::string line)
 
 void fileparser::writeFile()
 {
+    fout_.open(outfile);
+    fout_<<"'timescale 1ns / 1ps\n";
+    //module declaration. C_num is circuit number
+    std::string mod,c_num;
+    mod = "\tmodule circuit";
+
+    mod.append(l_inputs);
+
+    fout_<<"    input ["+ "datawidth"+":0]"
     for (int i=0; i<compVec_.size(); i++)
     {
         fout_ << compVec_[i].writeLine();
     }
+    fout_<<"endmodule";
 }
