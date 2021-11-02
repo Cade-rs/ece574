@@ -96,16 +96,17 @@ void fileparser::parseLine(std::string& line)
         // Comparator
         constructCOMP(line);
     }
-    else if( line.find("+") != std::string::npos )
+    else if( line.find("+") != std::string::npos 
+             || line.find("-") != std::string::npos )
     {
-        // Add/Increment
-        constructADDorINC(line);
+        // Add/Increment/Sub/Decrement
+        constructADDorSUB(line);
     }
-    else if( line.find("-") != std::string::npos )
-    {
-        // Subtract/Decrement
-        constructSUBorDEC(line);
-    }
+    //else if( line.find("-") != std::string::npos )
+    //{
+    //    // Subtract/Decrement
+    //    constructSUBorDEC(line);
+    //}
     else if( line.find("*") != std::string::npos )
     {
         // Multiply
@@ -204,7 +205,8 @@ void fileparser::constructRegisters(std::string& line)
 void fileparser::constructShift(std::string& line)
 {
     // Example line:
-    // out = in1 >> in2
+    // SHR: out = in1 >> in2
+    // SHL: out = in1 << in2
 
     std::cout << "I got to Shift!" << std::endl << line << std::endl;
 
@@ -302,17 +304,221 @@ void fileparser::constructCOMP(std::string& line)
 {
     std::cout << "I got to COMP!" << std::endl << line << std::endl;
     
-    //for (int i=0; i<in_.size(); i++)
-    //{
-    //    largestinput = (in_[i].size_ > largestinput) ? i : largestinput;
-    //}
+    // Example line:
+    // [GT, LT, EQ] = in1 [>,<,==] in2
 
-    //largestsize = in_[largestinput].size_;
+    std::vector<std::string> splitLine = stringSplit(line);
+
+    if( splitLine.size() != 5)
+    {
+        std::cout << "ERROR: Received different number of values than expected: " << line << std::endl;
+        error_ = true;
+        return;
+    }
+
+    // Instantiate variables
+    comp_type type;
+    comp_size maxInputSize = comp_size::ONE;
+    vector<variable> outputs;
+    vector<variable> inputs;
+    int varIdx = -1;
+    std::string varName = "";
+    
+    // Set type and determine which type of comparison
+    type = comp_type::COMP;
+    int outputPos;
+
+    if( splitLine[3] == ">" )
+    {
+        outputPos = 0;
+    }
+    else if( splitLine[3] == "<" )
+    {
+        outputPos = 1;
+    }
+    else // equal to
+    {
+        outputPos = 2;
+
+    }
+
+    // Find output
+    // Output is first token in splitLine
+    varName = splitLine[0];
+    varIdx = findVariableIndex(varName);
+    if( varIdx >= 0 )
+    {
+        outputs.push_back( variable( varVec_[varIdx] ) );
+        std::cout << "setting output: " << outputs[0].name_ << ", " << std::to_string(outputs[0].size_) << std::endl;
+    }
+    else
+    {
+        std::cout << "ERROR: Output variable used but not defined: " << varName << std::endl;
+        std::cout << "    On line: " << line << std::endl;
+        error_ = true;
+        return;
+    }
+    
+    // Find  inputs and determine biggest input size for later
+    //  Inputs are 3rd and 5th token
+    varName = splitLine[2];
+    varIdx = findVariableIndex(varName);
+    if( varIdx >= 0 )
+    {
+        inputs.push_back( variable( varVec_[varIdx] ) );
+        maxInputSize = (varVec_[varIdx].size_ > maxInputSize) ? varVec_[varIdx].size_ : maxInputSize;
+    }
+    else
+    {
+        std::cout << "ERROR: Input variable used but not defined: " << varName << std::endl;
+        std::cout << "    On line: " << line << std::endl;
+        error_ = true;
+        return;
+    }
+
+    varName = splitLine[4];
+    varIdx = findVariableIndex(varName);
+    if( varIdx >= 0 )
+    {
+        inputs.push_back( variable( varVec_[varIdx] ) );
+        maxInputSize = (varVec_[varIdx].size_ > maxInputSize) ? varVec_[varIdx].size_ : maxInputSize;
+    }
+    else
+    {
+        std::cout << "ERROR: Input variable used but not defined: " << varName << std::endl;
+        std::cout << "    On line: " << line << std::endl;
+        error_ = true;
+        return;
+    }
+
+    // Determine size
+    comp_size datawidth = maxInputSize;
+
+    // Call finalizeComponent to determine signed/unsigned, compNum, handle register creation
+    bool didItWork = finalizeComponent(type, datawidth, inputs, outputs);
+    
+    return;
 }
 
-void fileparser::constructADDorINC(std::string& line)
+void fileparser::constructADDorSUB(std::string& line)
 {
-    std::cout << "I got to ADDorINC!" << std::endl << line << std::endl;
+    std::cout << "I got to ADD/INC/SUB/DEC!" << std::endl << line << std::endl;
+
+    std::vector<std::string> splitLine = stringSplit(line);
+
+    if( splitLine.size() != 5)
+    {
+        std::cout << "ERROR: Received different number of values than expected: " << line << std::endl;
+        error_ = true;
+        return;
+    }
+
+    // Instantiate variables
+    comp_type type;
+    vector<variable> outputs;
+    vector<variable> inputs;
+    int varIdx = -1;
+    std::string varName = "";
+
+    // Set type
+    if( splitLine[3] == "+" && splitLine[4] == "1" )
+    {
+        std::cout << "I got to INC!" << std::endl;
+        type = comp_type::INC;
+    }
+    else if( splitLine[3] == "+" )
+    {
+        std::cout << "I got to ADD!" << std::endl;
+        type = comp_type::ADD;
+    }
+    else if( splitLine[3] == "-" && splitLine[4] == "1" )
+    {
+        std::cout << "I got to DEC!" << std::endl;
+        type = comp_type::DEC;
+    }
+    else if( splitLine[3] == "-")
+    {
+        std::cout << "I got to SUB!" << std::endl;
+        type = comp_type::SUB;
+    }
+    else
+    {
+        std::cout << "ERROR: ADD/SUB operator doesn't match options: " << line << std::endl;
+        error_ = true;
+        return;
+    }
+
+    // Find output
+    // Output is first token in splitLine
+    varName = splitLine[0];
+    varIdx = findVariableIndex(varName);
+    if( varIdx >= 0 )
+    {
+        outputs.push_back( variable( varVec_[varIdx] ) );
+        std::cout << "setting output: " << outputs[0].name_ << ", " << std::to_string(outputs[0].size_) << std::endl;
+    }
+    else
+    {
+        std::cout << "ERROR: Output variable used but not defined: " << varName << std::endl;
+        std::cout << "    On line: " << line << std::endl;
+        error_ = true;
+        return;
+    }
+    
+    // Find  inputs
+    //  Inputs are 3rd and 5th token
+    varName = splitLine[2];
+    varIdx = findVariableIndex(varName);
+    if( varIdx >= 0 )
+    {
+        inputs.push_back( variable( varVec_[varIdx] ) );
+    }
+    else
+    {
+        std::cout << "ERROR: Input variable used but not defined: " << varName << std::endl;
+        std::cout << "    On line: " << line << std::endl;
+        error_ = true;
+        return;
+    }
+
+    // Find  inputs
+    //  INC and DEC just save off a 1
+    varName = splitLine[4];
+    
+    if( (type == comp_type::INC || type == comp_type::DEC) && varName == "1" )
+    {
+        inputs.push_back( variable( varVec_[varIdx] ) );
+    }
+    else if( type == comp_type::INC || type == comp_type::DEC)
+    {
+        std::cout << "ERROR: Increment or Decrement expecting 2nd input of 1. Received:" << varName << std::endl;
+        std::cout << "    On line: " << line << std::endl;
+        error_ = true;
+        return;
+    }
+    else //ADD or SUB - proceed as normal
+    {    
+        varIdx = findVariableIndex(varName);
+        if( varIdx >= 0 )
+        {
+            inputs.push_back( variable( varVec_[varIdx] ) );
+        }
+        else
+        {
+            std::cout << "ERROR: Input variable used but not defined: " << varName << std::endl;
+            std::cout << "    On line: " << line << std::endl;
+            error_ = true;
+            return;
+        }
+    }
+
+    // Determine size
+    comp_size datawidth = outputs[0].size_;
+
+    // Call finalizeComponent to determine signed/unsigned, compNum, handle register creation
+    bool didItWork = finalizeComponent(type, datawidth, inputs, outputs);
+    
+    return;
 }
 void fileparser::constructSUBorDEC(std::string& line)
 {
@@ -321,18 +527,338 @@ void fileparser::constructSUBorDEC(std::string& line)
 void fileparser::constructMUL(std::string& line)
 {
     std::cout << "I got to MUL!" << std::endl << line << std::endl;
+
+    // Example line:
+    // out = in1 ? in2 : in3
+
+    std::vector<std::string> splitLine = stringSplit(line);
+
+    if( splitLine.size() != 5)
+    {
+        std::cout << "ERROR: Received different number of values than expected: " << line << std::endl;
+        error_ = true;
+        return;
+    }
+
+    // Instantiate variables
+    comp_type type;
+    vector<variable> outputs;
+    vector<variable> inputs;
+    int varIdx = -1;
+    std::string varName = "";
+
+    // Set type
+    type = comp_type::MUL;
+
+    // Find output
+    // Output is first token in splitLine
+    varName = splitLine[0];
+    varIdx = findVariableIndex(varName);
+    if( varIdx >= 0 )
+    {
+        outputs.push_back( variable( varVec_[varIdx] ) );
+        std::cout << "setting output: " << outputs[0].name_ << ", " << std::to_string(outputs[0].size_) << std::endl;
+    }
+    else
+    {
+        std::cout << "ERROR: Output variable used but not defined: " << varName << std::endl;
+        std::cout << "    On line: " << line << std::endl;
+        error_ = true;
+        return;
+    }
+    
+    // Find  inputs
+    //  Inputs are 3rd, 5th, and 7th token
+    varName = splitLine[2];
+    varIdx = findVariableIndex(varName);
+    if( varIdx >= 0 )
+    {
+        inputs.push_back( variable( varVec_[varIdx] ) );
+    }
+    else
+    {
+        std::cout << "ERROR: Input variable used but not defined: " << varName << std::endl;
+        std::cout << "    On line: " << line << std::endl;
+        error_ = true;
+        return;
+    }
+
+    varName = splitLine[4];
+    varIdx = findVariableIndex(varName);
+    if( varIdx >= 0 )
+    {
+        inputs.push_back( variable( varVec_[varIdx] ) );
+    }
+    else
+    {
+        std::cout << "ERROR: Input variable used but not defined: " << varName << std::endl;
+        std::cout << "    On line: " << line << std::endl;
+        error_ = true;
+        return;
+    }
+
+    // Determine size
+    comp_size datawidth = outputs[0].size_;
+
+    // Call finalizeComponent to determine signed/unsigned, compNum, handle register creation
+    bool didItWork = finalizeComponent(type, datawidth, inputs, outputs);
+    
+    return;
 }
 void fileparser::constructDIV(std::string& line)
 {
     std::cout << "I got to DIV!" << std::endl << line << std::endl;
+
+    // Example line:
+
+    std::vector<std::string> splitLine = stringSplit(line);
+
+    if( splitLine.size() != 5)
+    {
+        std::cout << "ERROR: Received different number of values than expected: " << line << std::endl;
+        error_ = true;
+        return;
+    }
+
+    // Instantiate variables
+    comp_type type;
+    vector<variable> outputs;
+    vector<variable> inputs;
+    int varIdx = -1;
+    std::string varName = "";
+
+    // Set type
+    type = comp_type::MUX;
+
+    // Find output
+    // Output is first token in splitLine
+    varName = splitLine[0];
+    varIdx = findVariableIndex(varName);
+    if( varIdx >= 0 )
+    {
+        outputs.push_back( variable( varVec_[varIdx] ) );
+        std::cout << "setting output: " << outputs[0].name_ << ", " << std::to_string(outputs[0].size_) << std::endl;
+    }
+    else
+    {
+        std::cout << "ERROR: Output variable used but not defined: " << varName << std::endl;
+        std::cout << "    On line: " << line << std::endl;
+        error_ = true;
+        return;
+    }
+    
+    // Find  inputs
+    //  Inputs are 3rd, 5th, and 7th token
+    varName = splitLine[2];
+    varIdx = findVariableIndex(varName);
+    if( varIdx >= 0 )
+    {
+        inputs.push_back( variable( varVec_[varIdx] ) );
+    }
+    else
+    {
+        std::cout << "ERROR: Input variable used but not defined: " << varName << std::endl;
+        std::cout << "    On line: " << line << std::endl;
+        error_ = true;
+        return;
+    }
+
+    varName = splitLine[4];
+    varIdx = findVariableIndex(varName);
+    if( varIdx >= 0 )
+    {
+        inputs.push_back( variable( varVec_[varIdx] ) );
+    }
+    else
+    {
+        std::cout << "ERROR: Input variable used but not defined: " << varName << std::endl;
+        std::cout << "    On line: " << line << std::endl;
+        error_ = true;
+        return;
+    }
+
+    // Determine size
+    comp_size datawidth = outputs[0].size_;
+
+    // Call finalizeComponent to determine signed/unsigned, compNum, handle register creation
+    bool didItWork = finalizeComponent(type, datawidth, inputs, outputs);
+    
+    return;
 }
 void fileparser::constructMOD(std::string& line)
 {
     std::cout << "I got to MOD!" << std::endl << line << std::endl;
+
+        // Example line:
+    
+    std::vector<std::string> splitLine = stringSplit(line);
+
+    if( splitLine.size() != 5)
+    {
+        std::cout << "ERROR: Received different number of values than expected: " << line << std::endl;
+        error_ = true;
+        return;
+    }
+
+    // Instantiate variables
+    comp_type type;
+    vector<variable> outputs;
+    vector<variable> inputs;
+    int varIdx = -1;
+    std::string varName = "";
+
+    // Set type
+    type = comp_type::MOD;
+
+    // Find output
+    // Output is first token in splitLine
+    varName = splitLine[0];
+    varIdx = findVariableIndex(varName);
+    if( varIdx >= 0 )
+    {
+        outputs.push_back( variable( varVec_[varIdx] ) );
+        std::cout << "setting output: " << outputs[0].name_ << ", " << std::to_string(outputs[0].size_) << std::endl;
+    }
+    else
+    {
+        std::cout << "ERROR: Output variable used but not defined: " << varName << std::endl;
+        std::cout << "    On line: " << line << std::endl;
+        error_ = true;
+        return;
+    }
+    
+    // Find  inputs
+    //  Inputs are 3rd and 5th token
+    varName = splitLine[2];
+    varIdx = findVariableIndex(varName);
+    if( varIdx >= 0 )
+    {
+        inputs.push_back( variable( varVec_[varIdx] ) );
+    }
+    else
+    {
+        std::cout << "ERROR: Input variable used but not defined: " << varName << std::endl;
+        std::cout << "    On line: " << line << std::endl;
+        error_ = true;
+        return;
+    }
+
+    varName = splitLine[4];
+    varIdx = findVariableIndex(varName);
+    if( varIdx >= 0 )
+    {
+        inputs.push_back( variable( varVec_[varIdx] ) );
+    }
+    else
+    {
+        std::cout << "ERROR: Input variable used but not defined: " << varName << std::endl;
+        std::cout << "    On line: " << line << std::endl;
+        error_ = true;
+        return;
+    }
+
+    // Determine size
+    comp_size datawidth = outputs[0].size_;
+
+    // Call finalizeComponent to determine signed/unsigned, compNum, handle register creation
+    bool didItWork = finalizeComponent(type, datawidth, inputs, outputs);
+    
+    return;
 }
 void fileparser::constructMUX(std::string& line)
 {
     std::cout << "I got to MUX!" << std::endl << line << std::endl;
+
+    // Example line:
+    // out = in1 ? in2 : in3
+
+    std::vector<std::string> splitLine = stringSplit(line);
+
+    if( splitLine.size() != 7)
+    {
+        std::cout << "ERROR: Received different number of values than expected: " << line << std::endl;
+        error_ = true;
+        return;
+    }
+
+    // Instantiate variables
+    comp_type type;
+    vector<variable> outputs;
+    vector<variable> inputs;
+    int varIdx = -1;
+    std::string varName = "";
+
+    // Set type
+    type = comp_type::MUX;
+
+    // Find output
+    // Output is first token in splitLine
+    varName = splitLine[0];
+    varIdx = findVariableIndex(varName);
+    if( varIdx >= 0 )
+    {
+        outputs.push_back( variable( varVec_[varIdx] ) );
+        std::cout << "setting output: " << outputs[0].name_ << ", " << std::to_string(outputs[0].size_) << std::endl;
+    }
+    else
+    {
+        std::cout << "ERROR: Output variable used but not defined: " << varName << std::endl;
+        std::cout << "    On line: " << line << std::endl;
+        error_ = true;
+        return;
+    }
+    
+    // Find  inputs
+    //  Inputs are 3rd, 5th, and 7th token
+    varName = splitLine[2];
+    varIdx = findVariableIndex(varName);
+    if( varIdx >= 0 )
+    {
+        inputs.push_back( variable( varVec_[varIdx] ) );
+    }
+    else
+    {
+        std::cout << "ERROR: Input variable used but not defined: " << varName << std::endl;
+        std::cout << "    On line: " << line << std::endl;
+        error_ = true;
+        return;
+    }
+
+    varName = splitLine[4];
+    varIdx = findVariableIndex(varName);
+    if( varIdx >= 0 )
+    {
+        inputs.push_back( variable( varVec_[varIdx] ) );
+    }
+    else
+    {
+        std::cout << "ERROR: Input variable used but not defined: " << varName << std::endl;
+        std::cout << "    On line: " << line << std::endl;
+        error_ = true;
+        return;
+    }
+
+    varName = splitLine[6];
+    varIdx = findVariableIndex(varName);
+    if( varIdx >= 0 )
+    {
+        inputs.push_back( variable( varVec_[varIdx] ) );
+    }
+    else
+    {
+        std::cout << "ERROR: Input variable used but not defined: " << varName << std::endl;
+        std::cout << "    On line: " << line << std::endl;
+        error_ = true;
+        return;
+    }
+
+    // Determine size
+    comp_size datawidth = outputs[0].size_;
+
+    // Call finalizeComponent to determine signed/unsigned, compNum, handle register creation
+    bool didItWork = finalizeComponent(type, datawidth, inputs, outputs);
+    
+    return;
 }
 void fileparser::constructREG(std::string& line)
 {
@@ -356,13 +882,13 @@ void fileparser::buildVarVec(std::vector<std::string>& inputLine)
     //std::vector<variable> testvec;
     std::string varSize;
 
-    //extract sign is part of 2nd element
+    //extract sign from part of 2nd element
     if (inputLine[1].find("U") != std::string::npos)
     {
         isSigned = true;
     }
 
-    //extract sign is part of 2nd element
+    //extract size from part of 2nd element
     int numIdx = inputLine[1].find_first_of("0123456789");
     varSize = inputLine[1].substr(numIdx);
 
@@ -371,8 +897,6 @@ void fileparser::buildVarVec(std::vector<std::string>& inputLine)
     {
         varVec_.push_back( variable(inputLine[i], std::stoi(varSize), isSigned ));
         std::cout << "varvec= " << inputLine[i] << ", " << varSize << ", " << isSigned << std::endl;
-        std::cout << "varvec= " << inputLine[i] << ", " << std::to_string(std::stoi(varSize)) << ", " << isSigned << std::endl;
-
     }
     return;
 }

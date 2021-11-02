@@ -21,7 +21,7 @@ private:
     void constructRegisters(std::string& line);
     void constructShift(std::string& line);
     void constructCOMP(std::string& line);
-    void constructADDorINC(std::string& line);
+    void constructADDorSUB(std::string& line);
     void constructSUBorDEC(std::string& line);
     void constructMUL(std::string& line);
     void constructDIV(std::string& line);
