@@ -59,6 +59,9 @@ void fileparser::parseLine(std::string& line)
     line = std::regex_replace(line, std::regex("^\\s+"), std::string(""));
     line = std::regex_replace(line, std::regex("\\s+$"), std::string(""));
 
+    // Remove commas
+    line.erase(std::remove(line.begin(), line.end(), ','), line.end());
+
     // Search keywords/chars and send to proper handler
     if( line.rfind("input", 0) == 0 )
     {
@@ -80,15 +83,11 @@ void fileparser::parseLine(std::string& line)
         // Register
         constructRegisters(line);
     }
-    else if( line.find(">>") != std::string::npos )
+    else if( line.find(">>") != std::string::npos 
+             || line.find("<<") != std::string::npos )
     {
-        // Shift Right
-        constructSHR(line);
-    }
-    else if( line.find("<<") != std::string::npos )
-    {
-        // Shift Left
-        constructSHL(line);
+        // Shift Right or Left
+        constructShift(line);
     }
     else if( line.find(">") != std::string::npos 
              || line.find("<") != std::string::npos 
@@ -150,33 +149,64 @@ void fileparser::constructInputs(std::string& line)
     {
         std::cout << splitLine[i] << std::endl;
     }
+
+    buildVarVec(splitLine);
+
+    return;
 }
 
 void fileparser::constructOutputs(std::string& line)
 {
     std::cout << "I got to Outputs!" << std::endl << line << std::endl;
+    std::vector<std::string> splitLine = stringSplit(line);
+    for( int i =0; i < splitLine.size(); i++ )
+    {
+        std::cout << splitLine[i] << std::endl;
+    }
+
+    buildVarVec(splitLine);
+
+    return;
 }
 
 void fileparser::constructWires(std::string& line)
 {
     std::cout << "I got to Wires!" << std::endl << line << std::endl;
+    std::vector<std::string> splitLine = stringSplit(line);
+    for( int i =0; i < splitLine.size(); i++ )
+    {
+        std::cout << splitLine[i] << std::endl;
+    }
+
+    buildVarVec(splitLine);
+
+    return;
 }
 
 void fileparser::constructRegisters(std::string& line)
 {
     std::cout << "I got to Registers!" << std::endl << line << std::endl;
+    std::vector<std::string> splitLine = stringSplit(line);
+    for( int i =0; i < splitLine.size(); i++ )
+    {
+        std::cout << splitLine[i] << std::endl;
+    }
+
+    buildVarVec(splitLine);
+
+    return;
 
     // The error line containing an invalid character currently goes here. 
     // Need to handle this:
     // d = a $ b
 }
 
-void fileparser::constructSHR(std::string& line)
+void fileparser::constructShift(std::string& line)
 {
     // Example line:
     // out = in1 >> in2
 
-    std::cout << "I got to SHR!" << std::endl << line << std::endl;
+    std::cout << "I got to Shift!" << std::endl << line << std::endl;
 
     std::vector<std::string> splitLine = stringSplit(line);
 
@@ -188,13 +218,29 @@ void fileparser::constructSHR(std::string& line)
     }
 
     // Instantiate variables
+    comp_type type;
     vector<variable> outputs;
     vector<variable> inputs;
     int varIdx = -1;
     std::string varName = "";
 
     // Set type
-    comp_type type = comp_type::SHR;
+    if( splitLine[3] == ">>" )
+    {
+        std::cout << "I got to SHR!" << std::endl;
+        type = comp_type::SHR;
+    }
+    else if( splitLine[3] == "<<" )
+    {
+        std::cout << "I got to SHL!" << std::endl;
+        type = comp_type::SHL;
+    }
+    else
+    {
+        std::cout << "ERROR: Shifter operator doesn't match SHR or SHL: " << line << std::endl;
+        error_ = true;
+        return;
+    }
 
     // Find output
     // Output is first token in splitLine
@@ -203,6 +249,7 @@ void fileparser::constructSHR(std::string& line)
     if( varIdx >= 0 )
     {
         outputs.push_back( variable( varVec_[varIdx] ) );
+        std::cout << "setting output: " << outputs[0].name_ << ", " << std::to_string(outputs[0].size_) << std::endl;
     }
     else
     {
@@ -249,11 +296,6 @@ void fileparser::constructSHR(std::string& line)
     bool didItWork = finalizeComponent(type, datawidth, inputs, outputs);
     
     return;
-}
-
-void fileparser::constructSHL(std::string& line)
-{
-    std::cout << "I got to SHL!" << std::endl << line << std::endl;
 }
 
 void fileparser::constructCOMP(std::string& line)
@@ -307,12 +349,59 @@ std::vector<std::string> fileparser::stringSplit(std::string line, std::string r
     return result;
 }
 
+void fileparser::buildVarVec(std::vector<std::string>& inputLine)
+{
+    bool isSigned = false;
+
+    //std::vector<variable> testvec;
+    std::string varSize;
+
+    //extract sign is part of 2nd element
+    if (inputLine[1].find("U") != std::string::npos)
+    {
+        isSigned = true;
+    }
+
+    //extract sign is part of 2nd element
+    int numIdx = inputLine[1].find_first_of("0123456789");
+    varSize = inputLine[1].substr(numIdx);
+
+    //IO always listed as 3rd to end elements
+    for( int i=2; i < inputLine.size(); i++)
+    {
+        varVec_.push_back( variable(inputLine[i], std::stoi(varSize), isSigned ));
+        std::cout << "varvec= " << inputLine[i] << ", " << varSize << ", " << isSigned << std::endl;
+        std::cout << "varvec= " << inputLine[i] << ", " << std::to_string(std::stoi(varSize)) << ", " << isSigned << std::endl;
+
+    }
+    return;
+}
+
 bool fileparser::finalizeComponent(comp_type type, comp_size datawidth, 
               vector<variable> in, vector<variable> out, int outputPos)
 {
+    std::cout << "got to finalize component" << std::endl;
+
     // Find what number component this should be
+    int compnum = compVec_.size();
+
+    std::cout << "got to finalize component" << std::endl;
+    std::cout << type << std::endl;
+    std::cout << datawidth << std::endl;
+    std::cout << compnum << std::endl;
+    //std::cout << outputPos << std::endl;
 
     // If output is a register and the component is not REG, call handleRegOutput
+
+    //TODO: Determine component type
+    //build and append component to compvec
+    //component temp(type, datawidth, in, out, compnum, outputPos);
+    component temp(type, datawidth, in, out, compnum);
+    compVec_.push_back(temp);
+
+    std::cout << "got to finalize component" << std::endl;
+
+    std::cout << "comp params: " << type << ", " << datawidth << std::endl;
 
     return true;
 }

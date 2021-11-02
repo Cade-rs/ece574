@@ -19,8 +19,7 @@ private:
     void constructOutputs(std::string& line);
     void constructWires(std::string& line);
     void constructRegisters(std::string& line);
-    void constructSHR(std::string& line);
-    void constructSHL(std::string& line);
+    void constructShift(std::string& line);
     void constructCOMP(std::string& line);
     void constructADDorINC(std::string& line);
     void constructSUBorDEC(std::string& line);
@@ -37,6 +36,7 @@ private:
               vector<variable> in, vector<variable> out, int outputPos=0);
     int findVariableIndex(std::string& varName);
     bool checkForSignedVariable(std::string& varName);
+    void buildVarVec(std::vector<std::string>& inputLine);
 
     // I don't know what needs to go into these yet
     void handleRegOutput(); 
