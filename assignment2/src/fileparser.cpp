@@ -997,7 +997,6 @@ bool fileparser::finalizeComponent(comp_type type, comp_size datawidth,
     std::cout << compnum << std::endl;
     //std::cout << outputPos << std::endl;
 
-    
 
     //build and append component to compvec
     //component temp(type, datawidth, in, out, compnum, outputPos);
