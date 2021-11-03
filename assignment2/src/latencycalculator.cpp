@@ -61,10 +61,12 @@ void latencycalculator::sumPathLatencies(std::vector<component> complist){
     }
 
     //Temporary cout for displaying all paths to provide confidence in calculation as we continue
+    /*
     for(int i=0; i<delays_.size(); i++)
     {
         std::cout << "Path" << i << ": " << std::to_string(delays_[i]) << std::endl;
     }
+    */
 }
 
 void latencycalculator::recursivesearch(std::vector<component> complist, int compnum, int branch){
