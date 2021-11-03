@@ -911,7 +911,7 @@ void fileparser::constructREG(std::string& line)
 
     if( splitLine.size() != 3)
     {
-        std::cout << "ERROR: Received different number of values than expected for REG: " << line << std::endl;
+        std::cout << "ERROR: Invalid line: " << line << std::endl;
         error_ = true;
         return;
     }
