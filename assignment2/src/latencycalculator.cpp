@@ -12,6 +12,8 @@ latencycalculator::latencycalculator(){
     criticalpath_ = 0.00;
     delays_.push_back( -1.0 );
 
+    //TODO: Update this to use the complist generated from circuit.txts
+
     //build the test component list
     //std::vector<component> complist {examplecomps1()};
     std::vector<component> complist {examplecomps4()};
@@ -22,7 +24,7 @@ latencycalculator::latencycalculator(){
     //determine and report critical path
     criticalpath_ = *max_element(delays_.begin(), delays_.end());
 
-    std::cout << "The critical path is " << std::to_string(criticalpath_) << std::endl;
+    std::cout << "Critical path : " << std::to_string(criticalpath_) << " ns" << std::endl;
 }
 
 
