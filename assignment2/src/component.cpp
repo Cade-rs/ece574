@@ -107,7 +107,6 @@ double component::findLatency(void)
     if (type_ >=comp_type::REG)
     {
         lat = latlist[type_][dw_];
-        std::cout << std::to_string(lat) << std::endl;   
     }
     else
     {

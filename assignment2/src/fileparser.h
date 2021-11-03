@@ -35,10 +35,7 @@ private:
               vector<variable> in, vector<variable> out, bool isSigned, int outputPos = 0);
     int findVariableIndex(std::string& varName);
     bool checkCompForSignedVariable(std::vector<variable>& varVec);
-    std::vector<variable> buildVarVec(std::vector<std::string>& inputLine);
-
-    // I don't know what needs to go into these yet
-    void handleRegOutput(); 
+    std::vector<variable> buildVarVec(std::vector<std::string>& inputLine, bool isReg=false);
 
     std::ifstream fin_;
     std::ofstream fout_;
