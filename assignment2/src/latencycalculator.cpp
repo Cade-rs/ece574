@@ -5,21 +5,21 @@
 #include <vector>
 
 #include "component.h"
+#include "fileparser.h"
 #include "latency.h"
 
-latencycalculator::latencycalculator(){
+latencycalculator::latencycalculator(std::vector<component>& compVec){
 
     criticalpath_ = 0.00;
     delays_.push_back( -1.0 );
 
-    //TODO: Update this to use the complist generated from circuit.txts
+    //Test benches for debugging purposes
+    //std::vector<component> compVec {examplecomps1()};
+    //std::vector<component> complist {examplecomps4()};
+    //sumPathLatencies(complist);
 
-    //build the test component list
-    //std::vector<component> complist {examplecomps1()};
-    std::vector<component> complist {examplecomps4()};
-
-    //Find 
-    sumPathLatencies(complist);
+    //Find latencies for each path
+    sumPathLatencies(compVec);
 
     //determine and report critical path
     criticalpath_ = *max_element(delays_.begin(), delays_.end());
@@ -34,15 +34,25 @@ The idea of the critical path calculation is to loop through each component, def
 void latencycalculator::sumPathLatencies(std::vector<component> complist){
 
     int branch = 0;
+    std::vector<component> redComplist;
 
-    //loop through each component
+    //reduce list to only component nodes (no I/O)
     for(int i=0; i < complist.size(); i++)
     {   
+        if( complist[i].type_ >= comp_type::REG)
+        {
+            redComplist.push_back( complist[i]);
+        }
+    }
 
-        recursivesearch(complist, i, branch);
+    //loop through each component
+    for(int i=0; i < redComplist.size(); i++)
+    {   
+
+        recursivesearch(redComplist, i, branch);
 
         //for each new component (unless finished), declare new branch. zero-based so set new branch to one less than size. Negative number was for debugging purposes
-        if( i < complist.size() -1 )
+        if( i < redComplist.size() -1 )
         {
             delays_.push_back( -1.0 );
             branch = delays_.size()-1;
@@ -142,7 +152,7 @@ std::vector<component> latencycalculator::examplecomps1(){
     in.push_back (variable("d", 8));
     in.push_back (variable("e", 8));
     out.push_back (variable("g", 16));
-    component temp3(comp_type::COMP,comp_size::SIXTEEN,in,out);
+    component temp3(comp_type::COMP,comp_size::EIGHT,in,out);
     complist.push_back(temp3);
 
     //z = g ? d : e
@@ -164,7 +174,7 @@ std::vector<component> latencycalculator::examplecomps1(){
 
     //xwire = f - d
     in.clear(); out.clear();
-    in.push_back (variable("f", 8));
+    in.push_back (variable("f", 16));
     in.push_back (variable("d", 8));
     out.push_back (variable("xwire", 16));
     component temp6(comp_type::SUB,comp_size::SIXTEEN,in,out);

@@ -28,14 +28,12 @@ int main(int argc, char *argv[])
     // then using the following command from the build folder:
     // ./pleaseWork.exe ../assignment_2_circuits/474a_circuit1.txt ../testfile.txt
     
-    // critical path calculations (and test component list)
-    //latencycalculator lc;
+    
 
     std::string infile  = argv[1];
     std::string outfile = argv[2];
     
     fileparser fp(infile, outfile);
-
 
     bool error = fp.run();
 
@@ -44,6 +42,9 @@ int main(int argc, char *argv[])
         std::cout << "Encountered error";
         return 1;
     }
+
+    // critical path calculations (and test component list)
+    latencycalculator lc(fp.compVec_);
 
     return 0;
 }
