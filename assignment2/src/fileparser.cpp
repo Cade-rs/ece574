@@ -940,7 +940,73 @@ void fileparser::constructMUX(std::string& line)
 }
 void fileparser::constructREG(std::string& line)
 {
+    // example line: out = in
+
     std::cout << "I got to REG!" << std::endl << line << std::endl;
+    // TODO me
+
+    
+    // Instantiate variables
+    comp_type type;
+    vector<variable> outputs;
+    vector<variable> inputs;
+    int varIdx = -1;
+    std::string varName = "";
+
+    std::vector<std::string> splitLine = stringSplit(line);
+
+    if( splitLine.size() != 3)
+    {
+        std::cout << "ERROR: Received different number of values than expected: " << line << std::endl;
+        error_ = true;
+        return;
+    }
+
+    
+    // Set type
+    type = comp_type::REG;
+
+    // Find output
+    // Output is first token in splitLine
+    varName = splitLine[0];
+    varIdx = findVariableIndex(varName);
+    if( varIdx >= 0 )
+    {
+        outputs.push_back( variable( varVec_[varIdx] ) );
+        std::cout << "setting output: " << outputs[0].name_ << ", " << std::to_string(outputs[0].size_) << std::endl;
+    }
+    else
+    {
+        std::cout << "ERROR: Output variable used but not defined: " << varName << std::endl;
+        std::cout << "    On line: " << line << std::endl;
+        error_ = true;
+        return;
+    }
+    
+    // Find input
+    // Input is 3rd token
+    varName = splitLine[2];
+    varIdx = findVariableIndex(varName);
+    if( varIdx >= 0 )
+    {
+        inputs.push_back( variable( varVec_[varIdx] ) );
+    }
+    else
+    {
+        std::cout << "ERROR: Input variable used but not defined: " << varName << std::endl;
+        std::cout << "    On line: " << line << std::endl;
+        error_ = true;
+        return;
+    }
+
+    // Determine size and sign
+    comp_size datawidth = outputs[0].size_;
+    bool isSigned = checkCompForSignedVariable(inputs);
+
+    // Call finalizeComponent to determine signed/unsigned, compNum, handle register creation
+    bool didItWork = finalizeComponent(type, datawidth, inputs, outputs, isSigned);
+    
+    return;
 }
 
 
@@ -991,13 +1057,6 @@ bool fileparser::finalizeComponent(comp_type type, comp_size datawidth,
     // Find what number component this should be
     int compnum = compVec_.size();
 
-    std::cout << "got to finalize component" << std::endl;
-    std::cout << type << std::endl;
-    std::cout << datawidth << std::endl;
-    std::cout << compnum << std::endl;
-    //std::cout << outputPos << std::endl;
-
-
     //build and append component to compvec
     //component temp(type, datawidth, in, out, compnum, outputPos);
     component temp(type, datawidth, in, out, isSigned, compnum, outputPos);
@@ -1007,10 +1066,6 @@ bool fileparser::finalizeComponent(comp_type type, comp_size datawidth,
     {
         temp.printComponent(fout_);
     }
-
-    std::cout << "got to finalize component" << std::endl;
-
-    std::cout << "comp params: " << type << ", " << datawidth << std::endl;
 
     return true;
 }
