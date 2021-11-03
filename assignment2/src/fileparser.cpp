@@ -175,7 +175,7 @@ void fileparser::constructInputs(std::string& line)
     comp_size dw = inputs[0].size_;
     isSigned = inputs[0].isSigned_;
 
-    bool didItWork = finalizeComponent(type, dw, inputs, outputs);
+    bool didItWork = finalizeComponent(type, dw, inputs, outputs, isSigned);
 
     return;
 }
@@ -205,7 +205,7 @@ void fileparser::constructOutputs(std::string& line)
     comp_size dw = outputs[0].size_;
     bool isSigned = outputs[0].isSigned_;
 
-    bool didItWork = finalizeComponent(type, dw, inputs, outputs);
+    bool didItWork = finalizeComponent(type, dw, inputs, outputs, isSigned);
     return;
 }
 
@@ -234,7 +234,7 @@ void fileparser::constructWires(std::string& line)
     comp_size dw = wires[0].size_;
     bool isSigned = wires[0].isSigned_;
 
-    bool didItWork = finalizeComponent(type, dw, wires, outputs);
+    bool didItWork = finalizeComponent(type, dw, wires, outputs, isSigned);
 
     return;
 }
@@ -264,7 +264,7 @@ void fileparser::constructRegisters(std::string& line)
     comp_size dw = registers[0].size_;
     bool isSigned = registers[0].isSigned_;
 
-    bool didItWork = finalizeComponent(type, dw, inputs, registers);
+    bool didItWork = finalizeComponent(type, dw, inputs, registers, isSigned);
     return;
 
     // The error line containing an invalid character currently goes here. 
@@ -361,11 +361,12 @@ void fileparser::constructShift(std::string& line)
         return;
     }
 
-    // Determine size
+    // Determine size and sign
     comp_size datawidth = outputs[0].size_;
+    bool isSigned = checkCompForSignedVariable(inputs);
 
     // Call finalizeComponent to determine signed/unsigned, compNum, handle register creation
-    bool didItWork = finalizeComponent(type, datawidth, inputs, outputs);
+    bool didItWork = finalizeComponent(type, datawidth, inputs, outputs, isSigned);
     
     return;
 }
@@ -405,6 +406,8 @@ void fileparser::constructCOMP(std::string& line)
     }
     else if( splitLine[3] == "<" )
     {
+        std::cout << "comp ==: " << splitLine[3] << std::endl;
+    
         outputPos = 1;
     }
     else // equal to
@@ -461,11 +464,12 @@ void fileparser::constructCOMP(std::string& line)
         return;
     }
 
-    // Determine size
+    // Determine size and sign
     comp_size datawidth = maxInputSize;
+    bool isSigned = checkCompForSignedVariable(inputs);
 
     // Call finalizeComponent to determine signed/unsigned, compNum, handle register creation
-    bool didItWork = finalizeComponent(type, datawidth, inputs, outputs);
+    bool didItWork = finalizeComponent(type, datawidth, inputs, outputs, isSigned, outputPos);
     
     return;
 }
@@ -582,11 +586,12 @@ void fileparser::constructADDorSUB(std::string& line)
         }
     }
 
-    // Determine size
+    // Determine size and sign
     comp_size datawidth = outputs[0].size_;
+    bool isSigned = checkCompForSignedVariable(inputs);
 
     // Call finalizeComponent to determine signed/unsigned, compNum, handle register creation
-    bool didItWork = finalizeComponent(type, datawidth, inputs, outputs);
+    bool didItWork = finalizeComponent(type, datawidth, inputs, outputs, isSigned);
     
     return;
 }
@@ -664,11 +669,12 @@ void fileparser::constructMUL(std::string& line)
         return;
     }
 
-    // Determine size
+    // Determine size and sign
     comp_size datawidth = outputs[0].size_;
+    bool isSigned = checkCompForSignedVariable(inputs);
 
     // Call finalizeComponent to determine signed/unsigned, compNum, handle register creation
-    bool didItWork = finalizeComponent(type, datawidth, inputs, outputs);
+    bool didItWork = finalizeComponent(type, datawidth, inputs, outputs, isSigned);
     
     return;
 }
@@ -746,9 +752,10 @@ void fileparser::constructDIV(std::string& line)
 
     // Determine size
     comp_size datawidth = outputs[0].size_;
+    bool isSigned = checkCompForSignedVariable(inputs);
 
     // Call finalizeComponent to determine signed/unsigned, compNum, handle register creation
-    bool didItWork = finalizeComponent(type, datawidth, inputs, outputs);
+    bool didItWork = finalizeComponent(type, datawidth, inputs, outputs, isSigned);
     
     return;
 }
@@ -824,11 +831,14 @@ void fileparser::constructMOD(std::string& line)
         return;
     }
 
-    // Determine size
+    // Determine size and sign
     comp_size datawidth = outputs[0].size_;
+    bool isSigned = checkCompForSignedVariable(inputs);
+
+//TODO issigned
 
     // Call finalizeComponent to determine signed/unsigned, compNum, handle register creation
-    bool didItWork = finalizeComponent(type, datawidth, inputs, outputs);
+    bool didItWork = finalizeComponent(type, datawidth, inputs, outputs, isSigned);
     
     return;
 }
@@ -919,11 +929,12 @@ void fileparser::constructMUX(std::string& line)
         return;
     }
 
-    // Determine size
+    // Determine size and sign
     comp_size datawidth = outputs[0].size_;
+    bool isSigned = checkCompForSignedVariable(inputs);
 
     // Call finalizeComponent to determine signed/unsigned, compNum, handle register creation
-    bool didItWork = finalizeComponent(type, datawidth, inputs, outputs);
+    bool didItWork = finalizeComponent(type, datawidth, inputs, outputs, isSigned);
     
     return;
 }
@@ -949,7 +960,7 @@ std::vector<variable> fileparser::buildVarVec(std::vector<std::string>& inputLin
     std::vector<variable> varVec;
 
     //extract sign from part of 2nd element
-    if (inputLine[1].find("U") != std::string::npos)
+    if (inputLine[1].find("U") == std::string::npos)
     {
         isSigned = true;
     }
@@ -968,9 +979,14 @@ std::vector<variable> fileparser::buildVarVec(std::vector<std::string>& inputLin
 }
 
 bool fileparser::finalizeComponent(comp_type type, comp_size datawidth, 
-              vector<variable> in, vector<variable> out, int outputPos)
+              vector<variable> in, vector<variable> out, bool isSigned, int outputPos)
 {
     std::cout << "got to finalize component" << std::endl;
+
+    //TODO: If output is a register and the component is not REG, call handleRegOutput
+    //TODO: Determine component type? I think this is done.
+    //TODO: Determine Comparator DW - nope, DONE
+    //TODO: Add outputPos for comparator
 
     // Find what number component this should be
     int compnum = compVec_.size();
@@ -981,14 +997,11 @@ bool fileparser::finalizeComponent(comp_type type, comp_size datawidth,
     std::cout << compnum << std::endl;
     //std::cout << outputPos << std::endl;
 
-    //TODO: If output is a register and the component is not REG, call handleRegOutput
-    //TODO: Determine component type? I think this is done.
-    //TODO: Determine Comparator DW - nope, DONE
-    //TODO: Add outputPos for comparator
+    
 
     //build and append component to compvec
     //component temp(type, datawidth, in, out, compnum, outputPos);
-    component temp(type, datawidth, in, out, compnum);
+    component temp(type, datawidth, in, out, isSigned, compnum, outputPos);
     compVec_.push_back(temp);
     
     if (DEBUG)
@@ -1019,9 +1032,26 @@ int fileparser::findVariableIndex(std::string& varName)
     return -1;
 }
 
-bool fileparser::checkForSignedVariable(std::string& varName)
+bool fileparser::checkCompForSignedVariable(std::vector<variable>& varVec)
 {
-    // Loop through existing variables
+    for( int i=0; i < varVec.size(); i++)
+    {
+        for( int j=0; j < varVec_.size(); j++)
+        {
+            if( varVec_[j] == varVec[i].name_ )
+            {
+                // Check if unsigned
+                if( !varVec_[j].isSigned_)
+                {
+                    return false;
+                }
+            }
+        }
+    }
+
+    //If no unsigned inputs, return signed
+    return true;
+    /*// Loop through existing variables
     for( int i=0; i< varVec_.size(); i++ )
     {
         // See if we found the variable
@@ -1041,6 +1071,7 @@ bool fileparser::checkForSignedVariable(std::string& varName)
     }
     // Shouldn't get here but there was a warning
     return false;
+    */
 }
 
 void handleRegOutput()
