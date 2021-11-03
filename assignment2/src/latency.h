@@ -19,7 +19,7 @@ enum comp_type{
     DIV,
     MOD,
     INC,
-    DEC
+    DEC,
 };
 
 enum comp_size{

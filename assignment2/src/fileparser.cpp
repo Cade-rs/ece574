@@ -63,13 +63,8 @@ void fileparser::parseLine(std::string& line)
     // Search keywords/chars and send to proper handler
     if( line.rfind("input", 0) == 0 )
     {
-<<<<<<< HEAD
-        //Handle inputs
-        return l_inputs;
-=======
         // Input
         constructInputs(line);
->>>>>>> 41d253e6b2f3460b0c83b3570232e55808298c35
     }
     else if( line.rfind("output", 0) == 0 )
     {
@@ -375,15 +370,13 @@ void handleRegOutput()
 
 void fileparser::writeFile()
 {
-    fout_.open(outfile);
+    fout_.open();
     fout_<<"'timescale 1ns / 1ps\n";
     //module declaration. C_num is circuit number
     std::string mod,c_num;
     mod = "\tmodule circuit";
-
-    mod.append(l_inputs);
-
-    fout_<<"    input ["+ "datawidth"+":0]"
+    
+    //fout_<<"    input ["+ "datawidth"+":0]";
     for (int i=0; i<compVec_.size(); i++)
     {
         fout_ << compVec_[i].writeLine();

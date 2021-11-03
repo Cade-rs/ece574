@@ -28,6 +28,10 @@ component::component(comp_type type, comp_size datawidth, vector<variable> in, v
     }
 
     lat_ = findLatency();
+    //Call the switch to member variables
+    sctype_ = comp2Str();
+    scdw_ = dw2Str();
+
 }
 
 // Copy constructor
@@ -116,10 +120,72 @@ double component::findLatency(void)
     return(lat);
 }
 
-std::string component::writeLine(const component& in_comp)
-{
-    std::string c_type = in_comp.type_;
-    std::string d_width= in_comp.dw_;
+std::string component::comp2Str(){
+    if(isSigned_==0){
+        switch(type_){
+            case 0: return "    reg "; 
+            case 1: return "    wire ";
+            case 2: return "    input ";
+            case 3: return "    output ";
+            case 4: return "    REG ";
+            case 5: return "    ADD ";
+            case 6: return "    SUB ";
+            case 7: return "    MUL ";
+            case 8: return "    COMP ";
+            case 9: return "    MUX ";
+            case 10: return "   SHR ";
+            case 11: return "   SHL ";
+            case 12: return "   DIV ";
+            case 13: return "   MOD ";
+            case 14: return "   INC ";
+            case 15: return "   DEC ";
+        }
+    }
+    else {
+        switch(type_){
+            case 0: return "    reg "; 
+            case 1: return "    wire ";
+            case 2: return "    input ";
+            case 3: return "    output ";
+            case 4: return "    REG ";
+            case 5: return "    SADD ";
+            case 6: return "    SSUB ";
+            case 7: return "    SMUL ";
+            case 8: return "    SCOMP ";
+            case 9: return "    SMUX ";
+            case 10: return "   SSHR ";
+            case 11: return "   SSHL ";
+            case 12: return "   SDIV ";
+            case 13: return "   SMOD ";
+            case 14: return "   SINC ";
+            case 15: return "   SDEC ";
+        }
+    }
+}
+
+std::string component::dw2Str(){
+    if (type_==0 | type_== 1 | type_==2 | type_==3){
+        switch(dw_){
+            case 0: return;
+            case 1: return "[1:0]";
+            case 2: return "[7:0]";
+            case 3: return "[15:0]";
+            case 4: return "[63:0]";
+        }
+    }   
+    else{
+        switch(dw_){
+            case 0: return "#(.DATAWIDTH(0))";
+            case 1: return "#(.DATAWIDTH(8))";
+            case 2: return "#(.DATAWIDTH(16))";
+            case 3: return "#(.DATAWIDTH(64))";
+        }
+    }
+}
+
+std::string component::writeLine(const component& in_comp){
+    std::string out = in_comp.comp2Str();
+    out.append();
 
     return( "THANKS FOR BREAKING THE CODE BRANDON");
 }

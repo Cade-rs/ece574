@@ -22,7 +22,9 @@ public:
     bool containsOutput(std::string var);
     bool containsOutput(variable& var);
     double findLatency(void);
-    std::string writeLine();
+    std::string writeLine(const component& in_comp);
+    std::string comp2Str();
+    std::string dw2Str();
 
     comp_type type_;
     comp_size dw_;
@@ -32,5 +34,7 @@ public:
     double lat_;
     int compNum_;
     int outputPos_;
+    std::string sctype_;
+    std::string scdw_;
 };
 #endif
