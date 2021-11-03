@@ -102,11 +102,6 @@ void fileparser::parseLine(std::string& line)
         // Add/Increment/Sub/Decrement
         constructADDorSUB(line);
     }
-    //else if( line.find("-") != std::string::npos )
-    //{
-    //    // Subtract/Decrement
-    //    constructSUBorDEC(line);
-    //}
     else if( line.find("*") != std::string::npos )
     {
         // Multiply
@@ -134,24 +129,43 @@ void fileparser::parseLine(std::string& line)
     }
     else if( line == "" )
     {
+        //Empty line
         std::cout << "I am empty!" << std::endl << line << std::endl;
     }
     else
     {
+        //TODO: use this as error reporting for invalid command characters
         std::cout << "I went nowhere!" << std::endl << line << std::endl;
     }
 }
 
 void fileparser::constructInputs(std::string& line)
 {
+    bool isSigned = false;
     std::cout << "I got to Inputs!" << std::endl << line << std::endl;
     std::vector<std::string> splitLine = stringSplit(line);
+    std::vector<variable> inputs;
+    std::vector<variable> outputs;
+
     for( int i =0; i < splitLine.size(); i++ )
     {
         std::cout << splitLine[i] << std::endl;
     }
 
-    buildVarVec(splitLine);
+    // update varVec_ with only inputs
+    inputs = buildVarVec(splitLine);
+
+    for( int i=0; i < inputs.size(); i++)
+    {
+        varVec_.push_back( inputs[i] );
+    }
+
+    //all inputs from one line should have same size
+    comp_type type = comp_type::Inputs;
+    comp_size dw = inputs[0].size_;
+    isSigned = inputs[0].isSigned_;
+
+    bool didItWork = finalizeComponent(type, dw, inputs, outputs);
 
     return;
 }
@@ -160,13 +174,28 @@ void fileparser::constructOutputs(std::string& line)
 {
     std::cout << "I got to Outputs!" << std::endl << line << std::endl;
     std::vector<std::string> splitLine = stringSplit(line);
+    std::vector<variable> inputs;
+    std::vector<variable> outputs;
+
     for( int i =0; i < splitLine.size(); i++ )
     {
         std::cout << splitLine[i] << std::endl;
     }
 
-    buildVarVec(splitLine);
+    // update varVec_ with only outputs
+    outputs = buildVarVec(splitLine);
 
+    for( int i=0; i < outputs.size(); i++)
+    {
+        varVec_.push_back( outputs[i] );
+    }
+
+    //all outputs from one line should have same size
+    comp_type type = comp_type::Outputs;
+    comp_size dw = outputs[0].size_;
+    bool isSigned = outputs[0].isSigned_;
+
+    bool didItWork = finalizeComponent(type, dw, inputs, outputs);
     return;
 }
 
@@ -174,12 +203,28 @@ void fileparser::constructWires(std::string& line)
 {
     std::cout << "I got to Wires!" << std::endl << line << std::endl;
     std::vector<std::string> splitLine = stringSplit(line);
+    std::vector<variable> wires;
+    std::vector<variable> outputs;
+
     for( int i =0; i < splitLine.size(); i++ )
     {
         std::cout << splitLine[i] << std::endl;
     }
 
-    buildVarVec(splitLine);
+    // update varVec_ with only wires
+    wires = buildVarVec(splitLine);
+
+    for( int i=0; i < wires.size(); i++)
+    {
+        varVec_.push_back( wires[i] );
+    }
+
+    //all wires from one line should have same size
+    comp_type type = comp_type::Wires;
+    comp_size dw = wires[0].size_;
+    bool isSigned = wires[0].isSigned_;
+
+    bool didItWork = finalizeComponent(type, dw, wires, outputs);
 
     return;
 }
@@ -188,13 +233,28 @@ void fileparser::constructRegisters(std::string& line)
 {
     std::cout << "I got to Registers!" << std::endl << line << std::endl;
     std::vector<std::string> splitLine = stringSplit(line);
+    std::vector<variable> inputs;
+    std::vector<variable> registers;
+
     for( int i =0; i < splitLine.size(); i++ )
     {
         std::cout << splitLine[i] << std::endl;
     }
 
-    buildVarVec(splitLine);
+    // update varVec_ with only registers
+    registers = buildVarVec(splitLine);
 
+    for( int i=0; i < registers.size(); i++)
+    {
+        varVec_.push_back( registers[i] );
+    }
+
+    //all registers from one line should have same size
+    comp_type type = comp_type::Registers;
+    comp_size dw = registers[0].size_;
+    bool isSigned = registers[0].isSigned_;
+
+    bool didItWork = finalizeComponent(type, dw, inputs, registers);
     return;
 
     // The error line containing an invalid character currently goes here. 
@@ -261,7 +321,7 @@ void fileparser::constructShift(std::string& line)
         return;
     }
     
-    // Find  inputs
+    // Find inputs
     //  Inputs are 3rd and 5th token
     varName = splitLine[2];
     varIdx = findVariableIndex(varName);
@@ -328,6 +388,7 @@ void fileparser::constructCOMP(std::string& line)
     type = comp_type::COMP;
     int outputPos;
 
+    //this could be handled here (write to component class) or by the file writing part
     if( splitLine[3] == ">" )
     {
         outputPos = 0;
@@ -339,7 +400,6 @@ void fileparser::constructCOMP(std::string& line)
     else // equal to
     {
         outputPos = 2;
-
     }
 
     // Find output
@@ -520,10 +580,7 @@ void fileparser::constructADDorSUB(std::string& line)
     
     return;
 }
-void fileparser::constructSUBorDEC(std::string& line)
-{
-    std::cout << "I got to SUBorDEC!" << std::endl << line << std::endl;
-}
+
 void fileparser::constructMUL(std::string& line)
 {
     std::cout << "I got to MUL!" << std::endl << line << std::endl;
@@ -875,12 +932,11 @@ std::vector<std::string> fileparser::stringSplit(std::string line, std::string r
     return result;
 }
 
-void fileparser::buildVarVec(std::vector<std::string>& inputLine)
+std::vector<variable> fileparser::buildVarVec(std::vector<std::string>& inputLine)
 {
     bool isSigned = false;
-
-    //std::vector<variable> testvec;
     std::string varSize;
+    std::vector<variable> varVec;
 
     //extract sign from part of 2nd element
     if (inputLine[1].find("U") != std::string::npos)
@@ -895,10 +951,10 @@ void fileparser::buildVarVec(std::vector<std::string>& inputLine)
     //IO always listed as 3rd to end elements
     for( int i=2; i < inputLine.size(); i++)
     {
-        varVec_.push_back( variable(inputLine[i], std::stoi(varSize), isSigned ));
+        varVec.push_back( variable(inputLine[i], std::stoi(varSize), isSigned ));
         std::cout << "varvec= " << inputLine[i] << ", " << varSize << ", " << isSigned << std::endl;
     }
-    return;
+    return varVec;
 }
 
 bool fileparser::finalizeComponent(comp_type type, comp_size datawidth, 
@@ -915,9 +971,11 @@ bool fileparser::finalizeComponent(comp_type type, comp_size datawidth,
     std::cout << compnum << std::endl;
     //std::cout << outputPos << std::endl;
 
-    // If output is a register and the component is not REG, call handleRegOutput
+    //TODO: If output is a register and the component is not REG, call handleRegOutput
+    //TODO: Determine component type? I think this is done.
+    //TODO: Determine Comparator DW - nope, DONE
+    //TODO: Add outputPos for comparator
 
-    //TODO: Determine component type
     //build and append component to compvec
     //component temp(type, datawidth, in, out, compnum, outputPos);
     component temp(type, datawidth, in, out, compnum);

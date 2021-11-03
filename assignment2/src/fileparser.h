@@ -22,7 +22,6 @@ private:
     void constructShift(std::string& line);
     void constructCOMP(std::string& line);
     void constructADDorSUB(std::string& line);
-    void constructSUBorDEC(std::string& line);
     void constructMUL(std::string& line);
     void constructDIV(std::string& line);
     void constructMOD(std::string& line);
@@ -36,7 +35,7 @@ private:
               vector<variable> in, vector<variable> out, int outputPos=0);
     int findVariableIndex(std::string& varName);
     bool checkForSignedVariable(std::string& varName);
-    void buildVarVec(std::vector<std::string>& inputLine);
+    std::vector<variable> buildVarVec(std::vector<std::string>& inputLine);
 
     // I don't know what needs to go into these yet
     void handleRegOutput(); 
