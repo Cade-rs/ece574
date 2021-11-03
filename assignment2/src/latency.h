@@ -64,4 +64,43 @@ inline comp_size int2size(int size)
     }
 }
 
+inline std::string size2str(comp_size size)
+{
+    switch( size )
+    {
+        case comp_size::ONE  : return "ONE";
+        case comp_size::TWO  : return "TWO";
+        case comp_size::EIGHT  : return "EIGHT";
+        case comp_size::SIXTEEN : return "SIXTEEN";
+        case comp_size::THIRTYTWO : return "THIRTYTWO";
+        case comp_size::SIXTYFOUR : return "SIXTYFOUR";
+        default : return "ONE";
+    }
+}
+
+
+inline std::string type2str(comp_type type)
+{
+    switch( type )
+    {
+        case comp_type::Registers  : return "Registers";
+        case comp_type::Wires  : return "Wires";
+        case comp_type::Inputs  : return "Inputs";
+        case comp_type::Outputs : return "Outputs";
+        case comp_type::REG : return "REG";
+        case comp_type::ADD : return "ADD";
+        case comp_type::SUB  : return "SUB";
+        case comp_type::MUL  : return "MUL";
+        case comp_type::COMP : return "COMP";
+        case comp_type::MUX : return "MUX";
+        case comp_type::SHR : return "SHR";
+        case comp_type::SHL  : return "SHL";
+        case comp_type::DIV  : return "DIV";
+        case comp_type::MOD : return "MOD";
+        case comp_type::INC : return "INC";
+        case comp_type::DEC : return "DEC";
+        default : return "UNKNOWN";
+    }
+}
+
 #endif

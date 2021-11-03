@@ -4,6 +4,7 @@
 #include <regex>
 #include <string>
 
+#define DEBUG 1
 
 fileparser::fileparser(std::string infile, std::string outfile)
 {
@@ -52,6 +53,13 @@ bool fileparser::run()
 
 void fileparser::parseLine(std::string& line)
 {
+    // Debug print line to file
+    if(DEBUG)
+    {
+        fout_ << "------------------------------------" << std::endl;
+        fout_ << "New line:" << std::endl << line << std::endl;
+    }
+    
     // Remove comments
     line = line.substr(0, line.find("//"));
 
@@ -61,6 +69,8 @@ void fileparser::parseLine(std::string& line)
 
     // Remove commas
     line.erase(std::remove(line.begin(), line.end(), ','), line.end());
+
+    
 
     // Search keywords/chars and send to proper handler
     if( line.rfind("input", 0) == 0 )
@@ -980,6 +990,11 @@ bool fileparser::finalizeComponent(comp_type type, comp_size datawidth,
     //component temp(type, datawidth, in, out, compnum, outputPos);
     component temp(type, datawidth, in, out, compnum);
     compVec_.push_back(temp);
+    
+    if (DEBUG)
+    {
+        temp.printComponent(fout_);
+    }
 
     std::cout << "got to finalize component" << std::endl;
 

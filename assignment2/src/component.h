@@ -2,6 +2,7 @@
 #define COMPONENT_H
 
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <vector>
 
@@ -23,6 +24,8 @@ public:
     bool containsOutput(variable& var);
     double findLatency(void);
     std::string writeLine();
+
+    void printComponent(std::ofstream& fout);
 
     comp_type type_;
     comp_size dw_;
