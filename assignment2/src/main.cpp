@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
 
     if (error)
     {
-        std::cout << "Encountered error";
+        std::cout << "Encountered error" << std:: endl;
         return 1;
     }
 
