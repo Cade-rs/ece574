@@ -2,6 +2,7 @@
 #define COMPONENT_H
 
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <vector>
 
@@ -25,6 +26,8 @@ public:
     std::string writeLine(const component& in_comp);
     std::string comp2Str();
     std::string dw2Str();
+
+    void printComponent(std::ofstream& fout);
 
     comp_type type_;
     comp_size dw_;

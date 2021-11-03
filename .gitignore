@@ -1,3 +1,4 @@
 *.vscode
 *.exe
 *assignment2/build/*
+*assignment2/output/*

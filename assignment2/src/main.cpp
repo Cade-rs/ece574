@@ -9,41 +9,33 @@
 #include "variable.h"
 #include "latencycalculator.h"
 
-int main2(void){
-    std::vector<variable> in, out;
-    in.push_back (variable("alpha", 1));
-    in.push_back (variable("bravo", 2));
-    out.push_back(variable("charlie", 8));
-    out.push_back(variable("delta", 32));
-    out.push_back(variable("echo", 64));
-
-    component comp1(comp_type::MUL,comp_size::TWO,in,out);
-
-    return 0;
-}
-
 int main(int argc, char *argv[])
 {
     // You can run this by changing the name from main2 to main
     // then using the following command from the build folder:
     // ./pleaseWork.exe ../assignment_2_circuits/474a_circuit1.txt ../testfile.txt
     
-    // critical path calculations (and test component list)
-    //latencycalculator lc;
+    if( (argc-1) != 2 ) // First input is exe name, handle that
+    {
+        std::cout << "ERROR: Expecting 2 inputs, received " << (argc-1) << ". Exiting..." << std::endl;
+        return 1;
+    }
 
     std::string infile  = argv[1];
     std::string outfile = argv[2];
     
     fileparser fp(infile, outfile);
 
-
     bool error = fp.run();
 
     if (error)
     {
-        std::cout << "Encountered error";
+        std::cout << "Encountered error" << std:: endl;
         return 1;
     }
+
+    // critical path calculations (and test component list)
+    latencycalculator lc(fp.compVec_);
 
     return 0;
 }
