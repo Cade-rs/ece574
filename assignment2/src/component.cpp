@@ -1,6 +1,7 @@
 #include "component.h"
 
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <vector>
 
@@ -119,4 +120,28 @@ double component::findLatency(void)
 std::string component::writeLine()
 {
     return( "THANKS FOR BREAKING THE CODE BRANDON");
+}
+
+void component::printComponent(std::ofstream& fout)
+{
+
+    fout << std::endl;
+    fout << "New Component" << std::endl;
+    fout << "Type:         " << type2str(type_) << std::endl;
+    fout << "Number:       " << compNum_ << std::endl;
+    fout << "OutputPos:    " << outputPos_ << std::endl;
+    fout << "Size:         " << size2str(dw_) << std::endl;
+    fout << "Signed:       " << isSigned_ << std::endl;
+    fout << "Latency:      " << lat_ << std::endl;
+    fout << "Inputs:" << std::endl;
+    for(int i=0; i<in_.size(); i++)
+    {
+        fout << "      " << in_[i].name_ << std::endl;
+    }
+    fout << "Outputs:" << std::endl;
+    for(int i=0; i<out_.size(); i++)
+    {
+        fout << "      " << out_[i].name_ << std::endl;
+    }
+    fout << std::endl ;
 }
