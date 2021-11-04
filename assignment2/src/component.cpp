@@ -147,7 +147,7 @@ std::string component::comp2Str(){
             case comp_type::Wires: return "    wire ";
             case comp_type::Inputs: return "    input ";
             case comp_type::Outputs: return "    output ";
-            case comp_type::REG: return "    REG ";
+            case comp_type::REG: return "    SREG ";
             case comp_type::ADD: return "    SADD ";
             case comp_type::SUB: return "    SSUB ";
             case comp_type::MUL: return "    SMUL ";
@@ -175,25 +175,47 @@ std::string component::dw2Str(){
     }   
     else{
         switch(dw_){
-            case comp_size:: ONE: return "#(.DATAWIDTH(0))";
-            case comp_size:: TWO: return "#(.DATAWIDTH(8))";
-            case comp_size:: SIXTEEN: return "#(.DATAWIDTH(16))";
-            case comp_size:: SIXTYFOUR: return "#(.DATAWIDTH(64))";
+            case comp_size:: ONE: return "#(.DATAWIDTH(0)) ";
+            case comp_size:: TWO: return "#(.DATAWIDTH(2)) ";
+            case comp_size:: EIGHT: return "#(.DATAWIDTH(8)) ";
+            case comp_size:: SIXTEEN: return "#(.DATAWIDTH(16)) ";
+            case comp_size:: SIXTYFOUR: return "#(.DATAWIDTH(64)) ";
         }
     }
 }
 
 std::string component::writeLine(){
+
     std::string out = comp2Str();
-    out = out.append(dw2Str());
-    for(int i=0;i<in_.size(); i++){
-        if(type_ != Registers|type_!=Wires|type_!=Inputs|type_!=Outputs){
-            out = out.append(type2str(type_));
+    std::string opn = "(";
+    std::string cls = ");";
+    std::string com = ",";
 
+    out.append(dw2Str());
+    if(type_ != Registers|type_!=Wires|type_!=Inputs|type_!=Outputs){
+        out.append(comp2Str());
+        out.append(dw2Str());
+        std::string compNumS = to_string(compNum_);
+        out.append(type2str(type_)+compNumS);
+        out.append(opn);
+        vector <std::string> clineVec;
+        clineVec.push_back(out_[0].name_);
+        clineVec.push_back(com);
+        for(int i=0;i < in_.size(); i++){
+            clineVec.push_back(in_[i].name_);
         }
-        
+        clineVec.push_back(cls);
+        while (!clineVec.empty()){
+            std::string more;
+            clineVec[clineVec.size()-1];
+            out.append(more);
+            clineVec.pop_back();
+        }    
     }
-
+    else{
+        out = out.append(comp2Str());
+        out = out.append(dw2Str());
+    }
     return( "THANKS FOR BREAKING THE CODE BRANDON");
 }
 

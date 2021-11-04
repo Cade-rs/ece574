@@ -63,6 +63,8 @@ bool fileparser::run()
     }
 
     return error_;
+    fin_.close();
+    fout_.close();
 }
 
 void fileparser::parseLine(std::string& line)
@@ -1125,7 +1127,7 @@ void fileparser::writeFile()
     fout_<<"'timescale 1ns / 1ps\n";
     std::string ofile,mod;
     //need to include the outfile name in the writefile function for module name
-    ofile = "testcircuit5.v";
+    ofile = "testcircuit5.txt";
     //Cutting off the file type to grab the name
     ofile = ofile.substr(0,ofile.size()-2);
     //Writing the first line 
@@ -1146,7 +1148,7 @@ void fileparser::writeFile()
         if (compVec_[i].comp2Str()=="output"){
             for(int j=0; j<compVec_[i].out_.size(); j++){
                 if (*find(modVec.begin(),modVec.end(),compVec_[i].out_[j].name_)!=compVec_[i].out_[j].name_){
-                    modVec.push_back(compVec_[i].in_[j].name_);
+                    modVec.push_back(compVec_[i].out_[j].name_);
                 }
             }
         }
@@ -1167,7 +1169,7 @@ void fileparser::writeFile()
         mod = mod.append(more);
         modVec.pop_back();
     }    
-    fout_<< mod+cls;
+    cout<< mod+cls;
     //fout_<<"    input ["+ "datawidth"+":0]";
     for (int i=0; i<compVec_.size(); i++)
     {
