@@ -120,69 +120,79 @@ double component::findLatency(void)
     return(lat);
 }
 
-std::string component::comp2Str(){
-    if(isSigned_==0){
-        switch(type_){
-            case comp_type::Registers: return "    reg "; 
-            case comp_type::Wires: return "    wire ";
-            case comp_type::Inputs: return "    input ";
-            case comp_type::Outputs: return "    output ";
-            case comp_type::REG: return "    REG ";
-            case comp_type::ADD: return "    ADD ";
-            case comp_type::SUB: return "    SUB ";
-            case comp_type::MUL: return "    MUL ";
-            case comp_type::COMP: return "    COMP ";
-            case comp_type::MUX: return "    MUX ";
-            case comp_type::SHR: return "    SHR ";
-            case comp_type::SHL: return "    SHL ";
-            case comp_type::DIV: return "    DIV ";
-            case comp_type::MOD: return "    MOD ";
-            case comp_type::INC: return "    INC ";
-            case comp_type::DEC: return "    DEC ";
+std::string component::comp2Str()
+{
+    if( !isSigned_ )
+    {
+        switch(type_)
+        {
+            case comp_type::Registers:  return "    reg "; 
+            case comp_type::Wires:      return "    wire ";
+            case comp_type::Inputs:     return "    input ";
+            case comp_type::Outputs:    return "    output ";
+            case comp_type::REG:        return "    REG ";
+            case comp_type::ADD:        return "    ADD ";
+            case comp_type::SUB:        return "    SUB ";
+            case comp_type::MUL:        return "    MUL ";
+            case comp_type::COMP:       return "    COMP ";
+            case comp_type::MUX:        return "    MUX ";
+            case comp_type::SHR:        return "    SHR ";
+            case comp_type::SHL:        return "    SHL ";
+            case comp_type::DIV:        return "    DIV ";
+            case comp_type::MOD:        return "    MOD ";
+            case comp_type::INC:        return "    INC ";
+            case comp_type::DEC:        return "    DEC ";
             default: return "";
         }
     }
-    else {
-        switch(type_){
-            case comp_type::Registers: return "    reg "; 
-            case comp_type::Wires: return "    wire ";
-            case comp_type::Inputs: return "    input ";
-            case comp_type::Outputs: return "    output ";
-            case comp_type::REG: return "    SREG ";
-            case comp_type::ADD: return "    SADD ";
-            case comp_type::SUB: return "    SSUB ";
-            case comp_type::MUL: return "    SMUL ";
-            case comp_type::COMP: return "    SCOMP ";
-            case comp_type::MUX: return "    SMUX ";
-            case comp_type::SHR: return "    SSHR ";
-            case comp_type::SHL: return "    SSHL ";
-            case comp_type::DIV: return "    SDIV ";
-            case comp_type::MOD: return "    SMOD ";
-            case comp_type::INC: return "    SINC ";
-            case comp_type::DEC: return "    SDEC ";
+    else
+    {
+        switch(type_)
+        {
+            case comp_type::Registers:  return "    reg "; 
+            case comp_type::Wires:      return "    wire ";
+            case comp_type::Inputs:     return "    input ";
+            case comp_type::Outputs:    return "    output ";
+            case comp_type::REG:        return "    SREG ";
+            case comp_type::ADD:        return "    SADD ";
+            case comp_type::SUB:        return "    SSUB ";
+            case comp_type::MUL:        return "    SMUL ";
+            case comp_type::COMP:       return "    SCOMP ";
+            case comp_type::MUX:        return "    SMUX ";
+            case comp_type::SHR:        return "    SSHR ";
+            case comp_type::SHL:        return "    SSHL ";
+            case comp_type::DIV:        return "    SDIV ";
+            case comp_type::MOD:        return "    SMOD ";
+            case comp_type::INC:        return "    SINC ";
+            case comp_type::DEC:        return "    SDEC ";
             default: return "";
         }
     }
     return "";
 }
 
-std::string component::dw2Str(){
-    if (type_==Registers | type_== Wires | type_== Inputs | type_== Outputs){
-        switch(dw_){
-            case comp_size:: ONE: return"";
-            case comp_size:: TWO: return "[1:0]";
-            case comp_size:: EIGHT: return "[7:0]";
-            case comp_size:: SIXTEEN: return "[15:0]";
+std::string component::dw2Str()
+{
+    if (type_ < comp_type::REG) // Is input, output, wire, or register
+    {
+        switch(dw_)
+        {
+            case comp_size:: ONE:       return"";
+            case comp_size:: TWO:       return "[1:0]";
+            case comp_size:: EIGHT:     return "[7:0]";
+            case comp_size:: SIXTEEN:   return "[15:0]";
             case comp_size:: SIXTYFOUR: return "[63:0]";
             default: return "";
         }
     }   
-    else{
-        switch(dw_){
-            case comp_size:: ONE: return "#(.DATAWIDTH(0)) ";
-            case comp_size:: TWO: return "#(.DATAWIDTH(2)) ";
-            case comp_size:: EIGHT: return "#(.DATAWIDTH(8)) ";
-            case comp_size:: SIXTEEN: return "#(.DATAWIDTH(16)) ";
+    else
+    {
+        switch(dw_)
+        {
+            case comp_size:: ONE:       return "#(.DATAWIDTH(0)) ";
+            case comp_size:: TWO:       return "#(.DATAWIDTH(2)) ";
+            case comp_size:: EIGHT:     return "#(.DATAWIDTH(8)) ";
+            case comp_size:: SIXTEEN:   return "#(.DATAWIDTH(16)) ";
             case comp_size:: SIXTYFOUR: return "#(.DATAWIDTH(64)) ";
             default: return "";
         }
@@ -190,7 +200,8 @@ std::string component::dw2Str(){
     return "";
 }
 
-std::string component::writeLine(){
+std::string component::writeLine()
+{
 
     std::string out = comp2Str();
     std::string opn = "(";
@@ -198,9 +209,10 @@ std::string component::writeLine(){
     std::string com = ",";
 
     out.append(dw2Str());
-    if(type_ != Registers|type_!=Wires|type_!=Inputs|type_!=Outputs)
+    if( type_ >= comp_type::REG ) // Real component
     {
-        out.append(comp2Str());
+        // Actual component time
+        //out.append(comp2Str());
         out.append(dw2Str());
         std::string compNumS = to_string(compNum_);
         out.append(type2str(type_)+compNumS);
@@ -223,6 +235,7 @@ std::string component::writeLine(){
     }
     else
     {
+        // Input, Output, Wire, Register
         out.append(comp2Str());
         out.append(dw2Str());
     }
