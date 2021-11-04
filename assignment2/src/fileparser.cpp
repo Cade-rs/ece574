@@ -1121,13 +1121,13 @@ bool fileparser::checkCompForSignedVariable(std::vector<variable>& varVec)
 void fileparser::writeFile()
 {
 
-    fout_.open();
+    //fout_.open();
     fout_<<"'timescale 1ns / 1ps\n";
     std::string ofile,mod;
     //need to include the outfile name in the writefile function for module name
-    ofile = outfile;
+    ofile = "testcircuit5.v";
     //Cutting off the file type to grab the name
-    ofile = ofile.substr(0,ofile.size()-4);
+    ofile = ofile.substr(0,ofile.size()-2);
     //Writing the first line 
     mod = "\nmodule ";
     std::string opn = "("; //open parentheses

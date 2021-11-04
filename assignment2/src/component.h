@@ -23,7 +23,7 @@ public:
     bool containsOutput(std::string var);
     bool containsOutput(variable& var);
     double findLatency(void);
-    std::string writeLine(const component& in_comp);
+    std::string writeLine();
     std::string comp2Str();
     std::string dw2Str();
 

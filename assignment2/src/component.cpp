@@ -168,7 +168,7 @@ std::string component::dw2Str(){
         switch(dw_){
             case comp_size:: ONE: return"";
             case comp_size:: TWO: return "[1:0]";
-            case comp_size:: EIGHT: return:: "[7:0]";
+            case comp_size:: EIGHT: return "[7:0]";
             case comp_size:: SIXTEEN: return "[15:0]";
             case comp_size:: SIXTYFOUR: return "[63:0]";
         }
@@ -178,12 +178,12 @@ std::string component::dw2Str(){
             case comp_size:: ONE: return "#(.DATAWIDTH(0))";
             case comp_size:: TWO: return "#(.DATAWIDTH(8))";
             case comp_size:: SIXTEEN: return "#(.DATAWIDTH(16))";
-            case 3: return "#(.DATAWIDTH(64))";
+            case comp_size:: SIXTYFOUR: return "#(.DATAWIDTH(64))";
         }
     }
 }
 
-std::string component::writeLine(const component& in_comp){
+std::string component::writeLine(){
     std::string out = comp2Str();
     out = out.append(dw2Str());
     for(int i=0;i<in_.size(); i++){
