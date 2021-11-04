@@ -1120,12 +1120,54 @@ bool fileparser::checkCompForSignedVariable(std::vector<variable>& varVec)
 
 void fileparser::writeFile()
 {
+
     fout_.open();
     fout_<<"'timescale 1ns / 1ps\n";
-    //module declaration. C_num is circuit number
-    std::string mod,c_num;
-    mod = "\tmodule circuit";
-    
+    std::string ofile,mod;
+    //need to include the outfile name in the writefile function for module name
+    ofile = outfile;
+    //Cutting off the file type to grab the name
+    ofile = ofile.substr(0,ofile.size()-4);
+    //Writing the first line 
+    mod = "\nmodule ";
+    std::string opn = "("; //open parentheses
+    std::string cls = ");";//close parentheses
+    mod = mod.append(ofile);
+    mod = mod.append(opn);  
+    vector <std::string> modVec; //module variable vector
+    for (int i=0; i<compVec_.size();i++){
+        if (compVec_[i].comp2Str() == "input"){
+            for(int j=0; j<compVec_[i].in_.size(); j++){
+                if (*find(modVec.begin(),modVec.end(),compVec_[i].in_[j].name_)!=compVec_[i].in_[j].name_){
+                    modVec.push_back(compVec_[i].in_[j].name_);
+                }
+            }
+        }
+        if (compVec_[i].comp2Str()=="output"){
+            for(int j=0; j<compVec_[i].out_.size(); j++){
+                if (*find(modVec.begin(),modVec.end(),compVec_[i].out_[j].name_)!=compVec_[i].out_[j].name_){
+                    modVec.push_back(compVec_[i].in_[j].name_);
+                }
+            }
+        }
+        if(compVec_[i].comp2Str()== "reg"|compVec_[i].comp2Str()=="REG");
+            if (*find(modVec.begin(),modVec.end(),"Clk")!="Clk"){
+                modVec.push_back("Clk");
+            }
+            if (*find(modVec.begin(),modVec.end(),"Rst")!="Rst"){
+                modVec.push_back("Rst");
+            }
+    }
+    //Re-Order Module Vector in reverse to pop in correct order
+    reverse(modVec.begin(),modVec.end());
+    //Append the Variables to the Module line
+    while (!modVec.empty()){
+        std::string more;
+        more = modVec[modVec.size()-1];
+        mod = mod.append(more);
+        modVec.pop_back();
+    }    
+    fout_<< mod+cls;
     //fout_<<"    input ["+ "datawidth"+":0]";
     for (int i=0; i<compVec_.size(); i++)
     {
