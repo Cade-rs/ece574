@@ -24,6 +24,8 @@ public:
     bool containsOutput(variable& var);
     double findLatency(void);
     std::string writeLine();
+    std::string comp2Str();
+    std::string dw2Str();
 
     void printComponent(std::ofstream& fout);
 
@@ -35,5 +37,7 @@ public:
     double lat_;
     int compNum_;
     int outputPos_;
+    std::string sctype_;
+    std::string scdw_;
 };
 #endif
