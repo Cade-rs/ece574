@@ -62,9 +62,10 @@ bool fileparser::run()
         writeFile();
     }
 
-    return error_;
     fin_.close();
     fout_.close();
+
+    return error_;
 }
 
 void fileparser::parseLine(std::string& line)
@@ -1137,28 +1138,37 @@ void fileparser::writeFile()
     mod = mod.append(ofile);
     mod = mod.append(opn);  
     vector <std::string> modVec; //module variable vector
-    for (int i=0; i<compVec_.size();i++){
-        if (compVec_[i].comp2Str() == "input"){
-            for(int j=0; j<compVec_[i].in_.size(); j++){
-                if (*find(modVec.begin(),modVec.end(),compVec_[i].in_[j].name_)!=compVec_[i].in_[j].name_){
+    for (int i=0; i<compVec_.size();i++)
+    {
+        if (compVec_[i].comp2Str() == "input")
+        {
+            for(int j=0; j<compVec_[i].in_.size(); j++)
+            {
+                if ( *find(modVec.begin(),modVec.end(),compVec_[i].in_[j].name_) != compVec_[i].in_[j].name_)
+                {
                     modVec.push_back(compVec_[i].in_[j].name_);
                 }
             }
         }
-        if (compVec_[i].comp2Str()=="output"){
-            for(int j=0; j<compVec_[i].out_.size(); j++){
-                if (*find(modVec.begin(),modVec.end(),compVec_[i].out_[j].name_)!=compVec_[i].out_[j].name_){
+        if (compVec_[i].comp2Str()=="output")
+        {
+            for(int j=0; j<compVec_[i].out_.size(); j++)
+            {
+                if (*find(modVec.begin(),modVec.end(),compVec_[i].out_[j].name_)!=compVec_[i].out_[j].name_)
+                {
                     modVec.push_back(compVec_[i].out_[j].name_);
                 }
             }
         }
-        if(compVec_[i].comp2Str()== "reg"|compVec_[i].comp2Str()=="REG");
+        if(compVec_[i].comp2Str()== "reg"|compVec_[i].comp2Str()=="REG")
+        {
             if (*find(modVec.begin(),modVec.end(),"Clk")!="Clk"){
                 modVec.push_back("Clk");
             }
             if (*find(modVec.begin(),modVec.end(),"Rst")!="Rst"){
                 modVec.push_back("Rst");
             }
+        }
     }
     //Re-Order Module Vector in reverse to pop in correct order
     reverse(modVec.begin(),modVec.end());
@@ -1169,10 +1179,11 @@ void fileparser::writeFile()
         mod = mod.append(more);
         modVec.pop_back();
     }    
-    cout<< mod+cls;
+    //cout<< mod+cls;
     //fout_<<"    input ["+ "datawidth"+":0]";
     for (int i=0; i<compVec_.size(); i++)
     {
+        std::cout << "Segfault incoming" << std:: endl;
         fout_ << compVec_[i].writeLine();
     }
     fout_<<"endmodule";
