@@ -198,7 +198,8 @@ std::string component::writeLine(){
     std::string com = ",";
 
     out.append(dw2Str());
-    if(type_ != Registers|type_!=Wires|type_!=Inputs|type_!=Outputs){
+    if(type_ != Registers|type_!=Wires|type_!=Inputs|type_!=Outputs)
+    {
         out.append(comp2Str());
         out.append(dw2Str());
         std::string compNumS = to_string(compNum_);
@@ -207,22 +208,25 @@ std::string component::writeLine(){
         vector <std::string> clineVec;
         clineVec.push_back(out_[0].name_);
         clineVec.push_back(com);
-        for(int i=0;i < in_.size(); i++){
+        for(int i=0;i < in_.size(); i++)
+        {
             clineVec.push_back(in_[i].name_);
         }
         clineVec.push_back(cls);
-        while (!clineVec.empty()){
+        while (!clineVec.empty())
+        {
             std::string more;
             clineVec[clineVec.size()-1];
             out.append(more);
             clineVec.pop_back();
-        }    
+        }
     }
-    else{
-        out = out.append(comp2Str());
-        out = out.append(dw2Str());
+    else
+    {
+        out.append(comp2Str());
+        out.append(dw2Str());
     }
-    return( "THANKS FOR BREAKING THE CODE BRANDON");
+    return out;
 }
 
 void component::printComponent(std::ofstream& fout)
