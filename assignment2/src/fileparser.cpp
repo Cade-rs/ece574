@@ -1138,21 +1138,26 @@ void fileparser::writeFile()
     mod = mod.append(ofile);
     mod = mod.append(opn);  
     vector <std::string> modVec; //module variable vector
+    std::cout << "Segfault incoming" << std:: endl;
     for (int i=0; i<compVec_.size();i++)
     {
         if ( compVec_[i].type_ == comp_type::Inputs )
         {
+            std::cout << "1" << std:: endl;
             for(int j=0; j<compVec_[i].in_.size(); j++)
             {
+                std::cout << "Why" << std:: endl;
                 if ( *find(modVec.begin(),modVec.end(),compVec_[i].in_[j].name_) 
                         != compVec_[i].in_[j].name_)
                 {
+                    std::cout << "ME" << std:: endl;
                     modVec.push_back(compVec_[i].in_[j].name_);
                 }
             }
         }
-        if ( compVec_[i].type_ == comp_type::Outputs )
+        else if ( compVec_[i].type_ == comp_type::Outputs )
         {
+            std::cout << "2" << std:: endl;
             for(int j=0; j<compVec_[i].out_.size(); j++)
             {
                 if (*find(modVec.begin(),modVec.end(),compVec_[i].out_[j].name_) 
@@ -1162,8 +1167,9 @@ void fileparser::writeFile()
                 }
             }
         }
-        if( compVec_[i].type_ == comp_type::Registers || compVec_[i].type_ == comp_type::REG )
+        else if( compVec_[i].type_ == comp_type::Registers || compVec_[i].type_ == comp_type::REG )
         {
+            std::cout << "3" << std:: endl;
             if (*find(modVec.begin(),modVec.end(),"Clk")!="Clk")
             {
                 modVec.push_back("Clk");
@@ -1188,7 +1194,6 @@ void fileparser::writeFile()
     //fout_<<"    input ["+ "datawidth"+":0]";
     for (int i=0; i<compVec_.size(); i++)
     {
-        std::cout << "Segfault incoming" << std:: endl;
         fout_ << compVec_[i].writeLine();
     }
     fout_<<"endmodule";
