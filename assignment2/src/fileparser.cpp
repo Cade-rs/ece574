@@ -1140,32 +1140,36 @@ void fileparser::writeFile()
     vector <std::string> modVec; //module variable vector
     for (int i=0; i<compVec_.size();i++)
     {
-        if (compVec_[i].comp2Str() == "input")
+        if ( compVec_[i].type_ == comp_type::Inputs )
         {
             for(int j=0; j<compVec_[i].in_.size(); j++)
             {
-                if ( *find(modVec.begin(),modVec.end(),compVec_[i].in_[j].name_) != compVec_[i].in_[j].name_)
+                if ( *find(modVec.begin(),modVec.end(),compVec_[i].in_[j].name_) 
+                        != compVec_[i].in_[j].name_)
                 {
                     modVec.push_back(compVec_[i].in_[j].name_);
                 }
             }
         }
-        if (compVec_[i].comp2Str()=="output")
+        if ( compVec_[i].type_ == comp_type::Outputs )
         {
             for(int j=0; j<compVec_[i].out_.size(); j++)
             {
-                if (*find(modVec.begin(),modVec.end(),compVec_[i].out_[j].name_)!=compVec_[i].out_[j].name_)
+                if (*find(modVec.begin(),modVec.end(),compVec_[i].out_[j].name_) 
+                        != compVec_[i].out_[j].name_)
                 {
                     modVec.push_back(compVec_[i].out_[j].name_);
                 }
             }
         }
-        if(compVec_[i].comp2Str()== "reg"|compVec_[i].comp2Str()=="REG")
+        if( compVec_[i].type_ == comp_type::Registers || compVec_[i].type_ == comp_type::REG )
         {
-            if (*find(modVec.begin(),modVec.end(),"Clk")!="Clk"){
+            if (*find(modVec.begin(),modVec.end(),"Clk")!="Clk")
+            {
                 modVec.push_back("Clk");
             }
-            if (*find(modVec.begin(),modVec.end(),"Rst")!="Rst"){
+            if (*find(modVec.begin(),modVec.end(),"Rst")!="Rst")
+            {
                 modVec.push_back("Rst");
             }
         }
@@ -1173,12 +1177,13 @@ void fileparser::writeFile()
     //Re-Order Module Vector in reverse to pop in correct order
     reverse(modVec.begin(),modVec.end());
     //Append the Variables to the Module line
-    while (!modVec.empty()){
+    while (!modVec.empty())
+    {
         std::string more;
         more = modVec[modVec.size()-1];
         mod = mod.append(more);
         modVec.pop_back();
-    }    
+    }
     //cout<< mod+cls;
     //fout_<<"    input ["+ "datawidth"+":0]";
     for (int i=0; i<compVec_.size(); i++)
