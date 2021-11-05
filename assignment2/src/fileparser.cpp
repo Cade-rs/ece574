@@ -1141,22 +1141,26 @@ void fileparser::writeFile()
     std::string nL="\n";
     mod.append(ofile);
     mod.append(opn);
+
     for(int i=0;i<compVec_.size();i++){
-        if(compVec_[i].type_>comp_type::REG){
-            for(int j=0;j<compVec_[i].in_.size();j++){
+        if(compVec_[i].type_==comp_type::Inputs||compVec_[i].type_==comp_type::Outputs){
+            for(int j=0;j<compVec_[i].in_.size();j++){              
+                
                 mod.append(compVec_[i].in_[j].name_);
                 mod.append(com);
             }
             for(int j=0;j<compVec_[i].out_.size();j++){
+
                 mod.append(compVec_[i].out_[j].name_);
                 mod.append(com);
+                
             }           
         }
     }
-    mod = mod.substr(0,mod.size()-1);
+    mod.append(clk+com+rst);
+    //mod = mod.substr(0,mod.size());
     mod.append(cls);
-    fout_<<nL+mod;  
-    vector <std::string> modVec; //module variable vector    
+    fout_<<nL+mod;
     for (int i=0; i<compVec_.size(); i++)
     {
         std::string ugh=nL+compVec_[i].writeLine();
