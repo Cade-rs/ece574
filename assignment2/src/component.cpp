@@ -126,22 +126,22 @@ std::string component::comp2Str()
     {
         switch(type_)
         {
-            case comp_type::Registers:  return "    reg "; 
-            case comp_type::Wires:      return "    wire ";
-            case comp_type::Inputs:     return "    input ";
-            case comp_type::Outputs:    return "    output ";
-            case comp_type::REG:        return "    REG ";
-            case comp_type::ADD:        return "    ADD ";
-            case comp_type::SUB:        return "    SUB ";
-            case comp_type::MUL:        return "    MUL ";
-            case comp_type::COMP:       return "    COMP ";
-            case comp_type::MUX:        return "    MUX ";
-            case comp_type::SHR:        return "    SHR ";
-            case comp_type::SHL:        return "    SHL ";
-            case comp_type::DIV:        return "    DIV ";
-            case comp_type::MOD:        return "    MOD ";
-            case comp_type::INC:        return "    INC ";
-            case comp_type::DEC:        return "    DEC ";
+            case comp_type::Registers:  return "reg"; 
+            case comp_type::Wires:      return "wire";
+            case comp_type::Inputs:     return "input";
+            case comp_type::Outputs:    return "output";
+            case comp_type::REG:        return "REG";
+            case comp_type::ADD:        return "ADD";
+            case comp_type::SUB:        return "SUB";
+            case comp_type::MUL:        return "MUL";
+            case comp_type::COMP:       return "COMP";
+            case comp_type::MUX:        return "MUX";
+            case comp_type::SHR:        return "SHR";
+            case comp_type::SHL:        return "SHL";
+            case comp_type::DIV:        return "DIV";
+            case comp_type::MOD:        return "MOD";
+            case comp_type::INC:        return "INC";
+            case comp_type::DEC:        return "DEC";
             default: return "";
         }
     }
@@ -149,22 +149,22 @@ std::string component::comp2Str()
     {
         switch(type_)
         {
-            case comp_type::Registers:  return "    reg "; 
-            case comp_type::Wires:      return "    wire ";
-            case comp_type::Inputs:     return "    input ";
-            case comp_type::Outputs:    return "    output ";
-            case comp_type::REG:        return "    SREG ";
-            case comp_type::ADD:        return "    SADD ";
-            case comp_type::SUB:        return "    SSUB ";
-            case comp_type::MUL:        return "    SMUL ";
-            case comp_type::COMP:       return "    SCOMP ";
-            case comp_type::MUX:        return "    SMUX ";
-            case comp_type::SHR:        return "    SSHR ";
-            case comp_type::SHL:        return "    SSHL ";
-            case comp_type::DIV:        return "    SDIV ";
-            case comp_type::MOD:        return "    SMOD ";
-            case comp_type::INC:        return "    SINC ";
-            case comp_type::DEC:        return "    SDEC ";
+            case comp_type::Registers:  return "reg"; 
+            case comp_type::Wires:      return "wire";
+            case comp_type::Inputs:     return "input";
+            case comp_type::Outputs:    return "output";
+            case comp_type::REG:        return "SREG";
+            case comp_type::ADD:        return "SADD";
+            case comp_type::SUB:        return "SSUB";
+            case comp_type::MUL:        return "SMUL";
+            case comp_type::COMP:       return "SCOMP";
+            case comp_type::MUX:        return "SMUX";
+            case comp_type::SHR:        return "SSHR";
+            case comp_type::SHL:        return "SSHL";
+            case comp_type::DIV:        return "SDIV";
+            case comp_type::MOD:        return "SMOD";
+            case comp_type::INC:        return "SINC";
+            case comp_type::DEC:        return "SDEC";
             default: return "";
         }
     }
@@ -189,11 +189,11 @@ std::string component::dw2Str()
     {
         switch(dw_)
         {
-            case comp_size:: ONE:       return "#(.DATAWIDTH(0)) ";
-            case comp_size:: TWO:       return "#(.DATAWIDTH(2)) ";
-            case comp_size:: EIGHT:     return "#(.DATAWIDTH(8)) ";
-            case comp_size:: SIXTEEN:   return "#(.DATAWIDTH(16)) ";
-            case comp_size:: SIXTYFOUR: return "#(.DATAWIDTH(64)) ";
+            case comp_size:: ONE:       return "#(.DATAWIDTH(0))";
+            case comp_size:: TWO:       return "#(.DATAWIDTH(2))";
+            case comp_size:: EIGHT:     return "#(.DATAWIDTH(8))";
+            case comp_size:: SIXTEEN:   return "#(.DATAWIDTH(16))";
+            case comp_size:: SIXTYFOUR: return "#(.DATAWIDTH(64))";
             default: return "";
         }
     }
@@ -202,42 +202,54 @@ std::string component::dw2Str()
 
 std::string component::writeLine()
 {
-
-    std::string out = comp2Str();
+    std::string nL = "\n";
+    std::string tab="\t";
+    std::string spc = " ";
     std::string opn = "(";
-    std::string cls = ");";
+    std::string sc = ";";
+    std::string clsc = ");";
     std::string com = ",";
+    std::string wire = "wire";
+    std::string out;
 
-    out.append(dw2Str());
-    if( type_ >= comp_type::REG ) // Real component
-    {
-        // Actual component time
-        //out.append(comp2Str());
-        out.append(dw2Str());
-        std::string compNumS = to_string(compNum_);
-        out.append(type2str(type_)+compNumS);
-        out.append(opn);
-        vector <std::string> clineVec;
-        clineVec.push_back(out_[0].name_);
-        clineVec.push_back(com);
-        for(int i=0;i < in_.size(); i++)
-        {
-            clineVec.push_back(in_[i].name_);
+    if(type_<comp_type::REG){
+        out = tab+comp2Str();
+        if(type_==comp_type::Outputs){
+            out.append(spc+wire+spc+dw2Str()+spc);
         }
-        clineVec.push_back(cls);
-        while (!clineVec.empty())
-        {
-            std::string more;
-            clineVec[clineVec.size()-1];
-            out.append(more);
-            clineVec.pop_back();
+        else{
+            out.append(spc+dw2Str()+spc);
         }
+        for (int i=0;i<in_.size();i++){
+            out.append(in_[i].name_);
+            out.append(com);
+        }
+        for (int i=0;i<out_.size();i++){
+            out.append(out_[i].name_);
+            out.append(com);
+        }
+        int _trailingComma=out.size();
+        out = out.substr(0,_trailingComma-1);
+        out.append(sc);
     }
-    else
-    {
-        // Input, Output, Wire, Register
-        out.append(comp2Str());
-        out.append(dw2Str());
+    else{
+        out = tab+comp2Str();
+        out.append(tab+dw2Str());
+        std::string compNumS = to_string(compNum_);
+        out.append(spc+comp2Str()+compNumS);
+        out.append(opn);
+        out.append(out_[0].name_+com);
+        for(int i=0;i < in_.size(); i++){
+            out.append(in_[i].name_);
+            out.append(com);
+        }
+        if (type_==comp_type::REG){
+            std::string clk="Clk", rst="Rst";
+            out.append(clk+com+rst+com);
+        };
+        int _trailingComma = out.size();
+        out = out.substr(0,_trailingComma-1);
+        out.append(clsc);
     }
     return out;
 }
