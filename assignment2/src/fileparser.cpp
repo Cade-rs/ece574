@@ -1147,8 +1147,8 @@ void fileparser::writeFile()
             for(int j=0; j<compVec_[i].in_.size(); j++)
             {
                 std::cout << "Why" << std:: endl;
-                if ( *find(modVec.begin(),modVec.end(),compVec_[i].in_[j].name_) 
-                        != compVec_[i].in_[j].name_)
+                if ( std::find(modVec.begin(),modVec.end(),compVec_[i].in_[j].name_) 
+                        != modVec.end())
                 {
                     std::cout << "ME" << std:: endl;
                     modVec.push_back(compVec_[i].in_[j].name_);
@@ -1160,8 +1160,8 @@ void fileparser::writeFile()
             std::cout << "2" << std:: endl;
             for(int j=0; j<compVec_[i].out_.size(); j++)
             {
-                if (*find(modVec.begin(),modVec.end(),compVec_[i].out_[j].name_) 
-                        != compVec_[i].out_[j].name_)
+                if (std::find(modVec.begin(),modVec.end(),compVec_[i].out_[j].name_) 
+                        != modVec.end())
                 {
                     modVec.push_back(compVec_[i].out_[j].name_);
                 }
@@ -1170,11 +1170,11 @@ void fileparser::writeFile()
         else if( compVec_[i].type_ == comp_type::Registers || compVec_[i].type_ == comp_type::REG )
         {
             std::cout << "3" << std:: endl;
-            if (*find(modVec.begin(),modVec.end(),"Clk")!="Clk")
+            if (std::find(modVec.begin(),modVec.end(),"Clk")!=modVec.end())
             {
                 modVec.push_back("Clk");
             }
-            if (*find(modVec.begin(),modVec.end(),"Rst")!="Rst")
+            if (std::find(modVec.begin(),modVec.end(),"Rst")!=modVec.end())
             {
                 modVec.push_back("Rst");
             }
