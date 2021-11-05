@@ -1125,76 +1125,43 @@ void fileparser::writeFile()
 {
 
     //fout_.open();
-    fout_<<"'timescale 1ns / 1ps\n";
+    fout_<<"\n'timescale 1ns / 1ps";
     std::string ofile,mod;
     //need to include the outfile name in the writefile function for module name
     ofile = "testcircuit5.txt";
     //Cutting off the file type to grab the name
-    ofile = ofile.substr(0,ofile.size()-2);
+    ofile = ofile.substr(0,ofile.size()-4);//need to change to 2 for the final
     //Writing the first line 
     mod = "\nmodule ";
     std::string opn = "("; //open parentheses
     std::string cls = ");";//close parentheses
-    mod = mod.append(ofile);
-    mod = mod.append(opn);  
-    vector <std::string> modVec; //module variable vector
-    std::cout << "Segfault incoming" << std:: endl;
-    for (int i=0; i<compVec_.size();i++)
-    {
-        if ( compVec_[i].type_ == comp_type::Inputs )
-        {
-            std::cout << "1" << std:: endl;
-            for(int j=0; j<compVec_[i].in_.size(); j++)
-            {
-                std::cout << "Why" << std:: endl;
-                if ( std::find(modVec.begin(),modVec.end(),compVec_[i].in_[j].name_) 
-                        != modVec.end())
-                {
-                    std::cout << "ME" << std:: endl;
-                    modVec.push_back(compVec_[i].in_[j].name_);
-                }
+    std::string semi = ";";
+    std::string com=",";
+    std::string clk = "Clk", rst = "Rst";
+    std::string nL="\n";
+    mod.append(ofile);
+    mod.append(opn);
+    for(int i=0;i<compVec_.size();i++){
+        if(compVec_[i].type_>comp_type::REG){
+            for(int j=0;j<compVec_[i].in_.size();j++){
+                mod.append(compVec_[i].in_[j].name_);
+                mod.append(com);
             }
-        }
-        else if ( compVec_[i].type_ == comp_type::Outputs )
-        {
-            std::cout << "2" << std:: endl;
-            for(int j=0; j<compVec_[i].out_.size(); j++)
-            {
-                if (std::find(modVec.begin(),modVec.end(),compVec_[i].out_[j].name_) 
-                        != modVec.end())
-                {
-                    modVec.push_back(compVec_[i].out_[j].name_);
-                }
-            }
-        }
-        else if( compVec_[i].type_ == comp_type::Registers || compVec_[i].type_ == comp_type::REG )
-        {
-            std::cout << "3" << std:: endl;
-            if (std::find(modVec.begin(),modVec.end(),"Clk")!=modVec.end())
-            {
-                modVec.push_back("Clk");
-            }
-            if (std::find(modVec.begin(),modVec.end(),"Rst")!=modVec.end())
-            {
-                modVec.push_back("Rst");
-            }
+            for(int j=0;j<compVec_[i].out_.size();j++){
+                mod.append(compVec_[i].out_[j].name_);
+                mod.append(com);
+            }           
         }
     }
-    //Re-Order Module Vector in reverse to pop in correct order
-    reverse(modVec.begin(),modVec.end());
-    //Append the Variables to the Module line
-    while (!modVec.empty())
-    {
-        std::string more;
-        more = modVec[modVec.size()-1];
-        mod = mod.append(more);
-        modVec.pop_back();
-    }
-    //cout<< mod+cls;
-    //fout_<<"    input ["+ "datawidth"+":0]";
+    mod = mod.substr(0,mod.size()-1);
+    mod.append(cls);
+    fout_<<nL+mod;  
+    vector <std::string> modVec; //module variable vector    
     for (int i=0; i<compVec_.size(); i++)
     {
-        fout_ << compVec_[i].writeLine();
+        std::string ugh=nL+compVec_[i].writeLine();
+        fout_<<ugh;
     }
-    fout_<<"endmodule";
+    
+    fout_<<"\nendmodule";
 }
