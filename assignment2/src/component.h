@@ -26,6 +26,8 @@ public:
     std::string writeLine();
     std::string comp2Str();
     std::string dw2Str();
+    std::string trunc();
+    std::string cPadd();
 
     void printComponent(std::ofstream& fout);
 

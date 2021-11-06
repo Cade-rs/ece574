@@ -1125,7 +1125,7 @@ void fileparser::writeFile()
 {
 
     //fout_.open();
-    fout_<<"\n'timescale 1ns / 1ps";
+    fout_<<"\n`timescale 1ns / 1ps";
     std::string ofile,mod;
     //need to include the outfile name in the writefile function for module name
     ofile =outfile_;
@@ -1150,7 +1150,7 @@ void fileparser::writeFile()
     std::string semi = ";";
     std::string com=",";
     std::string clk = "Clk", rst = "Rst";
-    std::string nL="\n";
+    std::string nL="\n",tab = "\t",iput="input",spc = " ";
     mod.append(ofile);
     mod.append(opn);
 
@@ -1173,6 +1173,7 @@ void fileparser::writeFile()
     //mod = mod.substr(0,mod.size());
     mod.append(cls);
     fout_<<nL+mod;
+    fout_<<nL+tab+iput+spc+clk+com+rst+semi;
     for (int i=0; i<compVec_.size(); i++)
     {
         std::string ugh=nL+compVec_[i].writeLine();

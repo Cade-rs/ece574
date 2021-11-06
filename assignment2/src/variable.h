@@ -18,6 +18,7 @@ public:
     comp_size size_;
     bool isSigned_;
     bool isReg_;
+    std::string iPadd();
 };
 
 

@@ -35,3 +35,16 @@ bool variable::operator== (variable param)
 {
     return name_ == param.name_;
 }
+std::string variable::iPadd(){
+    switch(size_)
+        {
+            case comp_size:: ONE:       return"1";
+            case comp_size:: TWO:       return "2";
+            case comp_size:: EIGHT:     return "8";
+            case comp_size:: SIXTEEN:   return "16";
+            case comp_size:: THIRTYTWO: return "32";
+            case comp_size:: SIXTYFOUR: return "64";
+            default: return "";
+        }
+    
+}
