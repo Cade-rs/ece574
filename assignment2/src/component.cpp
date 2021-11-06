@@ -276,7 +276,7 @@ std::string component::writeLine()
                     out.append(signc_+in_[i].name_+cls);
                 }
                 else{
-                    out.append(cOpen+cOpen+cPadd()+in_[i].iPadd()+cOpen+zBit+cCls+com+in_[i].name_+cCls);
+                    out.append(cOpen+cOpen+cPadd()+in_[i].iPadd()+cOpen+zBit+cCls+cCls+com+in_[i].name_+cCls);
                 }
             }
             else if(in_[i].size_>dw_){
@@ -298,7 +298,7 @@ std::string component::writeLine()
                 out.append(signc_+out_[0].name_+cls);
             }
             else{
-                out.append(cOpen+cOpen+cPadd()+out_[0].iPadd()+cCls+com+out_[0].name_+cCls);
+                out.append(cOpen+cOpen+cPadd()+out_[0].iPadd()+cCls+cCls+com+out_[0].name_+cCls);
             }
         }
         else if(out_[0].size_>dw_){
