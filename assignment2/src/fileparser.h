@@ -48,6 +48,7 @@ public:
 
     std::vector<component> compVec_;
     std::vector<variable>  varVec_;
+    std::string outfile_;
 
 };
 

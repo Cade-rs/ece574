@@ -232,13 +232,13 @@ std::string component::writeLine()
         out = out.substr(0,_trailingComma-1);
         out.append(sc);
     }
-    else{
+    else if(type_!=comp_type::COMP){
         out = tab+comp2Str();
         out.append(tab+dw2Str());
         std::string compNumS = to_string(compNum_);
         out.append(spc+comp2Str()+compNumS);
         out.append(opn);
-        out.append(out_[0].name_+com);
+        
         for(int i=0;i < in_.size(); i++){
             out.append(in_[i].name_);
             out.append(com);
@@ -246,10 +246,35 @@ std::string component::writeLine()
         if (type_==comp_type::REG){
             std::string clk="Clk", rst="Rst";
             out.append(clk+com+rst+com);
-        };
-        int _trailingComma = out.size();
+        }
+        out.append(out_[0].name_);
+        out.append(clsc);
+    }
+    else{
+        out = tab+comp2Str();
+        out.append(tab+dw2Str());
+        std::string compNumS = to_string(compNum_);
+        out.append(spc+comp2Str()+compNumS);
+        out.append(opn);
+        
+        for(int i=0;i < in_.size(); i++){
+            out.append(in_[i].name_);
+            out.append(com);
+        }
+        for(int i=0; i<3;i++){
+            if(i!=outputPos_-1){
+                out.append(spc);
+                out.append(com);
+            }           
+            else{
+                out.append(out_[0].name_);
+                out.append(com);
+            }
+        }
+        int _trailingComma=out.size();
         out = out.substr(0,_trailingComma-1);
         out.append(clsc);
+
     }
     return out;
 }
