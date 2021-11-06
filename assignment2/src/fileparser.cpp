@@ -5,7 +5,7 @@
 #include <regex>
 #include <string>
 
-#define DEBUG 1
+#define DEBUG 0
 
 fileparser::fileparser(std::string infile, std::string outfile)
 {
@@ -1130,8 +1130,20 @@ void fileparser::writeFile()
     //need to include the outfile name in the writefile function for module name
     ofile =outfile_;
     //Cutting off the file type to grab the name
-    ofile = ofile.substr(0,ofile.size()-2);//need to change to 2 for the final
-    //Writing the first line 
+    // Trim off the folder paths
+    std::size_t pos;
+    
+    if( ofile.find("/") != std::string::npos )
+    {
+        pos = ofile.find_last_of("/");
+        ofile.erase(0,pos+1);
+    }
+
+    // trim off the file extension
+    pos = ofile.find_last_of(".");
+    ofile = ofile.substr(0,pos);
+
+    //Writing the first line
     mod = "\nmodule ";
     std::string opn = "("; //open parentheses
     std::string cls = ");";//close parentheses
