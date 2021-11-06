@@ -6,7 +6,7 @@ project(dpgen VERSION 0.1.0)
 #enable_testing()
 include_directories(src)
 file(GLOB SOURCES "src/*.cpp")
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "../src")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "./src")
 add_executable(dpgen ${SOURCES})
 
 
