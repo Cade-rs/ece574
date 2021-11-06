@@ -262,7 +262,7 @@ std::string component::writeLine()
             out.append(com);
         }
         for(int i=0; i<3;i++){
-            if(i!=outputPos_){
+            if(i!=outputPos_-1){
                 out.append(spc);
                 out.append(com);
             }           
