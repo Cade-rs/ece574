@@ -328,7 +328,9 @@ std::string component::writeLine()
             }           
             else{
                 out.append(out_[0].name_);
-                out.append("[0]");
+                if(out_.size()!=0){
+                    out.append("[0]");
+                }
                 out.append(com);
             }
         }
