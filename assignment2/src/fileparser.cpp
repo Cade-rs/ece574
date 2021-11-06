@@ -31,7 +31,7 @@ fileparser::fileparser(std::string infile, std::string outfile)
     }
     else
     {
-        std::cout << infile << " going to " << outfile << "\n";
+        std::cout << std::endl << infile << " going to " << outfile << std::endl << std::endl;
     }
 }
 
