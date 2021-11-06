@@ -536,7 +536,8 @@ void fileparser::constructADDorSUB(std::string& line)
     
     if( (type == comp_type::INC || type == comp_type::DEC) && varName == "1" )
     {
-        inputs.push_back( variable( varVec_[varIdx] ) );
+        // Do nothing
+        //inputs.push_back( variable( varVec_[varIdx] ) );
     }
     else if( type == comp_type::INC || type == comp_type::DEC)
     {

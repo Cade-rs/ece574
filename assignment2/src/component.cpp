@@ -126,7 +126,7 @@ std::string component::comp2Str()
     {
         switch(type_)
         {
-            case comp_type::Registers:  return "reg"; 
+            case comp_type::Registers:  return "wire"; 
             case comp_type::Wires:      return "wire";
             case comp_type::Inputs:     return "input";
             case comp_type::Outputs:    return "output";
@@ -149,7 +149,7 @@ std::string component::comp2Str()
     {
         switch(type_)
         {
-            case comp_type::Registers:  return "reg"; 
+            case comp_type::Registers:  return "wire"; 
             case comp_type::Wires:      return "wire";
             case comp_type::Inputs:     return "input";
             case comp_type::Outputs:    return "output";
@@ -328,7 +328,7 @@ std::string component::writeLine()
             }           
             else{
                 out.append(out_[0].name_);
-                if(out_.size()!=0){
+                if(out_[0].size_ != comp_size::ONE){
                     out.append("[0]");
                 }
                 out.append(com);
