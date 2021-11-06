@@ -10,9 +10,9 @@
 fileparser::fileparser(std::string infile, std::string outfile)
 {
     error_ = false;
-
     fin_.open(infile);
     fout_.open(outfile);
+    outfile_=outfile;
     
     if ( !fin_.is_open() )
     {
@@ -1128,7 +1128,7 @@ void fileparser::writeFile()
     fout_<<"\n'timescale 1ns / 1ps";
     std::string ofile,mod;
     //need to include the outfile name in the writefile function for module name
-    ofile = "testcircuit5.txt";
+    ofile =outfile_;
     //Cutting off the file type to grab the name
     ofile = ofile.substr(0,ofile.size()-4);//need to change to 2 for the final
     //Writing the first line 
