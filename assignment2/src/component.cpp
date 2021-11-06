@@ -181,6 +181,7 @@ std::string component::dw2Str()
             case comp_size:: TWO:       return "[1:0]";
             case comp_size:: EIGHT:     return "[7:0]";
             case comp_size:: SIXTEEN:   return "[15:0]";
+            case comp_size:: THIRTYTWO: return "[31:0]";
             case comp_size:: SIXTYFOUR: return "[63:0]";
             default: return "";
         }
@@ -193,6 +194,7 @@ std::string component::dw2Str()
             case comp_size:: TWO:       return "#(.DATAWIDTH(2))";
             case comp_size:: EIGHT:     return "#(.DATAWIDTH(8))";
             case comp_size:: SIXTEEN:   return "#(.DATAWIDTH(16))";
+            case comp_size:: THIRTYTWO: return "#(.DATAWIDTH(32))";
             case comp_size:: SIXTYFOUR: return "#(.DATAWIDTH(64))";
             default: return "";
         }
@@ -207,6 +209,7 @@ std::string component::tOrp(){
             case comp_size:: TWO:       return "[1:0]";
             case comp_size:: EIGHT:     return "[7:0]";
             case comp_size:: SIXTEEN:   return "[15:0]";
+            case comp_size:: THIRTYTWO: return "[31:0]";
             case comp_size:: SIXTYFOUR: return "[63:0]";
             default: return "";
         }
