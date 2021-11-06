@@ -28,7 +28,6 @@ public:
     std::string dw2Str();
     std::string trunc();
     std::string cPadd();
-    std::string iPadd();
 
     void printComponent(std::ofstream& fout);
 

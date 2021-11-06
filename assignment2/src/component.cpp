@@ -226,19 +226,6 @@ std::string component::cPadd(){
             default: return "";
         }
 }
-std::string component::iPadd(){
-    switch(dw_)
-        {
-            case comp_size:: ONE:       return"1";
-            case comp_size:: TWO:       return "2";
-            case comp_size:: EIGHT:     return "8";
-            case comp_size:: SIXTEEN:   return "16";
-            case comp_size:: THIRTYTWO: return "32";
-            case comp_size:: SIXTYFOUR: return "64";
-            default: return "";
-        }
-    
-}
 
 std::string component::writeLine()
 {
@@ -289,7 +276,7 @@ std::string component::writeLine()
                     out.append(signc_+in_[i].name_+cls);
                 }
                 else{
-                    out.append(cOpen+cOpen+cPadd()+iPadd()+cCls+com+in_[i].name_+cCls);
+                    out.append(cOpen+cOpen+cPadd()+in_[i].iPadd()+cOpen+zBit+cCls+com+in_[i].name_+cCls);
                 }
             }
             else if(in_[i].size_>dw_){
@@ -311,7 +298,7 @@ std::string component::writeLine()
                 out.append(signc_+out_[0].name_+cls);
             }
             else{
-                out.append(cOpen+cOpen+cPadd()+iPadd()+cCls+com+out_[0].name_+cCls);
+                out.append(cOpen+cOpen+cPadd()+out_[0].iPadd()+cCls+com+out_[0].name_+cCls);
             }
         }
         else if(out_[0].size_>dw_){
