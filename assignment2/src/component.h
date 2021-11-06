@@ -26,6 +26,7 @@ public:
     std::string writeLine();
     std::string comp2Str();
     std::string dw2Str();
+    std::string tOrp();
 
     void printComponent(std::ofstream& fout);
 
