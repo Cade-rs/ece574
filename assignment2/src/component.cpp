@@ -256,7 +256,7 @@ std::string component::writeLine()
             //out.append(in_[i].name_);
             if(in_[i].size_<dw_){
                 if (isSigned_){
-                    std::string signc_="$SIGNED(";
+                    std::string signc_="$signed(";
                     out.append(signc_+in_[i].name_+cls);
                 }
                 else{
@@ -279,7 +279,7 @@ std::string component::writeLine()
         }
         if(out_[0].size_<dw_){
             if(isSigned_){
-                std::string signc_="$SIGNED(";
+                std::string signc_="$signed(";
                 out.append(signc_+out_[0].name_+cls);
             }
             else{
