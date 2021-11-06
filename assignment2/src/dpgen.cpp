@@ -37,5 +37,7 @@ int main(int argc, char *argv[])
     // critical path calculations (and test component list)
     latencycalculator lc(fp.compVec_);
 
+    std::cout << std::endl << std::endl << outfile << " Verilog file successfully created" << std::endl;
+
     return 0;
 }
