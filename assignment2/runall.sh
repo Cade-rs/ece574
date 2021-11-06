@@ -2,12 +2,12 @@
 
 #NOTE: need to be in the build directory in order for this to run properly
 
-../src/dpgen ../assignment_2_circuits/474a_circuit1.txt  ../output/474a_circuit1_out.v
-../src/dpgen ../assignment_2_circuits/474a_circuit2.txt  ../output/474a_circuit2_out.v
-../src/dpgen ../assignment_2_circuits/474a_circuit3.txt  ../output/474a_circuit3_out.v
-../src/dpgen ../assignment_2_circuits/474a_circuit4.txt  ../output/474a_circuit4_out.v
-../src/dpgen ../assignment_2_circuits/574a_circuit5.txt  ../output/574a_circuit5_out.v
-../src/dpgen ../assignment_2_circuits/574a_circuit6.txt  ../output/574a_circuit6_out.v
+../src/dpgen ../assignment_2_circuits/474a_circuit1.txt  ../output/circuit1_out.v
+../src/dpgen ../assignment_2_circuits/474a_circuit2.txt  ../output/circuit2_out.v
+../src/dpgen ../assignment_2_circuits/474a_circuit3.txt  ../output/circuit3_out.v
+../src/dpgen ../assignment_2_circuits/474a_circuit4.txt  ../output/circuit4_out.v
+../src/dpgen ../assignment_2_circuits/574a_circuit5.txt  ../output/circuit5_out.v
+../src/dpgen ../assignment_2_circuits/574a_circuit6.txt  ../output/circuit6_out.v
 
 ../src/dpgen ../assignment_2_circuits/error1.txt  ../output/error1_out.v
 ../src/dpgen ../assignment_2_circuits/error2.txt  ../output/error2_out.v
