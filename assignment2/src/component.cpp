@@ -261,13 +261,13 @@ std::string component::writeLine()
             out.append(in_[i].name_);
             out.append(com);
         }
-        for(int i=0; i<out_.size();i++){
-            if(i!=outputPos_&& out_.size()!=0){
+        for(int i=0; i<3;i++){
+            if(i!=outputPos_){
                 out.append(spc);
                 out.append(com);
             }           
             else{
-                out.append(out_[outputPos_].name_);
+                out.append(out_[0].name_);
                 out.append(com);
             }
         }

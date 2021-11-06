@@ -1130,7 +1130,7 @@ void fileparser::writeFile()
     //need to include the outfile name in the writefile function for module name
     ofile =outfile_;
     //Cutting off the file type to grab the name
-    ofile = ofile.substr(0,ofile.size()-4);//need to change to 2 for the final
+    ofile = ofile.substr(0,ofile.size()-2);//need to change to 2 for the final
     //Writing the first line 
     mod = "\nmodule ";
     std::string opn = "("; //open parentheses
