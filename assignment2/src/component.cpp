@@ -202,7 +202,7 @@ std::string component::dw2Str()
     return "";
 }
 
-std::string component::tOrp(){
+std::string component::trunc(){
     switch(dw_)
         {
             case comp_size:: ONE:       return"[0]";
@@ -213,6 +213,31 @@ std::string component::tOrp(){
             case comp_size:: SIXTYFOUR: return "[63:0]";
             default: return "";
         }
+}
+std::string component::cPadd(){
+    switch(dw_)
+        {
+            case comp_size:: ONE:       return"";
+            case comp_size:: TWO:       return "1-";
+            case comp_size:: EIGHT:     return "7-";
+            case comp_size:: SIXTEEN:   return "15-";
+            case comp_size:: THIRTYTWO: return "31-";
+            case comp_size:: SIXTYFOUR: return "63-";
+            default: return "";
+        }
+}
+std::string component::iPadd(){
+    switch(dw_)
+        {
+            case comp_size:: ONE:       return"1";
+            case comp_size:: TWO:       return "2";
+            case comp_size:: EIGHT:     return "8";
+            case comp_size:: SIXTEEN:   return "16";
+            case comp_size:: THIRTYTWO: return "32";
+            case comp_size:: SIXTYFOUR: return "64";
+            default: return "";
+        }
+    
 }
 
 std::string component::writeLine()
@@ -226,6 +251,7 @@ std::string component::writeLine()
     std::string clsc = ");";
     std::string com = ",";
     std::string wire = "wire";
+    std::string cOpen = "{", cCls="}", zBit = "1'b0";
     std::string out;
 
     if(type_<comp_type::REG){
@@ -263,13 +289,12 @@ std::string component::writeLine()
                     out.append(signc_+in_[i].name_+cls);
                 }
                 else{
-                    out.append(in_[i].name_);
-                    out.append(tOrp());
+                    out.append(cOpen+cOpen+cPadd()+iPadd()+cCls+com+in_[i].name_+cCls);
                 }
             }
             else if(in_[i].size_>dw_){
                 out.append(in_[i].name_);
-                out.append(tOrp());
+                out.append(trunc());
             }
             else{
                 out.append(in_[i].name_);
@@ -286,13 +311,12 @@ std::string component::writeLine()
                 out.append(signc_+out_[0].name_+cls);
             }
             else{
-                out.append(out_[0].name_);
-                out.append(tOrp());
+                out.append(cOpen+cOpen+cPadd()+iPadd()+cCls+com+out_[0].name_+cCls);
             }
         }
         else if(out_[0].size_>dw_){
             out.append(out_[0].name_);
-            out.append(tOrp());
+            out.append(trunc());
         }
         else{
             out.append(out_[0].name_);
