@@ -135,7 +135,7 @@ std::string component::comp2Str()
             case comp_type::SUB:        return "SUB";
             case comp_type::MUL:        return "MUL";
             case comp_type::COMP:       return "COMP";
-            case comp_type::MUX:        return "MUX";
+            case comp_type::MUX:        return "MUX2x1";
             case comp_type::SHR:        return "SHR";
             case comp_type::SHL:        return "SHL";
             case comp_type::DIV:        return "DIV";
@@ -158,7 +158,7 @@ std::string component::comp2Str()
             case comp_type::SUB:        return "SSUB";
             case comp_type::MUL:        return "SMUL";
             case comp_type::COMP:       return "SCOMP";
-            case comp_type::MUX:        return "SMUX";
+            case comp_type::MUX:        return "SMUX2x1";
             case comp_type::SHR:        return "SSHR";
             case comp_type::SHL:        return "SSHL";
             case comp_type::DIV:        return "SDIV";
