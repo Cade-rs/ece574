@@ -11,19 +11,18 @@
 
 int main(int argc, char *argv[])
 {
-    // You can run this by changing the name from main2 to main
-    // then using the following command from the build folder:
-    // ./pleaseWork.exe ../assignment_2_circuits/474a_circuit1.txt ../testfile.txt
-    
-    if( (argc-1) != 2 ) // First input is exe name, handle that
+    if( (argc-1) != 3 ) // First input is exe name, handle that
     {
-        std::cout << "ERROR: Expecting 2 inputs, received " << (argc-1) << ". Exiting..." << std::endl;
+        std::cout << "ERROR: Expecting 3 inputs, received " << (argc-1) << ". Exiting..." << std::endl;
         return 1;
     }
 
     std::string infile  = argv[1];
-    std::string outfile = argv[2];
-    
+    std::string latStr  = argv[2];
+    std::string outfile = argv[3];
+
+    int latConstraint   = std::stoi(latStr);
+
     fileparser fp(infile, outfile);
 
     bool error = fp.run();
