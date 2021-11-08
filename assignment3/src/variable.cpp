@@ -1,6 +1,6 @@
 #include "variable.h"
 
-#include "latency.h"
+#include "common.h"
 
 variable::variable(std::string name, int size, bool isSigned, bool isReg)
 {
