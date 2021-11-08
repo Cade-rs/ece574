@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "component.h"
-#include "latency.h"
+#include "common.h"
 #include "variable.h"
 
 class latencycalculator {

@@ -6,7 +6,7 @@
 
 #include "component.h"
 #include "fileparser.h"
-#include "latency.h"
+#include "common.h"
 
 latencycalculator::latencycalculator(std::vector<component>& compVec){
 

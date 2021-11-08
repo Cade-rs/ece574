@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-#include "latency.h"
+#include "common.h"
 
 using namespace std;
 

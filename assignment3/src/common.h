@@ -1,5 +1,5 @@
-#ifndef LATENCY_H
-#define LATENCY_H
+#ifndef COMMON_H
+#define COMMON_H
 
 
 

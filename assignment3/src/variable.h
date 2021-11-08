@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include "latency.h"
+#include "common.h"
 
 
 class variable {

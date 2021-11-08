@@ -5,7 +5,7 @@
 
 #include "component.h"
 #include "fileparser.h"
-#include "latency.h"
+#include "common.h"
 #include "variable.h"
 #include "latencycalculator.h"
 

@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-#include "latency.h"
+#include "common.h"
 #include "variable.h"
 
 using namespace std;
