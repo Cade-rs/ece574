@@ -5,9 +5,11 @@
 
 #include "component.h"
 #include "fileparser.h"
+#include "filewriter.h"
 #include "common.h"
 #include "variable.h"
 #include "latencycalculator.h"
+
 
 int main(int argc, char *argv[])
 {
@@ -35,6 +37,10 @@ int main(int argc, char *argv[])
 
     // critical path calculations (and test component list)
     latencycalculator lc(fp.compVec_);
+
+    filewriter fw(outfile, fp.compVec_);
+
+    fw.writeFile();
 
     std::cout << std::endl << std::endl << outfile << " Verilog file successfully created" << std::endl;
 
