@@ -1,18 +1,25 @@
 #include "fileparser.h"
+#include "common.h"
 
 
 #include <iostream>
 #include <regex>
 #include <string>
 
-#define DEBUG 0
 
+// -------------------------------------------------------------------------------
+// 
+// -------------------------------------------------------------------------------
 fileparser::fileparser(std::string infile, std::string outfile)
 {
     error_ = false;
     fin_.open(infile);
-    fout_.open(outfile);
-    outfile_=outfile;
+    
+    outfile_="./debug_out.txt";
+    if( DEBUG )
+    {
+        fout_.open(outfile_);
+    }
     
     if ( !fin_.is_open() )
     {
@@ -24,17 +31,11 @@ fileparser::fileparser(std::string infile, std::string outfile)
         std::cout << "ERROR: Input file is empty: " << infile << "\n";
         error_ =  true;
     }
-    else if ( !fout_.is_open() )
-    {
-        std::cout << "ERROR: Unable to read file: " << outfile << "\n";
-        error_ =  true;
-    }
-    else
-    {
-        std::cout << std::endl << infile << " going to " << outfile << std::endl << std::endl;
-    }
 }
 
+// -------------------------------------------------------------------------------
+// 
+// -------------------------------------------------------------------------------
 bool fileparser::run()
 {
     
@@ -56,11 +57,6 @@ bool fileparser::run()
             compVec_[i].printComponent(fout_);
         }
     }
-    
-    if (!error_)
-    {
-        writeFile();
-    }
 
     fin_.close();
     fout_.close();
@@ -68,6 +64,9 @@ bool fileparser::run()
     return error_;
 }
 
+// -------------------------------------------------------------------------------
+// 
+// -------------------------------------------------------------------------------
 void fileparser::parseLine(std::string& line)
 {
     // Debug print line to file
@@ -103,12 +102,27 @@ void fileparser::parseLine(std::string& line)
     else if( line.rfind("wire", 0) == 0 )
     {
         // Wire
-        constructWires(line);
+        constructVariables(line);
     }
     else if( line.rfind("register", 0) == 0 )
     {
         // Register
-        constructRegisters(line);
+        constructVariables(line);
+    }
+    else if( line.rfind("variable", 0) == 0 )
+    {
+        // Register
+        constructVariables(line);
+    }
+    else if ( line.rfind("if", 0) == 0 )
+    {
+        // what do?
+        std::cout << "I got to IF! What do?" << std::endl;
+    }
+    else if ( line.rfind("else", 0) == 0 )
+    {
+        // what do?
+        std::cout << "I got to ELSE! What do?" << std::endl;
     }
     else if( line.find(">>") != std::string::npos 
              || line.find("<<") != std::string::npos )
@@ -167,6 +181,9 @@ void fileparser::parseLine(std::string& line)
     return;
 }
 
+// -------------------------------------------------------------------------------
+// 
+// -------------------------------------------------------------------------------
 void fileparser::constructInputs(std::string& line)
 {
     bool isSigned = false;
@@ -192,6 +209,9 @@ void fileparser::constructInputs(std::string& line)
     return;
 }
 
+// -------------------------------------------------------------------------------
+// 
+// -------------------------------------------------------------------------------
 void fileparser::constructOutputs(std::string& line)
 {
     std::vector<std::string> splitLine = stringSplit(line);
@@ -215,7 +235,11 @@ void fileparser::constructOutputs(std::string& line)
     return;
 }
 
-void fileparser::constructWires(std::string& line)
+
+// -------------------------------------------------------------------------------
+// 
+// -------------------------------------------------------------------------------
+void fileparser::constructVariables(std::string& line)
 {
     std::vector<std::string> splitLine = stringSplit(line);
     std::vector<variable> wires;
@@ -239,29 +263,9 @@ void fileparser::constructWires(std::string& line)
     return;
 }
 
-void fileparser::constructRegisters(std::string& line)
-{
-    std::vector<std::string> splitLine = stringSplit(line);
-    std::vector<variable> inputs;
-    std::vector<variable> registers;
-
-    // update varVec_ with only registers
-    registers = buildVarVec(splitLine, true); // true denotes this is a register
-
-    for( int i=0; i < registers.size(); i++)
-    {
-        varVec_.push_back( registers[i] );
-    }
-
-    //all registers from one line should have same size
-    comp_type type = comp_type::Registers;
-    comp_size dw = registers[0].size_;
-    bool isSigned = registers[0].isSigned_;
-
-    bool didItWork = finalizeComponent(type, dw, inputs, registers, isSigned);
-    return;
-}
-
+// -------------------------------------------------------------------------------
+// 
+// -------------------------------------------------------------------------------
 void fileparser::constructShift(std::string& line)
 {
     // Example line:
@@ -356,6 +360,9 @@ void fileparser::constructShift(std::string& line)
     return;
 }
 
+// -------------------------------------------------------------------------------
+// 
+// -------------------------------------------------------------------------------
 void fileparser::constructCOMP(std::string& line)
 {
     //std::cout << "I got to COMP!" << std::endl << line << std::endl;
@@ -456,6 +463,9 @@ void fileparser::constructCOMP(std::string& line)
     return;
 }
 
+// -------------------------------------------------------------------------------
+// 
+// -------------------------------------------------------------------------------
 void fileparser::constructADDorSUB(std::string& line)
 {
     std::vector<std::string> splitLine = stringSplit(line);
@@ -572,6 +582,9 @@ void fileparser::constructADDorSUB(std::string& line)
     return;
 }
 
+// -------------------------------------------------------------------------------
+// 
+// -------------------------------------------------------------------------------
 void fileparser::constructMUL(std::string& line)
 {
     // Example line:
@@ -651,6 +664,10 @@ void fileparser::constructMUL(std::string& line)
     
     return;
 }
+
+// -------------------------------------------------------------------------------
+// 
+// -------------------------------------------------------------------------------
 void fileparser::constructDIV(std::string& line)
 {
     // Example line:
@@ -729,6 +746,10 @@ void fileparser::constructDIV(std::string& line)
     
     return;
 }
+
+// -------------------------------------------------------------------------------
+// 
+// -------------------------------------------------------------------------------
 void fileparser::constructMOD(std::string& line)
 {
         // Example line:
@@ -809,6 +830,10 @@ void fileparser::constructMOD(std::string& line)
     
     return;
 }
+
+// -------------------------------------------------------------------------------
+// 
+// -------------------------------------------------------------------------------
 void fileparser::constructMUX(std::string& line)
 {
     // Example line:
@@ -902,6 +927,10 @@ void fileparser::constructMUX(std::string& line)
     
     return;
 }
+
+// -------------------------------------------------------------------------------
+// 
+// -------------------------------------------------------------------------------
 void fileparser::constructREG(std::string& line)
 {
     // example line: out = in
@@ -968,8 +997,9 @@ void fileparser::constructREG(std::string& line)
 }
 
 
-
-// Helpers
+// -------------------------------------------------------------------------------
+// 
+// -------------------------------------------------------------------------------
 std::vector<std::string> fileparser::stringSplit(std::string line, std::string re)
 {
     std::regex delim(re);
@@ -977,6 +1007,9 @@ std::vector<std::string> fileparser::stringSplit(std::string line, std::string r
     return result;
 }
 
+// -------------------------------------------------------------------------------
+// 
+// -------------------------------------------------------------------------------
 std::vector<variable> fileparser::buildVarVec(std::vector<std::string>& inputLine, bool isReg)
 {
     bool isSigned = false;
@@ -1001,61 +1034,14 @@ std::vector<variable> fileparser::buildVarVec(std::vector<std::string>& inputLin
     return varVec;
 }
 
+// -------------------------------------------------------------------------------
+// 
+// -------------------------------------------------------------------------------
 bool fileparser::finalizeComponent(comp_type type, comp_size datawidth, 
               vector<variable> in, vector<variable> out, bool isSigned, int outputPos)
 {
     
-    // If output is a register and the component is not REG, handle it
-    // Need temp vector of REG components to fill in here, will append at the end
-    std::vector<component> tempRegVec;
-
-    // Skip all this if we're in Inputs, Outputs, Wires, Registers, or REG
-    if( type > comp_type::REG ) 
-    {
-        for( int i=0; i < out.size(); i++ )
-        {
-            if( out[i].isReg_ == true  ) 
-            {
-                // Make new dummy variable, add it to varVec_
-                variable dummyVar(out[i]);
-                dummyVar.name_.append("_temp");
-                
-                varVec_.push_back(dummyVar);
-
-                std::vector<variable> tempIn;
-                tempIn.push_back(dummyVar);
-                std::vector<variable> tempOut;
-                tempOut.push_back(out[i]);
-                std::vector<variable> tempEmpty;
-
-                // Create new Wire component for dummy, insert between last in/out/wire/reg 
-                // and before first real component
-                component tempWire(comp_type::Wires, dummyVar.size_, tempIn, tempEmpty, dummyVar.isSigned_ );
-
-                int insertIndex = 0;
-
-                for( int j = 0; j < compVec_.size(); j++ )
-                {
-                    // This will set insertIndex to the first location of a component type
-                    if( compVec_[j].type_ >= comp_type::REG )
-                    {
-                        insertIndex = j;
-                        break;
-                    }
-                }
-
-                compVec_.insert(compVec_.begin() + insertIndex, tempWire);
-
-                // Replace current output with dummy
-                out.at(i) = dummyVar;
-
-                // Create REG with dummy as input, current var as output, add to tempCompVec
-                component tempReg(comp_type::REG, tempOut[0].size_, tempIn, tempOut, tempOut[0].isSigned_, compVec_.size()+i+1, outputPos);
-                tempRegVec.push_back(tempReg);
-            }
-        }
-    }
-
+    
     // Find what number component this should be
     int compnum = compVec_.size();
 
@@ -1066,25 +1052,18 @@ bool fileparser::finalizeComponent(comp_type type, comp_size datawidth,
               bool isSigned=false, int compNum=0, int outputPos=0);*/
     component temp(type, datawidth, in, out, isSigned, compnum, outputPos);
     compVec_.push_back(temp);
-
-    // Add any needed REG components that were added
-    for( int i = 0; i< tempRegVec.size(); i++ )
-    {
-        compVec_.push_back(tempRegVec[i]);
-    }
     
     if (DEBUG)
     {
         temp.printComponent(fout_);
-        for( int i = 0; i< tempRegVec.size(); i++ )
-        {
-            tempRegVec[i].printComponent(fout_);
-        }
     }
 
     return true;
 }
 
+// -------------------------------------------------------------------------------
+// 
+// -------------------------------------------------------------------------------
 int fileparser::findVariableIndex(std::string& varName)
 {
     // Loop through existing variables
@@ -1101,6 +1080,9 @@ int fileparser::findVariableIndex(std::string& varName)
     return -1;
 }
 
+// -------------------------------------------------------------------------------
+// 
+// -------------------------------------------------------------------------------
 bool fileparser::checkCompForSignedVariable(std::vector<variable>& varVec)
 {
     for( int i=0; i < varVec.size(); i++)
@@ -1122,64 +1104,3 @@ bool fileparser::checkCompForSignedVariable(std::vector<variable>& varVec)
     return true;
 }
 
-void fileparser::writeFile()
-{
-
-    //fout_.open();
-    fout_<<"\n`timescale 1ns / 1ps";
-    std::string ofile,mod;
-    //need to include the outfile name in the writefile function for module name
-    ofile =outfile_;
-    //Cutting off the file type to grab the name
-    // Trim off the folder paths
-    std::size_t pos;
-    
-    if( ofile.find("/") != std::string::npos )
-    {
-        pos = ofile.find_last_of("/");
-        ofile.erase(0,pos+1);
-    }
-
-    // trim off the file extension
-    pos = ofile.find_last_of(".");
-    ofile = ofile.substr(0,pos);
-
-    //Writing the first line
-    mod = "\nmodule ";
-    std::string opn = "("; //open parentheses
-    std::string cls = ");";//close parentheses
-    std::string semi = ";";
-    std::string com=",";
-    std::string clk = "Clk", rst = "Rst";
-    std::string nL="\n",tab = "\t",iput="input",spc = " ";
-    mod.append(ofile);
-    mod.append(opn);
-
-    for(int i=0;i<compVec_.size();i++){
-        if(compVec_[i].type_==comp_type::Inputs||compVec_[i].type_==comp_type::Outputs){
-            for(int j=0;j<compVec_[i].in_.size();j++){              
-                
-                mod.append(compVec_[i].in_[j].name_);
-                mod.append(com);
-            }
-            for(int j=0;j<compVec_[i].out_.size();j++){
-
-                mod.append(compVec_[i].out_[j].name_);
-                mod.append(com);
-                
-            }           
-        }
-    }
-    mod.append(clk+com+rst);
-    //mod = mod.substr(0,mod.size());
-    mod.append(cls);
-    fout_<<nL+mod;
-    fout_<<nL+tab+iput+spc+clk+com+rst+semi;
-    for (int i=0; i<compVec_.size(); i++)
-    {
-        std::string ugh=nL+compVec_[i].writeLine();
-        fout_<<ugh;
-    }
-    
-    fout_<<"\nendmodule";
-}

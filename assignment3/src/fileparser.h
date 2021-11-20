@@ -13,12 +13,10 @@
 class fileparser {
 private:
     void parseLine(std::string& line);
-    void writeFile();
 
     void constructInputs(std::string& line);
     void constructOutputs(std::string& line);
-    void constructWires(std::string& line);
-    void constructRegisters(std::string& line);
+    void constructVariables(std::string& line);
     void constructShift(std::string& line);
     void constructCOMP(std::string& line);
     void constructADDorSUB(std::string& line);
