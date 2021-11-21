@@ -17,6 +17,9 @@ component::component(comp_type type, comp_size datawidth, vector<variable> in, v
     isSigned_ = isSigned;
     compNum_ = compNum;
     outputPos_ = outputPos;
+    //Scheduler Additions
+    int time=0;
+    std::vector<int> parent_,child_; //or comesfrom goesto
 
     for (int i=0; i<in.size(); i++)
     {

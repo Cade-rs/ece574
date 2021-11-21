@@ -6,5 +6,6 @@
 class pschedule{
 public:
     pschedule(std::vector<component>& compVec);
+    void asap(std::vector<component> cV);
 };
 
