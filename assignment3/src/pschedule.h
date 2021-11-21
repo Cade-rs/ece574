@@ -6,6 +6,5 @@
 class pschedule{
 public:
     pschedule(std::vector<component>& compVec);
-    void DFS(std::vector<component> compVec);
 };
 
