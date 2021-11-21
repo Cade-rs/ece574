@@ -62,9 +62,10 @@ void pschedule::recurse(std::vector<component> cV, int nodeidx)
             youngestage = (cV[cV[nodeidx].child_[i]].alapFrame_ < youngestage) ? cV[cV[nodeidx].child_[i]].alapFrame_ : youngestage;
         }
 
+        //Determine what the ALAP time frame should be based on youngest child and resource type
         newframe = findalaptf(cV[nodeidx].restype_, youngestage);
 
-        //Check if this node has been previously processed and determine the earliest of the two time frames
+        //Check if this node has been previously processed and determine the earliest of the two time frames - THIS IS UNNECESSARY WHY DID YOU DO THIS STUPID STUPID STUPID STUPID STUPID STU
         if (cV[nodeidx].alapFrame_ > 0)
         {
             cV[nodeidx].alapFrame_ = (newframe < cV[nodeidx].alapFrame_) ? newframe : cV[nodeidx].alapFrame_;
