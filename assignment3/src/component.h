@@ -28,7 +28,7 @@ public:
     std::string dw2Str();
     std::string trunc();
     std::string cPadd();
-
+    resource whichResource();
     void printComponent(std::ofstream& fout);
 
     comp_type type_;
@@ -43,5 +43,8 @@ public:
     int outputPos_;
     std::string sctype_;
     std::string scdw_;
+    int asapFrame_;
+    int alapFrame_;
+    resource restype_;
 };
 #endif

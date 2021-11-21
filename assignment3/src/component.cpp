@@ -19,6 +19,8 @@ component::component(comp_type type, comp_size datawidth, vector<variable> in, v
     outputPos_ = outputPos;
     //Scheduler Additions
     int time=0;
+    asapFrame_ = -1;
+    alapFrame_ = -1;
     std::vector<int> parent_,child_; //or comesfrom goesto
 
     for (int i=0; i<in.size(); i++)
@@ -35,6 +37,8 @@ component::component(comp_type type, comp_size datawidth, vector<variable> in, v
     //Call the switch to member variables
     sctype_ = comp2Str();
     scdw_ = dw2Str();
+
+    restype_ = whichResource();
 
 }
 
@@ -367,4 +371,24 @@ void component::printComponent(std::ofstream& fout)
         fout << "      " << out_[i].name_ << std::endl;
     }
     fout << std::endl ;
+}
+
+resource component::whichResource(){
+
+    switch(type_)
+    {
+        case comp_type::REG:        return resource::ADD_SUB;
+        case comp_type::ADD:        return resource::ADD_SUB;
+        case comp_type::SUB:        return resource::ADD_SUB;
+        case comp_type::MUL:        return resource::MULT;
+        case comp_type::COMP:       return resource::LOGIC;
+        case comp_type::MUX:        return resource::LOGIC;
+        case comp_type::SHR:        return resource::LOGIC;
+        case comp_type::SHL:        return resource::LOGIC;
+        case comp_type::DIV:        return resource::DIV_MOD;
+        case comp_type::MOD:        return resource::DIV_MOD;
+        case comp_type::INC:        return resource::ADD_SUB;
+        case comp_type::DEC:        return resource::ADD_SUB;
+        default: return resource::UNINIT;
+    }
 }
