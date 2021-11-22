@@ -1,7 +1,7 @@
 #ifndef COMMON_H
 #define COMMON_H
 
-static const bool DEBUG = false;
+static const bool DEBUG = true;
 
 enum comp_type{
     Registers = -40,
@@ -20,6 +20,14 @@ enum comp_type{
     MOD,
     INC,
     DEC,
+};
+
+enum resource{
+    UNINIT = -1,
+    ADD_SUB = 0,
+    MULT,
+    LOGIC,
+    DIV_MOD
 };
 
 enum comp_size{

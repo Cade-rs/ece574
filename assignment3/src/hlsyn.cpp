@@ -9,6 +9,7 @@
 #include "common.h"
 #include "variable.h"
 #include "latencycalculator.h"
+#include "pschedule.h"
 
 
 int main(int argc, char *argv[])
@@ -26,6 +27,7 @@ int main(int argc, char *argv[])
     int latConstraint   = std::stoi(latStr);
 
     fileparser fp(infile, outfile);
+    
 
     bool error = fp.run();
 
@@ -36,9 +38,12 @@ int main(int argc, char *argv[])
     }
 
     // critical path calculations (and test component list)
-    latencycalculator lc(fp.compVec_);
+    //latencycalculator lc(fp.compVec_);
 
-    filewriter fw(outfile, fp.compVec_);
+    pschedule pscheduler;
+    pscheduler.performScheduling(fp.compVec_);
+
+    filewriter fw(outfile, pscheduler.compVec_);
 
     fw.writeFile();
 

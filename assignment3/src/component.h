@@ -28,7 +28,7 @@ public:
     std::string dw2Str();
     std::string trunc();
     std::string cPadd();
-
+    resource whichResource();
     void printComponent(std::ofstream& fout);
 
     comp_type type_;
@@ -36,12 +36,15 @@ public:
     bool isSigned_;
     vector<variable> in_;
     vector<variable> out_;
-    vector<int> comesFrom;
-    vector<int> goesTo;
+    vector<int> parent_;
+    vector<int> child_;
     double lat_;
     int compNum_;
     int outputPos_;
     std::string sctype_;
     std::string scdw_;
+    int asapFrame_;
+    int alapFrame_;
+    resource restype_;
 };
 #endif
