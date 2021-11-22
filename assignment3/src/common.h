@@ -1,7 +1,7 @@
 #ifndef COMMON_H
 #define COMMON_H
 
-static const bool DEBUG = false;
+static const bool DEBUG = true;
 
 enum comp_type{
     Registers = -40,

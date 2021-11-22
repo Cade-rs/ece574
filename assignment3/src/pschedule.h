@@ -10,13 +10,19 @@
 
 class pschedule{
 public:
-    pschedule(std::vector<component>& compVec);
-    void asap(std::vector<component> cV);
-    void alap(std::vector<component> cV);
-    void recurse(std::vector<component> cV, int nodeidx);
+    pschedule();
+    void performScheduling(std::vector<component>& compVec);
+    void asap();
+    void alap();
+    void recurse(int nodeidx);
+    void outputDebug();
     int findalaptf( resource restype, int childtf);
-
+    
+    std::vector<component> compVec_;
     int latconstrnt_;
+
+    std::ifstream fin_;
+    std::ofstream fout_;
 };
 
 #endif

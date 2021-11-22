@@ -39,7 +39,6 @@ component::component(comp_type type, comp_size datawidth, vector<variable> in, v
     scdw_ = dw2Str();
 
     restype_ = whichResource();
-
 }
 
 // Copy constructor
@@ -62,6 +61,11 @@ component::component(const component& in_comp)
     }
 
     lat_ = in_comp.lat_;
+
+    restype_ = in_comp.restype_;
+
+    asapFrame_ = in_comp.asapFrame_;
+    alapFrame_ = in_comp.alapFrame_;
 }
 
 bool component::containsInput(std::string var)
@@ -355,6 +359,7 @@ void component::printComponent(std::ofstream& fout)
     fout << std::endl;
     fout << "New Component" << std::endl;
     fout << "Type:         " << type2str(type_) << std::endl;
+    fout << "Resource:     " << restype_ << std::endl;
     fout << "Number:       " << compNum_ << std::endl;
     fout << "OutputPos:    " << outputPos_ << std::endl;
     fout << "Size:         " << size2str(dw_) << std::endl;
@@ -371,6 +376,18 @@ void component::printComponent(std::ofstream& fout)
         fout << "      " << out_[i].name_ << std::endl;
     }
     fout << std::endl ;
+    fout << "ASAP TF:      " << asapFrame_ << std::endl;
+    fout << "ALAP TF:      " << alapFrame_ << std::endl;
+    fout << "Parents:" << std::endl;
+    for(int i=0; i<parent_.size(); i++)
+    {
+        fout << "      " << parent_[i] << std::endl;
+    }
+    fout << "Children:" << std::endl;
+    for(int i=0; i<child_.size(); i++)
+    {
+        fout << "      " << child_[i] << std::endl;
+    }
 }
 
 resource component::whichResource(){
