@@ -15,6 +15,7 @@ public:
     void asap();
     void alap();
     void recurse(int nodeidx);
+    void buildFDSTable();
     void outputDebug();
     int findalaptf( resource restype, int childtf);
     
