@@ -66,8 +66,6 @@ void pschedule::alap(){
         compVec_[8].parent_.push_back(4);
         compVec_[8].parent_.push_back(5);
         compVec_[8].parent_.push_back(7);
-
-        //std::cout << "test thing equals" << std::to_string(compVec_[8].parent_[1]) << std::endl;
     }
 
     std::vector<int> endnodes;
@@ -80,8 +78,8 @@ void pschedule::alap(){
             endnodes.push_back( compidx );
         }
     }
-    //std::cout << "amount of endnodes= " << endnodes.size() << std::endl;
 
+    //Start at endnodes. Recurse through parents to determine time frames
     for (int i=0; i < endnodes.size(); i++)
     {
         recurse(endnodes[i]);
@@ -97,15 +95,12 @@ void pschedule::alap(){
 // -------------------------------------------------------------------------------
 void pschedule::recurse(int nodeidx)
 {
-    //std::cout << "Entering recurse. node = " << nodeidx << "childnum = " << compVec_[nodeidx].child_.size() << std::endl;
 
     //set alap time based on succeeding nodes. If end node, set to latency constraint
     if (compVec_[nodeidx].child_.size() <= 0)
     {
         //trick the function into thinking end node has successor 1 frame after latency constraint
         compVec_[nodeidx].alapFrame_ = findalaptf(compVec_[nodeidx].restype_, latconstrnt_+1);
-
-        //std::cout << "recurse1: node = " << nodeidx << ", alapFrame = " << compVec_[nodeidx].alapFrame_ << std::endl;
     }
     else
     {
@@ -121,26 +116,11 @@ void pschedule::recurse(int nodeidx)
             youngestage = ( ( compVec_[compVec_[nodeidx].child_[i]].alapFrame_ < age ) &&
                             ( compVec_[compVec_[nodeidx].child_[i]].alapFrame_ > 0 ) )
                          ? compVec_[compVec_[nodeidx].child_[i]].alapFrame_ : age;
-
-            //std::cout << "recurse2: node = " << nodeidx << ", youngest = " << youngestage << std::endl;
         }
-
-    //std::cout << "recurse3: node = " << nodeidx << ", resource = " << compVec_[nodeidx].restype_ << ", comp type = " << compVec_[nodeidx].type_ << std::endl;
 
         //Determine what the ALAP time frame should be based on youngest child and resource type
-        newframe = findalaptf(compVec_[nodeidx].restype_, youngestage);
+        compVec_[nodeidx].alapFrame_ = findalaptf(compVec_[nodeidx].restype_, youngestage);
 
-        //Check if this node has been previously processed and determine the earliest of the two time frames - THIS IS UNNECESSARY WHY DID YOU DO THIS STUPID STUPID STUPID STUPID STUPID STU
-        if (compVec_[nodeidx].alapFrame_ > 0)
-        {
-            compVec_[nodeidx].alapFrame_ = (newframe < compVec_[nodeidx].alapFrame_) ? newframe : compVec_[nodeidx].alapFrame_;
-        }
-        else
-        {
-            compVec_[nodeidx].alapFrame_ = newframe;
-        }
-
-        //std::cout << "recurse4: node = " << nodeidx << ", alapFrame = " << compVec_[nodeidx].alapFrame_ << std::endl;
     }
 
     //Go on to parent nodes. If no parents, we're done!
@@ -169,8 +149,6 @@ int pschedule::findalaptf( resource restype, int childtf){
         case resource::LOGIC: delay = 1; break;
         default: delay = 100; break;
     }
-
-    //std::cout << "findalaptf: resource = " << restype << ", delay = " << delay << ", childframe = " << childtf << std::endl;
 
     newframe = childtf - delay;
 
