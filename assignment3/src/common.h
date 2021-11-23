@@ -23,6 +23,14 @@ enum comp_type{
     DEC,
 };
 
+enum resource{
+    UNINIT = -1,
+    ADD_SUB = 0,
+    MULT,
+    LOGIC,
+    DIV_MOD
+};
+
 enum comp_size{
     ONE = 0,
     TWO,

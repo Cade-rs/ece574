@@ -694,7 +694,7 @@ void fileparser::constructDIV(std::string& line)
     std::string varName = "";
 
     // Set type
-    type = comp_type::MUX;
+    type = comp_type::DIV;
 
     // Find output
     // Output is first token in splitLine
@@ -1060,7 +1060,7 @@ bool fileparser::finalizeComponent(comp_type type, comp_size datawidth,
     
     if (DEBUG)
     {
-        temp.printComponent(fout_);
+        //temp.printComponent(fout_); //cade removed this to prevent double printing
     }
 
     return true;
