@@ -16,7 +16,7 @@ public:
     void alap();
     void recurse(int nodeidx);
     void FDS();
-    void buildFDSTable(std::vector<double>& FDSTable, std::vector<int> nodeVec);
+    void buildFDSTable(std::vector<double>& FDSTable, std::vector<double>& probVec,  std::vector<int> nodeVec);
     void outputDebug();
     int findalaptf( resource restype, int childtf);
     
@@ -27,6 +27,11 @@ public:
     std::vector<double> multTable_;
     std::vector<double> logicTable_;
     std::vector<double> divTable_;
+
+    std::vector<double> addProbs_;
+    std::vector<double> multProbs_;
+    std::vector<double> logicProbs_;
+    std::vector<double> divProbs_;
 
     std::ifstream fin_;
     std::ofstream fout_;

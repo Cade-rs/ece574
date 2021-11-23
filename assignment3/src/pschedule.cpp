@@ -186,9 +186,24 @@ void pschedule::FDS(){
         }
     }
     
-    buildFDSTable(divTable_, divVec);
+    buildFDSTable(addTable_, addProbs_, addVec);
+    buildFDSTable(multTable_, multProbs_, multVec);
+    buildFDSTable(logicTable_, logicProbs_, logicVec);
+    buildFDSTable(divTable_, divProbs_, divVec);
+
+
 
     //debug prints
+    for (int nodeidx = 0; nodeidx < addVec.size(); nodeidx++)
+    {
+        std::cout << "printing new row= " << nodeidx << ": ";
+        for (int j = 0; j < latconstrnt_; j++)
+        {
+            //std::cout << FDSTable[nodeidx * latconstrnt_ + j];
+            std::cout << std::fixed << addTable_[nodeidx * latconstrnt_ + j] << "  ";
+        }
+        std::cout << std::endl;
+    }
     for (int nodeidx = 0; nodeidx < divVec.size(); nodeidx++)
     {
         std::cout << "printing new row= " << nodeidx << ": ";
@@ -212,7 +227,7 @@ void pschedule::FDS(){
 //       -Sum the probabilities (or handle in separate function). One way to do it
 //        is to add an extra row to the table for total values
 // -------------------------------------------------------------------------------
-void pschedule::buildFDSTable(std::vector<double>& FDSTable, std::vector<int> nodeVec){
+void pschedule::buildFDSTable(std::vector<double>& FDSTable, std::vector<double>& probVec, std::vector<int> nodeVec){
 
     //std::vector<int> nodeVec;
 
@@ -244,7 +259,7 @@ void pschedule::buildFDSTable(std::vector<double>& FDSTable, std::vector<int> no
     std::cout.precision( 3 ); //float/double precision for couts
 
     for (int nodeidx = 0; nodeidx < nodeVec.size(); nodeidx++)
-    {   
+    {
         //ASAP = ALAP -> 1.0 probability
         if ( (compVec_[nodeVec[nodeidx]].alapFrame_ - compVec_[nodeVec[nodeidx]].asapFrame_) == 0)
         {
@@ -283,8 +298,21 @@ void pschedule::buildFDSTable(std::vector<double>& FDSTable, std::vector<int> no
         }
     }
 
-    std::cout << "FDSTable size= " << FDSTable.size() << std::endl;
+    // Determine the probabilites of the resource at each time frame
+    for (int TF = 0; TF < latconstrnt_; TF++)
+    {
+        double sumTF;
+        for (int nodeidx = 0; nodeidx < nodeVec.size(); nodeidx++)
+        {
+            sumTF += FDSTable[nodeidx*latconstrnt_ + TF];
+        }
 
+        //vector of length equal to latency constraint
+        probVec.push_back(sumTF);
+    }
+
+
+    std::cout << "FDSTable size= " << FDSTable.size() << std::endl;
     //debug prints
     for (int nodeidx = 0; nodeidx < nodeVec.size(); nodeidx++)
     {
