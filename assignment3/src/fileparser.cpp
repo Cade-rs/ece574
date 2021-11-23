@@ -301,7 +301,7 @@ void fileparser::constructVariables(std::string& line)
     }
 
     //all wires from one line should have same size
-    comp_type type = comp_type::Wires;
+    comp_type type = comp_type::Variables;
     comp_size dw = wires[0].size_;
     bool isSigned = wires[0].isSigned_;
 
