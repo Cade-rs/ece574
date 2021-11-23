@@ -1079,7 +1079,6 @@ void fileparser::constructIfElse(std::string& line)
     newIf.isElse = isElse;
     newIf.condition = condition;
     newIf.correspondingIfElse = -1;
-    std::cout << "test " << std::endl;
 
     if ( isElse )
     {
