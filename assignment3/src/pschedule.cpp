@@ -131,21 +131,28 @@ void pschedule::alap()
 //Writing the Recursion Function For Initial Nodes
 void pschedule::recurse_firstNodes(int nodeidx){
     std::cout<<"Another time frame down"<<endl;
-    while(!compVec_[nodeidx].child_.empty()){
-        for(int i; compVec_[nodeidx].child_.size();i++){
-            if(compVec_[nodeidx].parent_.empty()){ //Handling if the input to the recusion is from the firstnode array of time =1
-                compVec_[nodeidx].asapFrame_=1;
-            }
-            else if (compVec_[nodeidx].asapFrame_!=0){
-                std::cout<<"A child was already accounted for"<<endl;
-                break;
-            }
-            else{
-                compVec_[nodeidx].asapFrame_+=findasaptf(compVec_[nodeidx].restype_, compVec_[nodeidx].asapFrame_);
-            }
+    
+    for(int i; compVec_[nodeidx].child_.size();i++){
+        if(compVec_[nodeidx].parent_.empty()){ //Handling if the input to the recusion is from the firstnode array of time =1
+            compVec_[nodeidx].asapFrame_=1;
+        }
+        else if (compVec_[nodeidx].asapFrame_!=0){
+            std::cout<<"A child was already accounted for"<<endl;
+            break;
+        }
+        else{
+            std::cout<<"Current time is:"<<compVec_[nodeidx].asapFrame_;
+            compVec_[nodeidx].asapFrame_=(compVec_[nodeidx].restype_, compVec_[nodeidx].asapFrame_);  
+            std::cout<<"New time is:"<<compVec_[nodeidx].asapFrame_;
         }
     }
+
+    //Go on to child nodes. If no children, we're done!
+    for (int i = 0; i< compVec_[nodeidx].child_.size(); i++){
+        recurse_firstNodes(compVec_[nodeidx].child_[i]);
+    }
 }
+
 
 
 // -------------------------------------------------------------------------------
