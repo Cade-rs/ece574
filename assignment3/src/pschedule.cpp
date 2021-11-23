@@ -30,7 +30,7 @@ void pschedule::performScheduling(std::vector<component>& compVec){
     alap();
 
     //NOTE: Need to add array cleanup
-    buildFDSTable();
+    FDS();
 
     outputDebug();
 
@@ -41,20 +41,20 @@ void pschedule::performScheduling(std::vector<component>& compVec){
 void pschedule::asap(){
 
     if (DEBUG){
-        compVec_[4].asapFrame_ = 1;
+        compVec_[4].asapFrame_ = -1;//1
         compVec_[4].child_.push_back(8);
 
-        compVec_[5].asapFrame_ = 1;
+        compVec_[5].asapFrame_ = -1;//1
         compVec_[5].child_.push_back(8);
 
-        compVec_[6].asapFrame_ = 1;
+        compVec_[6].asapFrame_ = -1;//1
         compVec_[6].child_.push_back(7);
 
-        compVec_[7].asapFrame_ = 2;
+        compVec_[7].asapFrame_ = -1;//2
         compVec_[7].parent_.push_back(6);
         compVec_[7].child_.push_back(8);
 
-        compVec_[8].asapFrame_ = 4;
+        compVec_[8].asapFrame_ = -1;//4
         compVec_[8].parent_.push_back(4);
         compVec_[8].parent_.push_back(5);
         compVec_[8].parent_.push_back(7);
@@ -220,6 +220,7 @@ int pschedule::findalaptf( resource restype, int childtf){
     return newframe;
 }
 
+<<<<<<< HEAD
 // -------------------------------------------------------------------------------
 // Find the ASAP time frame
 // -------------------------------------------------------------------------------
@@ -241,6 +242,54 @@ int pschedule::findasaptf( resource restype, int parenttf){
 
     return newframe;
 }
+=======
+void pschedule::FDS(){
+
+    //build individual resource compVecs
+    std::vector<int> addVec;
+    std::vector<int> multVec;
+    std::vector<int> logicVec;
+    std::vector<int> divVec;
+
+    //iterate through compvec, looking for components with ASAP/ALAP times (ie nodes). Fill out the FDS table as we go
+    for (int i=0; i< compVec_.size(); i++)
+    {
+        if (compVec_[i].alapFrame_ > 0 && compVec_[i].asapFrame_ > 0 && compVec_[i].restype_ == resource::ADD_SUB)
+        {
+            addVec.push_back(i);
+        }
+        else if (compVec_[i].alapFrame_ > 0 && compVec_[i].asapFrame_ > 0 && compVec_[i].restype_ == resource::MULT)
+        {
+            multVec.push_back(i);
+        }
+        else if (compVec_[i].alapFrame_ > 0 && compVec_[i].asapFrame_ > 0 && compVec_[i].restype_ == resource::LOGIC)
+        {
+            logicVec.push_back(i);
+        }
+        else if (compVec_[i].alapFrame_ > 0 && compVec_[i].asapFrame_ > 0 && compVec_[i].restype_ == resource::DIV_MOD)
+        {
+            divVec.push_back(i);
+        }
+    }
+    
+    buildFDSTable(divTable_, divVec);
+
+    //debug prints
+    for (int nodeidx = 0; nodeidx < divVec.size(); nodeidx++)
+    {
+        std::cout << "printing new row= " << nodeidx << ": ";
+        for (int j = 0; j < latconstrnt_; j++)
+        {
+            //std::cout << FDSTable[nodeidx * latconstrnt_ + j];
+            std::cout << std::fixed << divTable_[nodeidx * latconstrnt_ + j] << "  ";
+        }
+        std::cout << std::endl;
+    }
+
+
+}
+
+>>>>>>> 865da293297ab7289f665b9fff8ba9c2c3d534e6
 
 // -------------------------------------------------------------------------------
 // TODO: -Make most of the code below modular, so that we can call single function
@@ -250,15 +299,10 @@ int pschedule::findasaptf( resource restype, int parenttf){
 //       -Sum the probabilities (or handle in separate function). One way to do it
 //        is to add an extra row to the table for total values
 // -------------------------------------------------------------------------------
-void pschedule::buildFDSTable(){
+void pschedule::buildFDSTable(std::vector<double>& FDSTable, std::vector<int> nodeVec){
 
-    std::vector<int> nodeVec;
+    //std::vector<int> nodeVec;
 
-    //iterate through compvec, looking for components with ASAP/ALAP times (ie nodes). Fill out the FDS table as we go
-    for (int i=0; i< compVec_.size(); i++)
-    {
-        if (compVec_[i].alapFrame_ > 0 && compVec_[i].asapFrame_ > 0) nodeVec.push_back(i);
-    }
 
     for (int i=0; i<nodeVec.size(); i++){
         std::cout << "node " << nodeVec[i] << ", ";
@@ -270,16 +314,19 @@ void pschedule::buildFDSTable(){
     //std::vector<std::vector<int>> FDSTable
     
     double prob = 0.0;
-    double* FDSTable = new double[nodeVec.size() * latconstrnt_];
+    //FDSTable = new double[nodeVec.size() * latconstrnt_];
 
     //std::cout << "FDSTable size= " << sizeof(FDSTable)/sizeof(*FDSTable) << std::endl;
-    std::cout << "FDSTable size= " << sizeof(FDSTable) << "nodevecsize = " << nodeVec.size() << "latency = " << latconstrnt_ << std::endl;
+    std::cout << "nodevecsize = " << nodeVec.size() << "latency = " << latconstrnt_ << std::endl;
 
-    //Initialize all values to 0.0
+    /*//Initialize all values to 0.0
     for (int i=0; i < (nodeVec.size() * latconstrnt_); i++)
     {
+        std::cout << "initializing to zero" << std::endl;
         *(FDSTable + i) = 0.0;
-    }
+        //*FDSTable[i] = 0.0;
+        
+    }*/
 
     std::cout.precision( 3 ); //float/double precision for couts
 
@@ -301,14 +348,29 @@ void pschedule::buildFDSTable(){
             std::cout << "Diff = " << (compVec_[nodeVec[nodeidx]].alapFrame_ - compVec_[nodeVec[nodeidx]].asapFrame_ + 1) << std::endl;
         }
 
+        /*
         for (int TF = compVec_[nodeVec[nodeidx]].asapFrame_ -1; TF < compVec_[nodeVec[nodeidx]].alapFrame_; TF++)
         {
-            //FDSTable[ nodeidx * latconstrnt_ + TF] = prob;
+            //*FDSTable[ nodeidx * latconstrnt_ + TF] = prob;
             *(FDSTable + nodeidx * latconstrnt_ + TF) = prob;
+        }*/
+        for (int TF = 0; TF < latconstrnt_; TF++)
+        {
+            if ( (TF >= compVec_[nodeVec[nodeidx]].asapFrame_) && 
+                (TF <= compVec_[nodeVec[nodeidx]].alapFrame_) )
+            {
+                FDSTable.push_back( prob );
+            }
+            else
+            {
+                FDSTable.push_back( 0.0 );
+            }            
+            //*FDSTable[ nodeidx * latconstrnt_ + TF] = prob;
+            //*(FDSTable + nodeidx * latconstrnt_ + TF) = prob;
         }
     }
 
-    std::cout << "FDSTable size= " << sizeof(FDSTable)/sizeof(*FDSTable) << std::endl;
+    std::cout << "FDSTable size= " << FDSTable.size() << std::endl;
 
     //debug prints
     for (int nodeidx = 0; nodeidx < nodeVec.size(); nodeidx++)
@@ -317,12 +379,12 @@ void pschedule::buildFDSTable(){
         for (int j = 0; j < latconstrnt_; j++)
         {
             //std::cout << FDSTable[nodeidx * latconstrnt_ + j];
-            std::cout << std::fixed << *(FDSTable + nodeidx * latconstrnt_ + j) << "  ";
+            std::cout << std::fixed << FDSTable[nodeidx * latconstrnt_ + j] << "  ";
         }
         std::cout << std::endl;
     }
 
-    delete[] FDSTable;
+    //delete[] FDSTable;
 
     return;
 }
