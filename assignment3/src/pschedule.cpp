@@ -242,6 +242,53 @@ int pschedule::findasaptf( resource restype, int parenttf){
     return newframe;
 }
 
+void pschedule::FDS(){
+
+    //build individual resource compVecs
+    std::vector<int> addVec;
+    std::vector<int> multVec;
+    std::vector<int> logicVec;
+    std::vector<int> divVec;
+
+    //iterate through compvec, looking for components with ASAP/ALAP times (ie nodes). Fill out the FDS table as we go
+    for (int i=0; i< compVec_.size(); i++)
+    {
+        if (compVec_[i].alapFrame_ > 0 && compVec_[i].asapFrame_ > 0 && compVec_[i].restype_ == resource::ADD_SUB)
+        {
+            addVec.push_back(i);
+        }
+        else if (compVec_[i].alapFrame_ > 0 && compVec_[i].asapFrame_ > 0 && compVec_[i].restype_ == resource::MULT)
+        {
+            multVec.push_back(i);
+        }
+        else if (compVec_[i].alapFrame_ > 0 && compVec_[i].asapFrame_ > 0 && compVec_[i].restype_ == resource::LOGIC)
+        {
+            logicVec.push_back(i);
+        }
+        else if (compVec_[i].alapFrame_ > 0 && compVec_[i].asapFrame_ > 0 && compVec_[i].restype_ == resource::DIV_MOD)
+        {
+            divVec.push_back(i);
+        }
+    }
+    
+    buildFDSTable(divTable_, divVec);
+
+    //debug prints
+    for (int nodeidx = 0; nodeidx < divVec.size(); nodeidx++)
+    {
+        std::cout << "printing new row= " << nodeidx << ": ";
+        for (int j = 0; j < latconstrnt_; j++)
+        {
+            //std::cout << FDSTable[nodeidx * latconstrnt_ + j];
+            std::cout << std::fixed << divTable_[nodeidx * latconstrnt_ + j] << "  ";
+        }
+        std::cout << std::endl;
+    }
+
+
+}
+
+
 // -------------------------------------------------------------------------------
 // TODO: -Make most of the code below modular, so that we can call single function
 //        for all 4 resource types
