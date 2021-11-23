@@ -10,13 +10,14 @@
 using namespace std;
 
 
-component::component(comp_type type, comp_size datawidth, vector<variable> in, vector<variable> out, bool isSigned, int compNum, int outputPos)
+component::component(comp_type type, comp_size datawidth, vector<variable> in, vector<variable> out, bool isSigned, int compNum, int outputPos, int withinIf)
 {
     type_ = type;
     dw_ = datawidth;
     isSigned_ = isSigned;
     compNum_ = compNum;
     outputPos_ = outputPos;
+    withinIf_ = withinIf;
     //Scheduler Additions
     int time=0;
     asapFrame_ = -1;
@@ -49,6 +50,7 @@ component::component(const component& in_comp)
     isSigned_ = in_comp.isSigned_;
     compNum_ = in_comp.compNum_;
     outputPos_ = in_comp.outputPos_;
+    withinIf_ = in_comp.withinIf_;
 
     for (int i=0; i<in_comp.in_.size(); i++)
     {
@@ -365,6 +367,11 @@ void component::printComponent(std::ofstream& fout)
     fout << "Size:         " << size2str(dw_) << std::endl;
     fout << "Signed:       " << isSigned_ << std::endl;
     fout << "Latency:      " << lat_ << std::endl;
+    
+    fout << std::endl ;
+    fout << "Within If Statement: " << withinIf_ << std::endl;
+    fout << std::endl ;
+
     fout << "Inputs:" << std::endl;
     for(int i=0; i<in_.size(); i++)
     {
@@ -376,6 +383,7 @@ void component::printComponent(std::ofstream& fout)
         fout << "      " << out_[i].name_ << std::endl;
     }
     fout << std::endl ;
+
     fout << "ASAP TF:      " << asapFrame_ << std::endl;
     fout << "ALAP TF:      " << alapFrame_ << std::endl;
     fout << "Parents:" << std::endl;

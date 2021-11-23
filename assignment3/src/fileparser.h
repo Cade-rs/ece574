@@ -25,6 +25,7 @@ private:
     void constructMOD(std::string& line);
     void constructMUX(std::string& line);
     void constructREG(std::string& line);
+    void constructIfElse(std::string& line);
     
     // Helpers
     std::vector<std::string> stringSplit(std::string line, std::string re = "\\s+");
@@ -38,6 +39,9 @@ private:
     std::ifstream fin_;
     std::ofstream fout_;
 
+    int lastIfLeft_;
+    std::vector<ifStatement> ifStatements_;
+    std::vector<int> currentIfs_;
     bool error_;
 
 public:
