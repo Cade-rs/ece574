@@ -117,12 +117,12 @@ void fileparser::parseLine(std::string& line)
     else if ( line.rfind("if", 0) == 0 )
     {
         // what do?
-        std::cout << "I got to IF! What do?" << std::endl;
+        std::cout << "I got to IF! What do?" << std::endl << line << std::endl;
     }
     else if ( line.rfind("else", 0) == 0 )
     {
         // what do?
-        std::cout << "I got to ELSE! What do?" << std::endl;
+        std::cout << "I got to ELSE! What do?" << std::endl << line << std::endl;
     }
     else if( line.find(">>") != std::string::npos 
              || line.find("<<") != std::string::npos )
@@ -171,12 +171,17 @@ void fileparser::parseLine(std::string& line)
     else if( line == "" )
     {
         //Empty line
+        //std::cout << "I am empty!" << std::endl << line << std::endl;
     }
     else
     {
         //TODO: use this as error reporting for invalid command characters
         std::cout << "ERROR: Unrecognized command: " << std::endl << line << std::endl;
-        error_ = true;
+        
+        if( !DEBUG )
+        {
+            error_ = true;
+        }
     }
     return;
 }
@@ -246,7 +251,7 @@ void fileparser::constructVariables(std::string& line)
     std::vector<variable> outputs;
 
     // update varVec_ with only wires
-    wires = buildVarVec(splitLine);
+    wires = buildVarVec(splitLine, true); // true denotes this is a register
 
     for( int i=0; i < wires.size(); i++)
     {

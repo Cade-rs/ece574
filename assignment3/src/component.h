@@ -36,8 +36,8 @@ public:
     bool isSigned_;
     vector<variable> in_;
     vector<variable> out_;
-    vector<int> comesFrom;
-    vector<int> goesTo;
+    vector<int> comesFrom; // Use me?
+    vector<int> goesTo;    // Use me?
     double lat_;
     int compNum_;
     int outputPos_;

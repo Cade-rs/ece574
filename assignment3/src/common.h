@@ -1,9 +1,10 @@
 #ifndef COMMON_H
 #define COMMON_H
 
-static const bool DEBUG = false;
+static const bool DEBUG = true;
 
 enum comp_type{
+    Variables = -50,
     Registers = -40,
     Wires = -30,
     Inputs = -20,
