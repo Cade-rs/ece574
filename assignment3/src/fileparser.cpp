@@ -13,6 +13,7 @@
 fileparser::fileparser(std::string infile, std::string outfile)
 {
     error_ = false;
+    lastIfLeft_ = 0;
     fin_.open(infile);
     
     outfile_="./debug_out.txt";
@@ -118,6 +119,7 @@ void fileparser::parseLine(std::string& line)
     {
         // what do?
         std::cout << "I got to IF! What do?" << std::endl << line << std::endl;
+        constructIfElse(line);
     }
     else if ( line.rfind("else", 0) == 0 )
     {
@@ -168,6 +170,14 @@ void fileparser::parseLine(std::string& line)
         // Register
         constructREG(line);
     }
+    else if( line.find("}") != std::string::npos )
+    {
+        // End if statement, handle later
+    }
+    else if( line.find("{") != std::string::npos )
+    {
+        // Start if, do nothing
+    }
     else if( line == "" )
     {
         //Empty line
@@ -183,6 +193,14 @@ void fileparser::parseLine(std::string& line)
             error_ = true;
         }
     }
+
+    if( line.find("}") != std::string::npos )
+    {
+        // End if statement
+        lastIfLeft_ = currentIfs_[currentIfs_.size()-1];
+        currentIfs_.pop_back();
+    }
+
     return;
 }
 
@@ -239,7 +257,6 @@ void fileparser::constructOutputs(std::string& line)
     bool didItWork = finalizeComponent(type, dw, inputs, outputs, isSigned);
     return;
 }
-
 
 // -------------------------------------------------------------------------------
 // 
@@ -1001,6 +1018,57 @@ void fileparser::constructREG(std::string& line)
     return;
 }
 
+// -------------------------------------------------------------------------------
+// 
+// -------------------------------------------------------------------------------
+void fileparser::constructIfElse(std::string& line)
+{
+    
+    // std::vector<ifStatement> ifStatements_;
+    // std::vector<int> currentIfs_;
+
+    /*struct ifStatement
+    {
+        int ifNumber;
+        bool isElse;
+        std::vector<int> components;
+        std::string condition;
+        int correspondingIfElse;
+        int withinIf;
+    };*/
+
+    bool isElse = (line.rfind("else", 0) == 0);
+
+    // find what's within the parentheses
+    // if ( ARG ) {
+    std::vector<std::string> splitLine = stringSplit(line);
+    std::string condition = splitLine[2];
+
+    ifStatement newIf;
+
+    newIf.ifNumber = ifStatements_.size();
+    newIf.isElse = isElse;
+    newIf.condition = condition;
+
+    if ( isElse )
+    {
+        newIf.correspondingIfElse = lastIfLeft_;
+        ifStatements_[lastIfLeft_].correspondingIfElse = newIf.ifNumber;
+    }
+
+    if( currentIfs_.size() > 0)
+    {
+        newIf.withinIf = currentIfs_[currentIfs_.size()-1];
+    }
+    else
+    {
+        newIf.withinIf = -1;
+    }
+
+    ifStatements_.push_back(newIf);
+    currentIfs_.push_back(newIf.ifNumber);
+
+}
 
 // -------------------------------------------------------------------------------
 // 
@@ -1049,6 +1117,15 @@ bool fileparser::finalizeComponent(comp_type type, comp_size datawidth,
     
     // Find what number component this should be
     int compnum = compVec_.size();
+
+    int withinIf = -1;
+
+    // Add info if we're in an if statement
+    if( currentIfs_.size() > 0)
+    {
+        withinIf = currentIfs_[currentIfs_.size()-1];
+        ifStatements_[ currentIfs_[currentIfs_.size()-1] ].components.push_back(compnum);
+    }
 
     //build and append component to compvec
     //component temp(type, datawidth, in, out, compnum, outputPos);

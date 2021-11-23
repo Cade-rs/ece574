@@ -16,7 +16,7 @@ class component {
 public:
     component(comp_type type, comp_size datawidth, 
               vector<variable> in, vector<variable> out, 
-              bool isSigned=false, int compNum=0, int outputPos=0);
+              bool isSigned=false, int compNum=0, int outputPos=0, int withinIf=-1);
     component(const component& in_comp);
     bool containsInput(std::string var);
     bool containsInput(variable& var);
@@ -41,6 +41,7 @@ public:
     double lat_;
     int compNum_;
     int outputPos_;
+    int withinIf_;
     std::string sctype_;
     std::string scdw_;
     int asapFrame_;

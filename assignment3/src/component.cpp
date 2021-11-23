@@ -10,13 +10,14 @@
 using namespace std;
 
 
-component::component(comp_type type, comp_size datawidth, vector<variable> in, vector<variable> out, bool isSigned, int compNum, int outputPos)
+component::component(comp_type type, comp_size datawidth, vector<variable> in, vector<variable> out, bool isSigned, int compNum, int outputPos, int withinIf)
 {
     type_ = type;
     dw_ = datawidth;
     isSigned_ = isSigned;
     compNum_ = compNum;
     outputPos_ = outputPos;
+    withinIf_ = withinIf;
     //Scheduler Additions
     int time=0;
     asapFrame_ = -1;
@@ -49,6 +50,7 @@ component::component(const component& in_comp)
     isSigned_ = in_comp.isSigned_;
     compNum_ = in_comp.compNum_;
     outputPos_ = in_comp.outputPos_;
+    withinIf_ = in_comp.withinIf_;
 
     for (int i=0; i<in_comp.in_.size(); i++)
     {
