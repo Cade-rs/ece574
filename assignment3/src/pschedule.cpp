@@ -39,6 +39,42 @@ void pschedule::performScheduling(std::vector<component>& compVec){
 
 
 void pschedule::asap(){
+
+    if (DEBUG){
+        compVec_[4].asapFrame_ = 1;
+        compVec_[4].child_.push_back(8);
+
+        compVec_[5].asapFrame_ = 1;
+        compVec_[5].child_.push_back(8);
+
+        compVec_[6].asapFrame_ = 1;
+        compVec_[6].child_.push_back(7);
+
+        compVec_[7].asapFrame_ = 2;
+        compVec_[7].parent_.push_back(6);
+        compVec_[7].child_.push_back(8);
+
+        compVec_[8].asapFrame_ = 4;
+        compVec_[8].parent_.push_back(4);
+        compVec_[8].parent_.push_back(5);
+        compVec_[8].parent_.push_back(7);
+    }
+
+    std::vector <int> firstnodes;
+
+    //iterate through the nodes to find the initial nodes. These nodes will have two inputs that are NOT outputs of any other node
+    for (int compidx=0; compidx < compVec_.size(); compidx++){
+        if (compVec_[compidx].asapFrame_ > 0 && (compVec_[compidx].parent_.size() <= 0 || compVec_[compidx].parent_.empty())){
+            firstnodes.push_back(compidx);
+        }
+    }
+    
+    //Start at initial nodes. Recurse through children to determine time frames
+    for (int i=0; i < firstnodes.size(); i++){
+        std::vector<int> foo_path;
+        recurse(firstnodes[i]);
+    }
+
     return;
 }
 
@@ -48,7 +84,8 @@ void pschedule::asap(){
 The idea behind alap is to start with the end nodes by setting their time frame to the latency constraint. Next, go to the parent node and set it's ALAP time frame to the preceding time frame of the end node. Repeat this process recursively until we've mapped out all the upstream nodes
 */
 // -------------------------------------------------------------------------------
-void pschedule::alap(){
+void pschedule::alap()
+{
 
     if (DEBUG) //ASAP test case for circuit 5
     {
@@ -78,7 +115,7 @@ void pschedule::alap(){
     {
         if (compVec_[compidx].asapFrame_ > 0 && compVec_[compidx].child_.size() <= 0)
         {
-            endnodes.push_back( compidx );
+            endnodes.push_back(compidx);
         }
     }
 
@@ -89,6 +126,25 @@ void pschedule::alap(){
     }
 
     return;
+}
+//--------------------------------------------------------------------------------
+//Writing the Recursion Function For Initial Nodes
+void pschedule::recurse_firstNodes(int nodeidx){
+    std::cout<<"Another time frame down"<<endl;
+    while(!compVec_[nodeidx].child_.empty()){
+        for(int i; compVec_[nodeidx].child_.size();i++){
+            if(compVec_[nodeidx].parent_.empty()){ //Handling if the input to the recusion is from the firstnode array of time =1
+                compVec_[nodeidx].asapFrame_=1;
+            }
+            else if (compVec_[nodeidx].asapFrame_!=0){
+                std::cout<<"A child was already accounted for"<<endl;
+                break;
+            }
+            else{
+                compVec_[nodeidx].asapFrame_+=findasaptf(compVec_[nodeidx].restype_, compVec_[nodeidx].asapFrame_);
+            }
+        }
+    }
 }
 
 
@@ -157,6 +213,27 @@ int pschedule::findalaptf( resource restype, int childtf){
     return newframe;
 }
 
+// -------------------------------------------------------------------------------
+// Find the ASAP time frame
+// -------------------------------------------------------------------------------
+int pschedule::findasaptf( resource restype, int parenttf){
+
+    int delay;
+    int newframe;
+
+    switch (restype)
+    {
+        case resource::ADD_SUB: delay = 1; break;
+        case resource::MULT: delay = 2; break;
+        case resource::DIV_MOD: delay = 3; break;
+        case resource::LOGIC: delay = 1; break;
+        default: delay = 100; break;
+    }
+
+    newframe = parenttf + delay;
+
+    return newframe;
+}
 
 // -------------------------------------------------------------------------------
 // TODO: -Make most of the code below modular, so that we can call single function
