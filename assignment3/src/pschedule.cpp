@@ -196,7 +196,7 @@ void pschedule::FDS(){
     //debug prints
     for (int nodeidx = 0; nodeidx < addVec.size(); nodeidx++)
     {
-        std::cout << "printing new row= " << nodeidx << ": ";
+        std::cout << "add printing new row= " << nodeidx << ": ";
         for (int j = 0; j < latconstrnt_; j++)
         {
             //std::cout << FDSTable[nodeidx * latconstrnt_ + j];
@@ -204,9 +204,29 @@ void pschedule::FDS(){
         }
         std::cout << std::endl;
     }
+    for (int nodeidx = 0; nodeidx < multVec.size(); nodeidx++)
+    {
+        std::cout << "mult printing new row= " << nodeidx << ": ";
+        for (int j = 0; j < latconstrnt_; j++)
+        {
+            //std::cout << FDSTable[nodeidx * latconstrnt_ + j];
+            std::cout << std::fixed << multTable_[nodeidx * latconstrnt_ + j] << "  ";
+        }
+        std::cout << std::endl;
+    }
+    for (int nodeidx = 0; nodeidx < logicVec.size(); nodeidx++)
+    {
+        std::cout << "logic printing new row= " << nodeidx << ": ";
+        for (int j = 0; j < latconstrnt_; j++)
+        {
+            //std::cout << FDSTable[nodeidx * latconstrnt_ + j];
+            std::cout << std::fixed << logicTable_[nodeidx * latconstrnt_ + j] << "  ";
+        }
+        std::cout << std::endl;
+    }
     for (int nodeidx = 0; nodeidx < divVec.size(); nodeidx++)
     {
-        std::cout << "printing new row= " << nodeidx << ": ";
+        std::cout << "div printing new row= " << nodeidx << ": ";
         for (int j = 0; j < latconstrnt_; j++)
         {
             //std::cout << FDSTable[nodeidx * latconstrnt_ + j];
@@ -215,7 +235,44 @@ void pschedule::FDS(){
         std::cout << std::endl;
     }
 
+    /*std::cout << "logic printing whole table: " << std::endl;
+    for (int nodeidx = 0; nodeidx < logicTable_.size(); nodeidx++)
+    {
+            std::cout << std::fixed << logicTable_[nodeidx] << "  ";
+    }
+    std::cout << std::endl;
 
+    std::cout << "div printing whole table: " << std::endl;
+    for (int nodeidx = 0; nodeidx < divTable_.size(); nodeidx++)
+    {
+            std::cout << std::fixed << divTable_[nodeidx] << "  ";
+    }
+    std::cout << std::endl;
+*/
+    std::cout << "add printing probs: " << std::endl;
+    for (int nodeidx = 0; nodeidx < addProbs_.size(); nodeidx++)
+    {
+            std::cout << std::fixed << addProbs_[nodeidx] << "  ";
+    }
+    std::cout << std::endl;
+    std::cout << "mult printing probs: " << std::endl;
+    for (int nodeidx = 0; nodeidx < multProbs_.size(); nodeidx++)
+    {
+            std::cout << std::fixed << multProbs_[nodeidx] << "  ";
+    }
+    std::cout << std::endl;
+    std::cout << "logic printing probs: " << std::endl;
+    for (int nodeidx = 0; nodeidx < logicProbs_.size(); nodeidx++)
+    {
+            std::cout << std::fixed << logicProbs_[nodeidx] << "  ";
+    }
+    std::cout << std::endl;
+    std::cout << "div printing probs: " << std::endl;
+    for (int nodeidx = 0; nodeidx < divProbs_.size(); nodeidx++)
+    {
+            std::cout << std::fixed << divProbs_[nodeidx] << "  ";
+    }
+    std::cout << std::endl;
 }
 
 
@@ -232,10 +289,11 @@ void pschedule::buildFDSTable(std::vector<double>& FDSTable, std::vector<double>
     //std::vector<int> nodeVec;
 
 
-    for (int i=0; i<nodeVec.size(); i++){
+    /*for (int i=0; i<nodeVec.size(); i++){
         std::cout << "node " << nodeVec[i] << ", ";
     }
     std::cout << std::endl;
+    */
 
     //instantiate FDS table of nodes x time frame
     //auto FDSTable [nodes.size()][latconstrnt_];
@@ -245,7 +303,7 @@ void pschedule::buildFDSTable(std::vector<double>& FDSTable, std::vector<double>
     //FDSTable = new double[nodeVec.size() * latconstrnt_];
 
     //std::cout << "FDSTable size= " << sizeof(FDSTable)/sizeof(*FDSTable) << std::endl;
-    std::cout << "nodevecsize = " << nodeVec.size() << "latency = " << latconstrnt_ << std::endl;
+    //std::cout << "nodevecsize = " << nodeVec.size() << "latency = " << latconstrnt_ << std::endl;
 
     /*//Initialize all values to 0.0
     for (int i=0; i < (nodeVec.size() * latconstrnt_); i++)
@@ -282,7 +340,8 @@ void pschedule::buildFDSTable(std::vector<double>& FDSTable, std::vector<double>
             //*FDSTable[ nodeidx * latconstrnt_ + TF] = prob;
             *(FDSTable + nodeidx * latconstrnt_ + TF) = prob;
         }*/
-        for (int TF = 0; TF < latconstrnt_; TF++)
+        //Time frames are 1-based, not 0-based
+        for (int TF = 1; TF <= latconstrnt_; TF++)
         {
             if ( (TF >= compVec_[nodeVec[nodeidx]].asapFrame_) && 
                 (TF <= compVec_[nodeVec[nodeidx]].alapFrame_) )
@@ -301,7 +360,7 @@ void pschedule::buildFDSTable(std::vector<double>& FDSTable, std::vector<double>
     // Determine the probabilites of the resource at each time frame
     for (int TF = 0; TF < latconstrnt_; TF++)
     {
-        double sumTF;
+        double sumTF = 0.0;
         for (int nodeidx = 0; nodeidx < nodeVec.size(); nodeidx++)
         {
             sumTF += FDSTable[nodeidx*latconstrnt_ + TF];
@@ -311,7 +370,7 @@ void pschedule::buildFDSTable(std::vector<double>& FDSTable, std::vector<double>
         probVec.push_back(sumTF);
     }
 
-
+/*
     std::cout << "FDSTable size= " << FDSTable.size() << std::endl;
     //debug prints
     for (int nodeidx = 0; nodeidx < nodeVec.size(); nodeidx++)
@@ -324,7 +383,7 @@ void pschedule::buildFDSTable(std::vector<double>& FDSTable, std::vector<double>
         }
         std::cout << std::endl;
     }
-
+*/
     //delete[] FDSTable;
 
     return;
