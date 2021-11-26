@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
     // critical path calculations (and test component list)
     //latencycalculator lc(fp.compVec_);
 
-    pschedule pscheduler;
+    pschedule pscheduler(latConstraint);
     pscheduler.performScheduling(fp.compVec_);
 
     filewriter fw(outfile, pscheduler.compVec_);

@@ -10,7 +10,7 @@
 
 class pschedule{
 public:
-    pschedule();
+    pschedule(int latencyConstraint);
     void performScheduling(std::vector<component>& compVec);
     void asap();
     void alap();
