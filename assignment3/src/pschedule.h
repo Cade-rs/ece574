@@ -33,8 +33,6 @@ public:
     std::vector<double> logicProbs_;
     std::vector<double> divProbs_;
 
-    std::ifstream fin_;
-    std::ofstream fout_;
 };
 
 #endif
