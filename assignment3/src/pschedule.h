@@ -10,14 +10,14 @@
 
 class pschedule{
 public:
-    pschedule();
+    pschedule(int latencyConstraint);
     void performScheduling(std::vector<component>& compVec);
     void asap();
     void alap();
     void recurse_firstNodes(int nodeidx);
     void recurse(int nodeidx);
     void FDS();
-    void buildFDSTable(std::vector<double>& FDSTable, std::vector<int> nodeVec);
+    void buildFDSTable(std::vector<double>& FDSTable, std::vector<double>& probVec,  std::vector<int> nodeVec);
     void outputDebug();
     int findalaptf( resource restype, int childtf);
     int findasaptf( resource restype, int tf);
@@ -30,8 +30,11 @@ public:
     std::vector<double> logicTable_;
     std::vector<double> divTable_;
 
-    std::ifstream fin_;
-    std::ofstream fout_;
+    std::vector<double> addProbs_;
+    std::vector<double> multProbs_;
+    std::vector<double> logicProbs_;
+    std::vector<double> divProbs_;
+
 };
 
 #endif

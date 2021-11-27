@@ -1,9 +1,12 @@
 #ifndef COMMON_H
 #define COMMON_H
 
+#include <vector>
+
 static const bool DEBUG = true;
 
 enum comp_type{
+    Variables = -50,
     Registers = -40,
     Wires = -30,
     Inputs = -20,
@@ -38,6 +41,17 @@ enum comp_size{
     THIRTYTWO,
     SIXTYFOUR
 };
+
+struct ifStatement
+{
+    int ifNumber;
+    bool isElse;
+    std::vector<int> components;
+    std::string condition;
+    int correspondingIfElse;
+    int withinIf;
+};
+
 
 comp_size int2size(int size);
 
