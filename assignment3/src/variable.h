@@ -13,12 +13,12 @@ public:
     variable(const variable& in_var);
     bool operator== (std::string param);
     bool operator== (variable param);
+    std::string iPadd();
 
     std::string name_;
     comp_size size_;
     bool isSigned_;
     bool isReg_;
-    std::string iPadd();
 };
 
 
