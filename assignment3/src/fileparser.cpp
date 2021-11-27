@@ -111,7 +111,9 @@ void fileparser::parseLine(std::string& line)
     // Remove commas
     line.erase(std::remove(line.begin(), line.end(), ','), line.end());
 
-    
+    // Doing this because I need line inside the compoennt, but too lazy to feed it to
+    // every call of finalizeComponent,  also too lazy to find/replace line with line_
+    line_ = line; 
 
     // Search keywords/chars and send to proper handler
     if( line.rfind("input", 0) == 0 )
@@ -1162,12 +1164,12 @@ bool fileparser::finalizeComponent(comp_type type, comp_size datawidth,
     /*component(comp_type type, comp_size datawidth, 
               vector<variable> in, vector<variable> out, 
               bool isSigned=false, int compNum=0, int outputPos=0);*/
-    component temp(type, datawidth, in, out, isSigned, compnum, outputPos, withinIf);
+    component temp(type, datawidth, in, out, isSigned, compnum, outputPos, withinIf, line_);
     compVec_.push_back(temp);
     
     if (DEBUG)
     {
-        //temp.printComponent(fout_); //cade removed this to prevent double printing
+        temp.printComponent(fout_);
     }
 
     return true;

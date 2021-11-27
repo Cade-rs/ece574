@@ -38,6 +38,7 @@ private:
 
     std::ifstream fin_;
     std::ofstream fout_;
+    std::string line_;
 
     int lastIfLeft_;
     std::vector<ifStatement> ifStatements_;

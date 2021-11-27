@@ -369,6 +369,7 @@ void component::printComponent(std::ofstream& fout)
 
     fout << std::endl;
     fout << "New Component" << std::endl;
+    fout << "Line:         " << line_ << std::endl;
     fout << "Type:         " << type2str(type_) << std::endl;
     fout << "Resource:     " << restype_ << std::endl;
     fout << "Number:       " << compNum_ << std::endl;
