@@ -30,6 +30,7 @@ public:
     std::string cPadd();
     resource whichResource();
     void printComponent(std::ofstream& fout);
+    std::string replaceString( std::string& s, const std::string& toReplace, const std::string& replaceWith);
 
     std::string line_;
     comp_type type_;
