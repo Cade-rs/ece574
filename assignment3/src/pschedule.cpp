@@ -64,7 +64,7 @@ void pschedule::asap(){
 
     //iterate through the nodes to find the initial nodes. These nodes will have two inputs that are NOT outputs of any other node
     for (int compidx=0; compidx < compVec_.size(); compidx++){
-        if (compVec_[compidx].asapFrame_ > 0 && (compVec_[compidx].parent_.size() <= 0 || compVec_[compidx].parent_.empty())){
+        if (compVec_[compidx].compNum_ >= 0 && (compVec_[compidx].parent_.size() == 0 || compVec_[compidx].parent_.empty())){
             firstnodes.push_back(compidx);
         }
     }
@@ -72,7 +72,7 @@ void pschedule::asap(){
     //Start at initial nodes. Recurse through children to determine time frames
     for (int i=0; i < firstnodes.size(); i++){
         std::vector<int> foo_path;
-        recurse(firstnodes[i]);
+        recurse_firstNodes(firstnodes[i]);
     }
 
     return;
@@ -89,20 +89,20 @@ void pschedule::alap()
 
     if (DEBUG) //ASAP test case for circuit 5
     {
-        compVec_[4].asapFrame_ = 1;
+        compVec_[4].asapFrame_ = -1;
         compVec_[4].child_.push_back(8);
 
-        compVec_[5].asapFrame_ = 1;
+        compVec_[5].asapFrame_ = -1;
         compVec_[5].child_.push_back(8);
 
-        compVec_[6].asapFrame_ = 1;
+        compVec_[6].asapFrame_ = -1;
         compVec_[6].child_.push_back(7);
 
-        compVec_[7].asapFrame_ = 2;
+        compVec_[7].asapFrame_ = -1;
         compVec_[7].parent_.push_back(6);
         compVec_[7].child_.push_back(8);
 
-        compVec_[8].asapFrame_ = 4;
+        compVec_[8].asapFrame_ = -1;
         compVec_[8].parent_.push_back(4);
         compVec_[8].parent_.push_back(5);
         compVec_[8].parent_.push_back(7);
@@ -132,13 +132,12 @@ void pschedule::alap()
 void pschedule::recurse_firstNodes(int nodeidx){
     std::cout<<"Another time frame down"<<endl;
     
-    for(int i; compVec_[nodeidx].child_.size();i++){
+    for(int i=0; compVec_[nodeidx].child_.size();i++){
         if(compVec_[nodeidx].parent_.empty()){ //Handling if the input to the recusion is from the firstnode array of time =1
             compVec_[nodeidx].asapFrame_=1;
         }
         else if (compVec_[nodeidx].asapFrame_!=0){
             std::cout<<"A child was already accounted for"<<endl;
-            break;
         }
         else{
             std::cout<<"Current time is:"<<compVec_[nodeidx].asapFrame_;
