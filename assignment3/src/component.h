@@ -16,7 +16,7 @@ class component {
 public:
     component(comp_type type, comp_size datawidth, 
               vector<variable> in, vector<variable> out, 
-              bool isSigned=false, int compNum=0, int outputPos=0, int withinIf=-1);
+              bool isSigned=false, int compNum=0, int outputPos=0, int withinIf=-1, std::string line = "");
     component(const component& in_comp);
     bool containsInput(std::string var);
     bool containsInput(variable& var);
@@ -31,13 +31,10 @@ public:
     resource whichResource();
     void printComponent(std::ofstream& fout);
 
+    std::string line_;
     comp_type type_;
     comp_size dw_;
     bool isSigned_;
-    vector<variable> in_;
-    vector<variable> out_;
-    vector<int> parent_;
-    vector<int> child_;
     double lat_;
     int compNum_;
     int outputPos_;
@@ -47,5 +44,9 @@ public:
     int asapFrame_;
     int alapFrame_;
     resource restype_;
+    vector<variable> in_;
+    vector<variable> out_;
+    vector<int> parent_;
+    vector<int> child_;
 };
 #endif

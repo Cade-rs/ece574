@@ -10,19 +10,23 @@
 using namespace std;
 
 
-component::component(comp_type type, comp_size datawidth, vector<variable> in, vector<variable> out, bool isSigned, int compNum, int outputPos, int withinIf)
+component::component(comp_type type, comp_size datawidth, vector<variable> in, vector<variable> out, bool isSigned, int compNum, int outputPos, int withinIf, std::string line)
 {
-    type_ = type;
-    dw_ = datawidth;
-    isSigned_ = isSigned;
-    compNum_ = compNum;
-    outputPos_ = outputPos;
-    withinIf_ = withinIf;
+    line_       = line;
+    type_       = type;
+    dw_         = datawidth;
+    isSigned_   = isSigned;
+    lat_        = findLatency();
+    compNum_    = compNum;
+    outputPos_  = outputPos;
+    withinIf_   = withinIf;
+    sctype_     = comp2Str();
+    scdw_       = dw2Str();
     //Scheduler Additions
-    int time=0;
-    asapFrame_ = -1;
-    alapFrame_ = -1;
-    std::vector<int> parent_,child_; //or comesfrom goesto
+    // int time    =0; // Not used?
+    asapFrame_  = -1;
+    alapFrame_  = -1;
+    restype_    = whichResource();
 
     for (int i=0; i<in.size(); i++)
     {
@@ -34,23 +38,24 @@ component::component(comp_type type, comp_size datawidth, vector<variable> in, v
         out_.push_back( variable(out[i]) );
     }
 
-    lat_ = findLatency();
-    //Call the switch to member variables
-    sctype_ = comp2Str();
-    scdw_ = dw2Str();
-
-    restype_ = whichResource();
 }
 
 // Copy constructor
 component::component(const component& in_comp)
 {
-    type_ = in_comp.type_;
-    dw_ = in_comp.dw_;
-    isSigned_ = in_comp.isSigned_;
-    compNum_ = in_comp.compNum_;
-    outputPos_ = in_comp.outputPos_;
-    withinIf_ = in_comp.withinIf_;
+    line_       = in_comp.line_;
+    type_       = in_comp.type_;
+    dw_         = in_comp.dw_;
+    isSigned_   = in_comp.isSigned_;
+    lat_        = in_comp.lat_;
+    compNum_    = in_comp.compNum_;
+    outputPos_  = in_comp.outputPos_;
+    withinIf_   = in_comp.withinIf_;
+    sctype_     = in_comp.sctype_;
+    scdw_       = in_comp.scdw_;
+    asapFrame_  = in_comp.asapFrame_;
+    alapFrame_  = in_comp.alapFrame_;
+    restype_    = in_comp.restype_;
 
     for (int i=0; i<in_comp.in_.size(); i++)
     {
@@ -62,12 +67,16 @@ component::component(const component& in_comp)
         out_.push_back( variable(in_comp.out_[i]) );
     }
 
-    lat_ = in_comp.lat_;
+    for (int i=0; i<in_comp.parent_.size(); i++)
+    {
+        parent_.push_back( in_comp.parent_[i] ) ;
+    }
 
-    restype_ = in_comp.restype_;
+    for (int i=0; i<in_comp.child_.size(); i++)
+    {
+        child_.push_back( in_comp.child_[i] );
+    }
 
-    asapFrame_ = in_comp.asapFrame_;
-    alapFrame_ = in_comp.alapFrame_;
 }
 
 bool component::containsInput(std::string var)
