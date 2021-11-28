@@ -64,7 +64,9 @@ void pschedule::asap(){
         if (compVec_[compidx].compNum_ >= 0 && (compVec_[compidx].parent_.size() == 0 || compVec_[compidx].parent_.empty())){
             compVec_[compidx].asapFrame_=1;
             firstnodes.push_back(compidx);
-            std::cout<<firstnodes.size()<<endl;
+        }
+        else if(compVec_[compidx].compNum_>=0 && (compVec_[compidx].parent_.size()!=0 || !compVec_[compidx].parent_.empty())){
+            compVec_[compidx].asapFrame_=0;
         }
     }
     
@@ -135,13 +137,13 @@ void pschedule::recurse_firstNodes(int nodeidx){
     std::cout<<"Recurse again muthafucka"<<endl;
     
     for(int i=0; compVec_[nodeidx].child_.size();i++){
-        if (compVec_[nodeidx].asapFrame_>0){
+        if (compVec_[compVec_[nodeidx].child_[i]].asapFrame_>0){
             std::cout<<"A child was already accounted for"<<endl;
             break;
         }
         else{
             std::cout<<"oh damn I'm a baby daddy again"<<endl;
-            int time_2_child=findalaptf(compVec_[nodeidx].restype_, compVec_[nodeidx].asapFrame_);  
+            int time_2_child=findasaptf(compVec_[nodeidx].restype_, compVec_[nodeidx].asapFrame_);  
             compVec_[compVec_[nodeidx].child_[i]].asapFrame_+=time_2_child;
         }
     }
@@ -153,6 +155,28 @@ void pschedule::recurse_firstNodes(int nodeidx){
         }
     }
     else{
+        /*compVec_[4].asapFrame_ = -1;
+        compVec_[4].child_.push_back(8);
+
+        compVec_[5].asapFrame_ = -1;
+        compVec_[5].child_.push_back(8);
+
+        compVec_[6].asapFrame_ = -1;
+        compVec_[6].child_.push_back(7);
+
+        compVec_[7].asapFrame_ = -1;
+        compVec_[7].parent_.push_back(6);
+        compVec_[7].child_.push_back(8);
+
+        compVec_[8].asapFrame_ = -1;
+        compVec_[8].parent_.push_back(4);
+        compVec_[8].parent_.push_back(5);
+        compVec_[8].parent_.push_back(7);*/
+        std::cout<<compVec_[4].asapFrame_<<endl;
+        std::cout<<compVec_[5].asapFrame_<<endl;
+        std::cout<<compVec_[6].asapFrame_<<endl;
+        std::cout<<compVec_[7].asapFrame_<<endl;
+        std::cout<<compVec_[8].asapFrame_<<endl;
         return;
     }
 }
@@ -223,7 +247,27 @@ int pschedule::findalaptf( resource restype, int childtf){
 
     return newframe;
 }
+// -------------------------------------------------------------------------------
+// Find the ASAP time frame
+// -------------------------------------------------------------------------------
+int pschedule::findasaptf( resource restype, int parenttf){
 
+    int delay;
+    int newframe;
+
+    switch (restype)
+    {
+        case resource::ADD_SUB: delay = 1; break;
+        case resource::MULT: delay = 2; break;
+        case resource::DIV_MOD: delay = 3; break;
+        case resource::LOGIC: delay = 1; break;
+        default: delay = 100; break;
+    }
+
+    newframe = parenttf + delay;
+
+    return newframe;
+}
 
 // -------------------------------------------------------------------------------
 // Force Directed Scheduling

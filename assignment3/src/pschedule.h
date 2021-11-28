@@ -20,7 +20,7 @@ public:
     void buildFDSTable(std::vector<double>& FDSTable, std::vector<double>& probVec,  std::vector<int> nodeVec);
     void outputDebug();
     int findalaptf( resource restype, int childtf);
-    int findasaptf( resource restype, int tf);
+    int findasaptf( resource restype, int parenttf);
     
     std::vector<component> compVec_;
     int latconstrnt_;
