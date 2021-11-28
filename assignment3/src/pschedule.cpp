@@ -62,6 +62,7 @@ void pschedule::asap(){
     //iterate through the nodes to find the initial nodes. These nodes will have two inputs that are NOT outputs of any other node
     for (int compidx=0; compidx < compVec_.size(); compidx++){
         if (compVec_[compidx].compNum_ >= 0 && (compVec_[compidx].parent_.size() == 0 || compVec_[compidx].parent_.empty())){
+            compVec_[compidx].asapFrame_=1;
             firstnodes.push_back(compidx);
             std::cout<<firstnodes.size()<<endl;
         }
@@ -131,27 +132,28 @@ void pschedule::alap()
 //--------------------------------------------------------------------------------
 //Writing the Recursion Function For Initial Nodes
 void pschedule::recurse_firstNodes(int nodeidx){
-    std::cout<<"Another time frame down"<<endl;
+    std::cout<<"Recurse again muthafucka"<<endl;
     
     for(int i=0; compVec_[nodeidx].child_.size();i++){
-        std::cout<<i<<endl;
-        std::cout<<nodeidx<<endl;
-        if(compVec_[nodeidx].parent_.empty()||compVec_[nodeidx].parent_.size()==0){ //Handling if the input to the recusion is from the firstnode array of time =1
-            compVec_[nodeidx].asapFrame_=1;
-        }
-        else if (compVec_[nodeidx].asapFrame_>0){
+        if (compVec_[nodeidx].asapFrame_>0){
             std::cout<<"A child was already accounted for"<<endl;
+            break;
         }
         else{
-            std::cout<<"Current time is:"<<compVec_[nodeidx].asapFrame_;
-            compVec_[nodeidx].asapFrame_=(compVec_[nodeidx].restype_, compVec_[nodeidx].asapFrame_);  
-            std::cout<<"New time is:"<<compVec_[nodeidx].asapFrame_;
+            std::cout<<"oh damn I'm a baby daddy again"<<endl;
+            int time_2_child=findalaptf(compVec_[nodeidx].restype_, compVec_[nodeidx].asapFrame_);  
+            compVec_[compVec_[nodeidx].child_[i]].asapFrame_+=time_2_child;
         }
     }
 
     //Go on to child nodes. If no children, we're done!
-    for (int i = 0; i< compVec_[nodeidx].child_.size(); i++){
-        recurse_firstNodes(compVec_[nodeidx].child_[i]);
+    if(compVec_[nodeidx].child_.empty()){
+        for (int i = 0; i< compVec_[nodeidx].child_.size(); i++){
+            recurse_firstNodes(compVec_[nodeidx].child_[i]);
+        }
+    }
+    else{
+        return;
     }
 }
 
