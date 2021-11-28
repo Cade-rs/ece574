@@ -12,6 +12,8 @@
 #include "pschedule.h"
 
 
+void fillStates(std::vector<std::vector<int>>& states);
+
 int main(int argc, char *argv[])
 {
     if( (argc-1) != 3 ) // First input is exe name, handle that
@@ -43,11 +45,43 @@ int main(int argc, char *argv[])
     pschedule pscheduler(latConstraint);
     pscheduler.performScheduling(fp.compVec_);
 
-    filewriter fw(outfile, pscheduler.compVec_);
+    std::vector<std::vector<int>> testStates;
+
+    fillStates(testStates);
+
+    filewriter fw(outfile, pscheduler.compVec_, testStates);
 
     fw.writeFile();
 
     std::cout << std::endl << std::endl << outfile << " Verilog file successfully created" << std::endl;
 
     return 0;
+}
+
+
+void fillStates(std::vector<std::vector<int>>& states)
+{
+    std::vector<int> state1;
+    state1.push_back(4);
+    state1.push_back(5);
+    state1.push_back(6);
+    state1.push_back(7);
+
+    std::vector<int> state2;
+    state2.push_back(8);
+    state2.push_back(9);
+    state2.push_back(10);
+
+    std::vector<int> state3;
+    state3.push_back(10);
+    state3.push_back(11);
+    state3.push_back(12);
+    state3.push_back(13);
+    state3.push_back(14);
+    state3.push_back(15);
+
+    states.push_back(state1);
+    states.push_back(state2);
+    states.push_back(state3);
+
 }

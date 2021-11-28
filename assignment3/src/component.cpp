@@ -10,19 +10,23 @@
 using namespace std;
 
 
-component::component(comp_type type, comp_size datawidth, vector<variable> in, vector<variable> out, bool isSigned, int compNum, int outputPos, int withinIf)
+component::component(comp_type type, comp_size datawidth, vector<variable> in, vector<variable> out, bool isSigned, int compNum, int outputPos, int withinIf, std::string line)
 {
-    type_ = type;
-    dw_ = datawidth;
-    isSigned_ = isSigned;
-    compNum_ = compNum;
-    outputPos_ = outputPos;
-    withinIf_ = withinIf;
+    line_       = line;
+    type_       = type;
+    dw_         = datawidth;
+    isSigned_   = isSigned;
+    lat_        = findLatency();
+    compNum_    = compNum;
+    outputPos_  = outputPos;
+    withinIf_   = withinIf;
+    sctype_     = comp2Str();
+    scdw_       = dw2Str();
     //Scheduler Additions
-    int time=0;
-    asapFrame_ = -1;
-    alapFrame_ = -1;
-    std::vector<int> parent_,child_; //or comesfrom goesto
+    // int time    =0; // Not used?
+    asapFrame_  = -1;
+    alapFrame_  = -1;
+    restype_    = whichResource();
 
     for (int i=0; i<in.size(); i++)
     {
@@ -34,23 +38,24 @@ component::component(comp_type type, comp_size datawidth, vector<variable> in, v
         out_.push_back( variable(out[i]) );
     }
 
-    lat_ = findLatency();
-    //Call the switch to member variables
-    sctype_ = comp2Str();
-    scdw_ = dw2Str();
-
-    restype_ = whichResource();
 }
 
 // Copy constructor
 component::component(const component& in_comp)
 {
-    type_ = in_comp.type_;
-    dw_ = in_comp.dw_;
-    isSigned_ = in_comp.isSigned_;
-    compNum_ = in_comp.compNum_;
-    outputPos_ = in_comp.outputPos_;
-    withinIf_ = in_comp.withinIf_;
+    line_       = in_comp.line_;
+    type_       = in_comp.type_;
+    dw_         = in_comp.dw_;
+    isSigned_   = in_comp.isSigned_;
+    lat_        = in_comp.lat_;
+    compNum_    = in_comp.compNum_;
+    outputPos_  = in_comp.outputPos_;
+    withinIf_   = in_comp.withinIf_;
+    sctype_     = in_comp.sctype_;
+    scdw_       = in_comp.scdw_;
+    asapFrame_  = in_comp.asapFrame_;
+    alapFrame_  = in_comp.alapFrame_;
+    restype_    = in_comp.restype_;
 
     for (int i=0; i<in_comp.in_.size(); i++)
     {
@@ -62,12 +67,16 @@ component::component(const component& in_comp)
         out_.push_back( variable(in_comp.out_[i]) );
     }
 
-    lat_ = in_comp.lat_;
+    for (int i=0; i<in_comp.parent_.size(); i++)
+    {
+        parent_.push_back( in_comp.parent_[i] ) ;
+    }
 
-    restype_ = in_comp.restype_;
+    for (int i=0; i<in_comp.child_.size(); i++)
+    {
+        child_.push_back( in_comp.child_[i] );
+    }
 
-    asapFrame_ = in_comp.asapFrame_;
-    alapFrame_ = in_comp.alapFrame_;
 }
 
 bool component::containsInput(std::string var)
@@ -139,7 +148,8 @@ std::string component::comp2Str()
     {
         switch(type_)
         {
-            case comp_type::Registers:  return "wire"; 
+            case comp_type::Variables:  return "reg";
+            case comp_type::Registers:  return "wire";
             case comp_type::Wires:      return "wire";
             case comp_type::Inputs:     return "input";
             case comp_type::Outputs:    return "output";
@@ -162,7 +172,8 @@ std::string component::comp2Str()
     {
         switch(type_)
         {
-            case comp_type::Registers:  return "wire"; 
+            case comp_type::Variables:  return "reg";
+            case comp_type::Registers:  return "wire";
             case comp_type::Wires:      return "wire";
             case comp_type::Inputs:     return "input";
             case comp_type::Outputs:    return "output";
@@ -218,7 +229,7 @@ std::string component::dw2Str()
 std::string component::trunc(){
     switch(dw_)
         {
-            case comp_size:: ONE:       return"[0]";
+            case comp_size:: ONE:       return "[0]";
             case comp_size:: TWO:       return "[1:0]";
             case comp_size:: EIGHT:     return "[7:0]";
             case comp_size:: SIXTEEN:   return "[15:0]";
@@ -252,7 +263,7 @@ std::string component::writeLine()
     std::string com = ",";
     std::string wire = "wire";
     std::string cOpen = "{", cCls="}", zBit = "1'b0";
-    std::string out;
+    std::string out = "";
 
     if(type_<comp_type::REG){
         out = tab+comp2Str();
@@ -274,7 +285,13 @@ std::string component::writeLine()
         out = out.substr(0,_trailingComma-1);
         out.append(sc);
     }
-    else if(type_!=comp_type::COMP){
+    else
+    {
+        out = replaceString(line_, "=", "<=") + ";";
+    }
+    /*
+    else if(type_!=comp_type::COMP)
+    {
         out = tab+comp2Str();
         out.append(tab+dw2Str());
         std::string compNumS = to_string(compNum_);
@@ -352,6 +369,7 @@ std::string component::writeLine()
         out.append(clsc);
 
     }
+    */
     return out;
 }
 
@@ -359,7 +377,8 @@ void component::printComponent(std::ofstream& fout)
 {
 
     fout << std::endl;
-    fout << "New Component" << std::endl;
+    fout << "New Component"  << std::endl;
+    fout << "Line:"          << std::endl << line_ << std::endl;
     fout << "Type:         " << type2str(type_) << std::endl;
     fout << "Resource:     " << restype_ << std::endl;
     fout << "Number:       " << compNum_ << std::endl;
@@ -416,4 +435,14 @@ resource component::whichResource(){
         case comp_type::DEC:        return resource::ADD_SUB;
         default: return resource::UNINIT;
     }
+}
+
+std::string component::replaceString( std::string& s, const std::string& toReplace, const std::string& replaceWith)
+{
+    std::size_t pos = s.find(toReplace);
+    if (pos == std::string::npos)
+    {
+        return s;
+    }
+    return s.replace(pos, toReplace.length(), replaceWith);
 }

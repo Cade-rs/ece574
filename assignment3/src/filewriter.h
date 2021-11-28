@@ -15,10 +15,13 @@ private:
     std::string outfile_;
     std::ofstream fout_;
     std::vector<component> compVec_;
+    std::vector<std::vector<int>> states_;
     bool error_;
 
+    void writeIf(int ifNum);
+
 public:
-    filewriter(std::string outfile, std::vector<component> compVec);
+    filewriter(std::string outfile, std::vector<component> compVec, std::vector<std::vector<int>> states);
     void writeFile();
 
 };
