@@ -22,6 +22,7 @@ component::component(comp_type type, comp_size datawidth, vector<variable> in, v
     int time=0;
     asapFrame_ = -1;
     alapFrame_ = -1;
+    fdsFrame_  = -1;
     std::vector<int> parent_,child_; //or comesfrom goesto
 
     for (int i=0; i<in.size(); i++)
@@ -68,6 +69,7 @@ component::component(const component& in_comp)
 
     asapFrame_ = in_comp.asapFrame_;
     alapFrame_ = in_comp.alapFrame_;
+    fdsFrame_  = in_comp.fdsFrame_;
 }
 
 bool component::containsInput(std::string var)
@@ -383,6 +385,8 @@ void component::printComponent(std::ofstream& fout)
         fout << "      " << out_[i].name_ << std::endl;
     }
     fout << std::endl ;
+
+    fout << "Scheduled TF: " << alapFrame_ << std::endl;
 
     fout << "ASAP TF:      " << asapFrame_ << std::endl;
     fout << "ALAP TF:      " << alapFrame_ << std::endl;
