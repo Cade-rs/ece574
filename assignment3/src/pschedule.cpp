@@ -63,6 +63,7 @@ void pschedule::asap(){
     for (int compidx=0; compidx < compVec_.size(); compidx++){
         if (compVec_[compidx].compNum_ >= 0 && (compVec_[compidx].parent_.size() == 0 || compVec_[compidx].parent_.empty())){
             firstnodes.push_back(compidx);
+            std::cout<<firstnodes.size()<<endl;
         }
     }
     
@@ -133,10 +134,12 @@ void pschedule::recurse_firstNodes(int nodeidx){
     std::cout<<"Another time frame down"<<endl;
     
     for(int i=0; compVec_[nodeidx].child_.size();i++){
-        if(compVec_[nodeidx].parent_.empty()){ //Handling if the input to the recusion is from the firstnode array of time =1
+        std::cout<<i<<endl;
+        std::cout<<nodeidx<<endl;
+        if(compVec_[nodeidx].parent_.empty()||compVec_[nodeidx].parent_.size()==0){ //Handling if the input to the recusion is from the firstnode array of time =1
             compVec_[nodeidx].asapFrame_=1;
         }
-        else if (compVec_[nodeidx].asapFrame_!=0){
+        else if (compVec_[nodeidx].asapFrame_>0){
             std::cout<<"A child was already accounted for"<<endl;
         }
         else{
