@@ -178,10 +178,12 @@ void pschedule::FDS(){
     for (int TF = 1; TF < latconstrnt_; TF++)
     {   
         //reset resource compVecs, tables, probabilities, and nodes to be scheduled
-        addVec_.empty(); multVec_.empty(); logicVec_.empty(); divVec_.empty();
-        addTable_.empty(); multTable_.empty(); logicTable_.empty(); divTable_.empty();
-        addProbs_.empty(); multProbs_.empty(); logicProbs_.empty(); divProbs_.empty();
-        chosenOnes_.empty();
+        addVec_.clear(); multVec_.clear(); logicVec_.clear(); divVec_.clear();
+        addTable_.clear(); multTable_.clear(); logicTable_.clear(); divTable_.clear();
+        addProbs_.clear(); multProbs_.clear(); logicProbs_.clear(); divProbs_.clear();
+        chosenOnes_.clear();
+
+        std::cout << "On Time Frame " << TF << std::endl;
 
         //Run ASAP
         asap();
@@ -217,10 +219,10 @@ void pschedule::FDS(){
 
         //Determine resource distributions. By passing member vectors by reference, this function updates the vectors internally
         //NOTE: can remove the tables from member variables if wanted
-        buildFDSTable(addTable_, addProbs_, addVec_);
-        buildFDSTable(multTable_, multProbs_, multVec_);
-        buildFDSTable(logicTable_, logicProbs_, logicVec_);
-        buildFDSTable(divTable_, divProbs_, divVec_);
+        if (addVec_.size() > 0)    buildFDSTable(addTable_, addProbs_, addVec_);
+        if (multVec_.size() > 0)   buildFDSTable(multTable_, multProbs_, multVec_);
+        if (logicVec_.size() > 0)  buildFDSTable(logicTable_, logicProbs_, logicVec_);
+        if (divVec_.size() > 0)    buildFDSTable(divTable_, divProbs_, divVec_);
 
         //If possible to schedule node at current time frame, calculate forces and find the minimum
         for (int i=0; i< compVec_.size(); i++)
@@ -232,9 +234,11 @@ void pschedule::FDS(){
                 if (compVec_[i].alapFrame_ == TF)
                 {
                     bestFrame = i;
+                    std::cout << "TF == ALAP Frame" << std::endl;
                 }
                 else
                 {
+                    std::cout << "Calculating forces" << std::endl;
                     bestFrame = calculateForces(TF, i);
                 }
 
@@ -262,10 +266,12 @@ int pschedule::calculateForces(int TF, int n)
     int bestFrame, bestFrameIdx;
     std::vector<double> totalForces;
 
-    for (int frame=compVec_[n].asapFrame_; frame >= compVec_[n].alapFrame_; frame++ )
+    //std::cout << "calcForce: asap, alap = " << compVec_[n].asapFrame_ << ", " << compVec_[n].alapFrame_ << std::endl;
+
+    for (int frame=compVec_[n].asapFrame_; frame <= compVec_[n].alapFrame_; frame++ )
     {
         //Reset forces
-        forces_.empty();
+        forces_.clear();
 
         //calculate self force for one time frame
         calcSelfForce(frame, n);
@@ -339,7 +345,10 @@ void pschedule::calcSelfForce(int frame, int n)
 // -------------------------------------------------------------------------------
 void pschedule::buildFDSTable(std::vector<double>& FDSTable, std::vector<double>& probVec, std::vector<int> nodeVec){
 
+    FDSTable.clear(); probVec.clear();
+
     double prob = 0.0;
+
     std::cout.precision( 3 ); //float/double precision for couts
 
     //Determine operator probabilities for each node
@@ -383,6 +392,14 @@ void pschedule::buildFDSTable(std::vector<double>& FDSTable, std::vector<double>
 
         probVec.push_back(sumTF);
     }
+
+    std::cout << "Printing probs. FDSTable size = " << FDSTable.size() <<  ", NumProbs = " << probVec.size() << ", NodeVec size = " << nodeVec.size() << std::endl;
+
+    for (int i = 0; i < probVec.size(); i ++)
+    {
+        std::cout << probVec[i] << ", ";
+    }
+    std::cout << std::endl;
 
     return;
 }
@@ -472,7 +489,7 @@ void pschedule::debugPrints()
             std::cout << std::fixed << logicProbs_[nodeidx] << "  ";
     }
     std::cout << std::endl;
-    std::cout << "div printing probs: " << std::endl;
+    std::cout << "div printing probs. numProbs = " << divProbs_.size() << std::endl;
     for (int nodeidx = 0; nodeidx < divProbs_.size(); nodeidx++)
     {
             std::cout << std::fixed << divProbs_[nodeidx] << "  ";
