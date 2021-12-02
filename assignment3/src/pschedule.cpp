@@ -411,21 +411,21 @@ void pschedule::buildFDSTable(std::vector<double>& FDSTable, std::vector<double>
 void pschedule::outputDebug()
 {
     std::string outfile="./debug_out.txt";
+    std::ofstream fout;
 
     if (DEBUG)
     {
-        fout_.open(outfile);
+        fout.open(outfile);
 
-        fout_ << "Scheduler Component Order: " << std:: endl;
+        fout << "Scheduler Component Order: " << std:: endl;
         for( int i = 0; i< compVec_.size(); i++ )
         {
-            fout_ << "------------------------------------" << std::endl;
-            compVec_[i].printComponent(fout_);
+            fout << "------------------------------------" << std::endl;
+            compVec_[i].printComponent(fout);
         }
     }
 
-    fin_.close();
-    fout_.close();
+    fout.close();
 
     return;
 }

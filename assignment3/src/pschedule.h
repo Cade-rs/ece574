@@ -51,6 +51,7 @@ public:
 
     std::ifstream fin_;
     std::ofstream fout_;
+
 };
 
 #endif
