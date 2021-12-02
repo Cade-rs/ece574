@@ -3,8 +3,10 @@
 #include "fileparser.h"
 #include "latencycalculator.h"
 
+#include <algorithm>
 #include <iostream>
 #include <fstream>
+#include <numeric>
 #include <string>
 #include <vector>
 
@@ -22,10 +24,6 @@ pschedule::pschedule(int latencyConstraint){
 void pschedule::performScheduling(std::vector<component>& compVec){
 
     compVec_ = compVec;
-
-    asap();
-
-    alap();
 
     FDS();
 
@@ -158,126 +156,187 @@ int pschedule::findalaptf( resource restype, int childtf){
 }
 
 
-// -------------------------------------------------------------------------------
-// Force Directed Scheduling
-// -------------------------------------------------------------------------------
+/* -------------------------------------------------------------------------------
+  Force Directed Scheduling Hierarchy
+  FDS
+    -asap
+    -alap
+      -recurse
+        -findalaptf
+    -buildFDSTable
+    -calculateForces
+      -calculateSelfForce
+        -calcSelfForce
+        -calcPrePostForce
+   ------------------------------------------------------------------------------- */
 void pschedule::FDS(){
+
+    //build/reset individual resource compVecs
+    
 
     //FDS scheduling, 1 frame at a time
     for (int TF = 1; TF < latconstrnt_; TF++)
-    {        
+    {   
+        //reset resource compVecs, tables, probabilities, and nodes to be scheduled
+        addVec_.clear(); multVec_.clear(); logicVec_.clear(); divVec_.clear();
+        addTable_.clear(); multTable_.clear(); logicTable_.clear(); divTable_.clear();
+        addProbs_.clear(); multProbs_.clear(); logicProbs_.clear(); divProbs_.clear();
+        chosenOnes_.clear();
+
+        std::cout << "On Time Frame " << TF << std::endl;
+
         //Run ASAP
+        asap();
 
             //If node has already been scheduled (check time frame?), set ASAP frame to scheduled time frame
 
-        //Run ALAP
+        //Run ALAP. Shouldn't need to rerun this every time but might as well
+        alap();
 
-        //Update node resource vectors, only considering non-scheduled nodes
-
-        //Calculate forces
-
-        //Set FDS time frames/cycle numbers for winning nodes
-
-    }
-
-    //build individual resource compVecs
-    std::vector<int> addVec;
-    std::vector<int> multVec;
-    std::vector<int> logicVec;
-    std::vector<int> divVec;
-
-    //iterate through compvec, looking for components with ASAP/ALAP times (ie nodes). Fill out the node vectors (filtered by resource type) as we go.
-    for (int i=0; i< compVec_.size(); i++)
-    {
-        if (compVec_[i].alapFrame_ > 0 && compVec_[i].asapFrame_ > 0 && compVec_[i].restype_ == resource::ADD_SUB)
+        //Update node resource vectors, only considering non-scheduled nodes (ignoring non-nodal components ie I/O/Reg)
+        for (int i=0; i< compVec_.size(); i++)
         {
-            addVec.push_back(i);
+            if (compVec_[i].alapFrame_ > 0 && compVec_[i].asapFrame_ > 0 && compVec_[i].fdsFrame_ <= 0)
+            {
+                switch (compVec_[i].restype_)
+                {
+                    case resource::ADD_SUB: 
+                        addVec_.push_back(i);
+                        break;
+                    case resource::MULT:
+                        multVec_.push_back(i);
+                        break;
+                    case resource::LOGIC:
+                        logicVec_.push_back(i);
+                        break;
+                    case resource::DIV_MOD:
+                        divVec_.push_back(i);
+                        break;
+                }    
+
+            }
         }
-        else if (compVec_[i].alapFrame_ > 0 && compVec_[i].asapFrame_ > 0 && compVec_[i].restype_ == resource::MULT)
+
+        //Determine resource distributions. By passing member vectors by reference, this function updates the vectors internally
+        //NOTE: can remove the tables from member variables if wanted
+        if (addVec_.size() > 0)    buildFDSTable(addTable_, addProbs_, addVec_);
+        if (multVec_.size() > 0)   buildFDSTable(multTable_, multProbs_, multVec_);
+        if (logicVec_.size() > 0)  buildFDSTable(logicTable_, logicProbs_, logicVec_);
+        if (divVec_.size() > 0)    buildFDSTable(divTable_, divProbs_, divVec_);
+
+        //If possible to schedule node at current time frame, calculate forces and find the minimum
+        for (int i=0; i< compVec_.size(); i++)
         {
-            multVec.push_back(i);
-        }
-        else if (compVec_[i].alapFrame_ > 0 && compVec_[i].asapFrame_ > 0 && compVec_[i].restype_ == resource::LOGIC)
-        {
-            logicVec.push_back(i);
-        }
-        else if (compVec_[i].alapFrame_ > 0 && compVec_[i].asapFrame_ > 0 && compVec_[i].restype_ == resource::DIV_MOD)
-        {
-            divVec.push_back(i);
-        }
+            if (compVec_[i].alapFrame_ > 0 && compVec_[i].asapFrame_ > 0 && compVec_[i].fdsFrame_ <= 0)
+            {
+                int bestFrame = 0;
+                //If we've reached our max frame (ALAP), schedule the node
+                if (compVec_[i].alapFrame_ == TF)
+                {
+                    bestFrame = i;
+                    std::cout << "TF == ALAP Frame" << std::endl;
+                }
+                else
+                {
+                    std::cout << "Calculating forces" << std::endl;
+                    bestFrame = calculateForces(TF, i);
+                }
+
+                //Set FDS time frames/cycle numbers if the least force frame matches current time frame
+                if (bestFrame == TF) compVec_[i].fdsFrame_=  bestFrame;
+            }
+        }    
     }
     
-    //By passing member vectors by reference, this function updates the vectors internally
-    buildFDSTable(addTable_, addProbs_, addVec);
-    buildFDSTable(multTable_, multProbs_, multVec);
-    buildFDSTable(logicTable_, logicProbs_, logicVec);
-    buildFDSTable(divTable_, divProbs_, divVec);
-
-
-    //debug prints- Leaving these in until ASAP + ALAP verified together
-    for (int nodeidx = 0; nodeidx < addVec.size(); nodeidx++)
-    {
-        std::cout << "add printing new row= " << nodeidx << ": ";
-        for (int j = 0; j < latconstrnt_; j++)
-        {
-            std::cout << std::fixed << addTable_[nodeidx * latconstrnt_ + j] << "  ";
-        }
-        std::cout << std::endl;
-    }
-    for (int nodeidx = 0; nodeidx < multVec.size(); nodeidx++)
-    {
-        std::cout << "mult printing new row= " << nodeidx << ": ";
-        for (int j = 0; j < latconstrnt_; j++)
-        {
-            std::cout << std::fixed << multTable_[nodeidx * latconstrnt_ + j] << "  ";
-        }
-        std::cout << std::endl;
-    }
-    for (int nodeidx = 0; nodeidx < logicVec.size(); nodeidx++)
-    {
-        std::cout << "logic printing new row= " << nodeidx << ": ";
-        for (int j = 0; j < latconstrnt_; j++)
-        {
-            std::cout << std::fixed << logicTable_[nodeidx * latconstrnt_ + j] << "  ";
-        }
-        std::cout << std::endl;
-    }
-    for (int nodeidx = 0; nodeidx < divVec.size(); nodeidx++)
-    {
-        std::cout << "div printing new row= " << nodeidx << ": ";
-        for (int j = 0; j < latconstrnt_; j++)
-        {
-            std::cout << std::fixed << divTable_[nodeidx * latconstrnt_ + j] << "  ";
-        }
-        std::cout << std::endl;
-    }
-
-    std::cout << "add printing probs: " << std::endl;
-    for (int nodeidx = 0; nodeidx < addProbs_.size(); nodeidx++)
-    {
-            std::cout << std::fixed << addProbs_[nodeidx] << "  ";
-    }
-    std::cout << std::endl;
-    std::cout << "mult printing probs: " << std::endl;
-    for (int nodeidx = 0; nodeidx < multProbs_.size(); nodeidx++)
-    {
-            std::cout << std::fixed << multProbs_[nodeidx] << "  ";
-    }
-    std::cout << std::endl;
-    std::cout << "logic printing probs: " << std::endl;
-    for (int nodeidx = 0; nodeidx < logicProbs_.size(); nodeidx++)
-    {
-            std::cout << std::fixed << logicProbs_[nodeidx] << "  ";
-    }
-    std::cout << std::endl;
-    std::cout << "div printing probs: " << std::endl;
-    for (int nodeidx = 0; nodeidx < divProbs_.size(); nodeidx++)
-    {
-            std::cout << std::fixed << divProbs_[nodeidx] << "  ";
-    }
-    std::cout << std::endl;
+    //debug prints- Leaving these in until ASAP + ALAP verified together. Doesn't work well after adding time frame loop
+    debugPrints();
 
     return;
+}
+
+
+/*we need these things: 
+-comp type
+-which index of the resourceVec_ to use
+-which predecessors
+-which successors
+*/
+int pschedule::calculateForces(int TF, int n)
+{
+    int bestFrame, bestFrameIdx;
+    std::vector<double> totalForces;
+
+    //std::cout << "calcForce: asap, alap = " << compVec_[n].asapFrame_ << ", " << compVec_[n].alapFrame_ << std::endl;
+
+    for (int frame=compVec_[n].asapFrame_; frame <= compVec_[n].alapFrame_; frame++ )
+    {
+        //Reset forces
+        forces_.clear();
+
+        //calculate self force for one time frame
+        calcSelfForce(frame, n);
+
+        //Recursive through predecessors and sucessors, calculate force and return
+
+        //Store off total force
+        totalForces.push_back( std::accumulate(forces_.begin(), forces_.end(), 0.0) );
+    }
+
+    bestFrameIdx = min_element(totalForces.begin(), totalForces.end()) - totalForces.begin();
+
+    bestFrame = compVec_[n].asapFrame_ + bestFrameIdx;
+
+    return bestFrame;
+}
+
+void pschedule::calcPrePostForce()
+{
+
+}
+
+void pschedule::calcSelfForce(int frame, int n)
+{
+    double oldcon, newcon, weight, force;
+
+    //find old and new contributions
+    oldcon = 1/(compVec_[n].alapFrame_ - compVec_[n].asapFrame_ + 1);
+
+    newcon = 1/(compVec_[n].alapFrame_ - frame + 1);
+
+    //find weight of operation distribution at current frame
+    switch (compVec_[n].restype_)
+    {
+        case resource::ADD_SUB:
+        {
+            weight = addProbs_[frame - 1];
+            break;
+        }
+        case resource::MULT:
+        {
+            weight = multProbs_[frame - 1];
+            break;
+        }
+        case resource::LOGIC:
+        {
+            weight = logicProbs_[frame - 1];
+            break;
+        }
+        case resource::DIV_MOD:
+        {
+            weight = divProbs_[frame - 1];
+            break;
+        }
+    }
+
+    force = weight * (newcon - oldcon);
+
+    forces_.push_back( force );
+
+    std::cout.precision( 3 ); //float/double precision for couts
+    std::cout << "Frame " << frame << ": Force calculated as " << force << std::endl;
+
+    return;
+
 }
 
 
@@ -286,7 +345,10 @@ void pschedule::FDS(){
 // -------------------------------------------------------------------------------
 void pschedule::buildFDSTable(std::vector<double>& FDSTable, std::vector<double>& probVec, std::vector<int> nodeVec){
 
+    FDSTable.clear(); probVec.clear();
+
     double prob = 0.0;
+
     std::cout.precision( 3 ); //float/double precision for couts
 
     //Determine operator probabilities for each node
@@ -331,8 +393,17 @@ void pschedule::buildFDSTable(std::vector<double>& FDSTable, std::vector<double>
         probVec.push_back(sumTF);
     }
 
+    std::cout << "Printing probs. FDSTable size = " << FDSTable.size() <<  ", NumProbs = " << probVec.size() << ", NodeVec size = " << nodeVec.size() << std::endl;
+
+    for (int i = 0; i < probVec.size(); i ++)
+    {
+        std::cout << probVec[i] << ", ";
+    }
+    std::cout << std::endl;
+
     return;
 }
+
 
 // -------------------------------------------------------------------------------
 // This was moved from fileparser
@@ -357,4 +428,72 @@ void pschedule::outputDebug()
     fout.close();
 
     return;
+}
+
+
+void pschedule::debugPrints()
+{
+
+    for (int nodeidx = 0; nodeidx < addVec_.size(); nodeidx++)
+    {
+        std::cout << "add printing new row= " << nodeidx << ": ";
+        for (int j = 0; j < latconstrnt_; j++)
+        {
+            std::cout << std::fixed << addTable_[nodeidx * latconstrnt_ + j] << "  ";
+        }
+        std::cout << std::endl;
+    }
+    for (int nodeidx = 0; nodeidx < multVec_.size(); nodeidx++)
+    {
+        std::cout << "mult printing new row= " << nodeidx << ": ";
+        for (int j = 0; j < latconstrnt_; j++)
+        {
+            std::cout << std::fixed << multTable_[nodeidx * latconstrnt_ + j] << "  ";
+        }
+        std::cout << std::endl;
+    }
+    for (int nodeidx = 0; nodeidx < logicVec_.size(); nodeidx++)
+    {
+        std::cout << "logic printing new row= " << nodeidx << ": ";
+        for (int j = 0; j < latconstrnt_; j++)
+        {
+            std::cout << std::fixed << logicTable_[nodeidx * latconstrnt_ + j] << "  ";
+        }
+        std::cout << std::endl;
+    }
+    for (int nodeidx = 0; nodeidx < divVec_.size(); nodeidx++)
+    {
+        std::cout << "div printing new row= " << nodeidx << ": ";
+        for (int j = 0; j < latconstrnt_; j++)
+        {
+            std::cout << std::fixed << divTable_[nodeidx * latconstrnt_ + j] << "  ";
+        }
+        std::cout << std::endl;
+    }
+
+    std::cout << "add printing probs: " << std::endl;
+    for (int nodeidx = 0; nodeidx < addProbs_.size(); nodeidx++)
+    {
+            std::cout << std::fixed << addProbs_[nodeidx] << "  ";
+    }
+    std::cout << std::endl;
+    std::cout << "mult printing probs: " << std::endl;
+    for (int nodeidx = 0; nodeidx < multProbs_.size(); nodeidx++)
+    {
+            std::cout << std::fixed << multProbs_[nodeidx] << "  ";
+    }
+    std::cout << std::endl;
+    std::cout << "logic printing probs: " << std::endl;
+    for (int nodeidx = 0; nodeidx < logicProbs_.size(); nodeidx++)
+    {
+            std::cout << std::fixed << logicProbs_[nodeidx] << "  ";
+    }
+    std::cout << std::endl;
+    std::cout << "div printing probs. numProbs = " << divProbs_.size() << std::endl;
+    for (int nodeidx = 0; nodeidx < divProbs_.size(); nodeidx++)
+    {
+            std::cout << std::fixed << divProbs_[nodeidx] << "  ";
+    }
+    std::cout << std::endl;
+
 }
