@@ -11,13 +11,15 @@
 // -------------------------------------------------------------------------------
 // 
 // -------------------------------------------------------------------------------
-filewriter::filewriter(std::string outfile, std::vector<component> compVec, std::vector<std::vector<int>> states)
+filewriter::filewriter(std::string outfile, std::vector<component> compVec, std::vector<std::vector<int>> states, std::vector<ifStatement> ifStatements)
 {
-    outfile_ = outfile;
+    outfile_        = outfile;
+    compVec_        = compVec;
+    states_         = states;
+    ifStatements_   = ifStatements;
+    error_          = false;
+
     fout_.open(outfile);
-    compVec_ = compVec;
-    states_ = states;
-    error_ = false;
 
     if ( !fout_.is_open() )
     {
@@ -129,7 +131,16 @@ void filewriter::writeFile()
                 continue;
             }
             component currComp(compVec_[compNum]);
-            fout_ << "\t\t\t" << currComp.writeLine() << std::endl;
+            // Check for if statements
+            if ( currComp.withinIf_ >= 0 )
+            {
+                std::cout << "first if" << std::endl;
+                writeIf(currComp.withinIf_, compNum);
+            }
+            else
+            {
+                fout_ << "\t\t\t" << currComp.writeLine() << std::endl;
+            }
         }
         // Print end of state
         fout_ << "\t\t\tState <= S" << i+2 << ":" << std::endl;
@@ -152,7 +163,48 @@ void filewriter::writeFile()
     fout_ << "endmodule";
 }
 
-void filewriter::writeIf(int ifNum)
+void filewriter::writeIf(int ifNum, int compNum)
 {
+    std::cout << "in function" << std::endl;
+    std::cout << "if num " << ifNum << std::endl;
+    static int recurseNum = 0;
+    ifStatement currIf = ifStatements_[ifNum];
+
+    if( currIf.withinIf >= 0 )
+    {
+        std::cout << "recurse" << std::endl;
+        writeIf(currIf.withinIf);
+        recurseNum++;
+    }
+
+    if(currIf.isElse)
+    {
+        std::cout << "is else" << std::endl;
+        ifStatement pairedIf =  ifStatements_[currIf.correspondingIfElse];
+        fout_ << "\t\t\t" << "if ( " << pairedIf.condition << " ) begin"<< std::endl;
+        fout_ << "\t\t\t" << "end" << std::endl;
+        fout_ << "\t\t\t" << "else begin" << std::endl;
+        if( compNum >= 0)
+        {
+            fout_ << "\t\t\t\t" << compVec_[compNum].writeLine() << std::endl;
+            fout_ << "\t\t\t" << "end" << std::endl;
+        }
+    }
+    else
+    {
+        std::cout << "not else" << std::endl;
+        fout_ << "\t\t\t" << "if ( " << currIf.condition << " ) begin"<< std::endl;
+        if( compNum >= 0 )
+        {
+            fout_ << "\t\t\t\t" << compVec_[compNum].writeLine() << std::endl;
+            fout_ << "\t\t\t" << "end" << std::endl;
+        }
+    }
+
+    while( recurseNum>0 && compNum >= 0 )
+    {
+        fout_ << "\t\t\t" << "end" << std::endl;
+        recurseNum--;
+    }
 
 }
