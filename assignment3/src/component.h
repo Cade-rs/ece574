@@ -44,6 +44,7 @@ public:
     std::string scdw_;
     int asapFrame_;
     int alapFrame_;
+    int fdsFrame_;
     resource restype_;
     vector<variable> in_;
     vector<variable> out_;
