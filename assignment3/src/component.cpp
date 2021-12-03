@@ -23,12 +23,9 @@ component::component(comp_type type, comp_size datawidth, vector<variable> in, v
     sctype_     = comp2Str();
     scdw_       = dw2Str();
     //Scheduler Additions
-    int time=0;
-    asapFrame_ = -1;
-    alapFrame_ = -1;
-    fdsFrame_  = -1;
-    std::vector<int> parent_,child_; //or comesfrom goesto
-
+    asapFrame_  = -1;
+    alapFrame_  = -1;
+    fdsFrame_   = -1;
     restype_    = whichResource();
 
 
@@ -59,6 +56,7 @@ component::component(const component& in_comp)
     scdw_       = in_comp.scdw_;
     asapFrame_  = in_comp.asapFrame_;
     alapFrame_  = in_comp.alapFrame_;
+    fdsFrame_   = in_comp.fdsFrame_;
     restype_    = in_comp.restype_;
 
     for (int i=0; i<in_comp.in_.size(); i++)
@@ -80,10 +78,6 @@ component::component(const component& in_comp)
     {
         child_.push_back( in_comp.child_[i] );
     }
-
-    asapFrame_ = in_comp.asapFrame_;
-    alapFrame_ = in_comp.alapFrame_;
-    fdsFrame_  = in_comp.fdsFrame_;
 }
 
 bool component::containsInput(std::string var)
@@ -410,10 +404,9 @@ void component::printComponent(std::ofstream& fout)
     }
     fout << std::endl ;
 
-    fout << "Scheduled TF: " << alapFrame_ << std::endl;
-
     fout << "ASAP TF:      " << asapFrame_ << std::endl;
     fout << "ALAP TF:      " << alapFrame_ << std::endl;
+    fout << "Scheduled TF: " << fdsFrame_  << std::endl;
     fout << "Parents:" << std::endl;
     for(int i=0; i<parent_.size(); i++)
     {
