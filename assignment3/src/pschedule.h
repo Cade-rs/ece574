@@ -11,6 +11,7 @@
 class pschedule{
 public:
     pschedule(int latencyConstraint);
+    void buildFamily();
     void performScheduling(std::vector<component>& compVec);
     void asap();
     void alap();

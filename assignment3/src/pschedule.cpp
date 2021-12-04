@@ -24,16 +24,62 @@ void pschedule::performScheduling(std::vector<component>& compVec){
 
     compVec_ = compVec;
 
+    buildFamily();
+
     FDS();
 
     outputDebug();
 
+
     return;
 }
 
+void pschedule::buildFamily()
+{
+    for (int i=0; i < compVec_.size(); i++)
+    {
+        //determine if valid component (ie no I/O/Reg/Wire)
+        if (compVec_[i].type_ > 0)
+        {
+            //Find parents
+            for (int j=0; j < compVec_[i].in_.size(); j++) //check all inputs
+            {
+                for (int k=0; k < compVec_.size(); k++) //check all other comps
+                {
+                    for (int l=0; l < compVec_[k].out_.size(); l++) //check other comp outs
+                    {
+                        //check if potential parent is valid component, has outputs, and is match
+                        if (compVec_[k].type_ > 0 &&
+                            compVec_[i].in_[j].name_ == compVec_[k].out_[l].name_)
+                        {
+                            compVec_[i].parent_.push_back ( compVec_[k].compNum_ );
+                        }
+                    }
+                }
+            }
+
+            //Find children
+            for (int j=0; j < compVec_[i].out_.size(); j++) //check all inputs
+            {
+                for (int k=0; k < compVec_.size(); k++) //check all other comps
+                {
+                    for (int l=0; l < compVec_[k].in_.size(); l++) //check other comp outs
+                    {
+                        //check if potential parent is valid component, and is match
+                        if (compVec_[k].type_ > 0 &&
+                            compVec_[i].out_[j].name_ == compVec_[k].in_[l].name_)
+                        {
+                            compVec_[i].child_.push_back ( compVec_[k].compNum_ );
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
 
 void pschedule::asap(){
-
+/*
     if (DEBUG){
         compVec_[4].asapFrame_ = -1;//1
         compVec_[4].child_.push_back(8);
@@ -53,7 +99,7 @@ void pschedule::asap(){
         compVec_[8].parent_.push_back(5);
         compVec_[8].parent_.push_back(7);
     }
-
+*/
     std::vector <int> firstnodes;
 
     //iterate through the nodes to find the initial nodes. These nodes will have two inputs that are NOT outputs of any other node
@@ -87,7 +133,7 @@ we've mapped out all the upstream nodes
 // -------------------------------------------------------------------------------
 void pschedule::alap()
 {
-
+/*
     if (DEBUG) //ASAP test case for circuit 5
     {
         compVec_[4].asapFrame_ = -1;
@@ -108,7 +154,7 @@ void pschedule::alap()
         compVec_[8].parent_.push_back(5);
         compVec_[8].parent_.push_back(7);
     }
-
+*/
     std::vector<int> endnodes;
 
     //iterate through components and find the end nodes. End nodes will have zero children
@@ -266,7 +312,8 @@ void pschedule::FDS(){
     
 
     //FDS scheduling, 1 frame at a time
-    for (int TF = 1; TF < latconstrnt_; TF++)
+    //for (int TF = 1; TF < latconstrnt_; TF++)
+    for (int TF = 1; TF < 2; TF++)
     {   
         //reset resource compVecs, tables, probabilities, and nodes to be scheduled
         addVec_.clear(); multVec_.clear(); logicVec_.clear(); divVec_.clear();
