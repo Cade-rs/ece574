@@ -364,17 +364,14 @@ void pschedule::calcSelfForce(int frame, int n)
 
         // new contribution value to time frame distribution is 1.0 for current frame of interest
         newcon = i == frame ? 1.0 : 0.0;
-        newcon = static_cast<double>(newcon);
 
-        force += weight * static_cast<double>((newcon - oldcon));
+        force += weight * (newcon - oldcon);
         std::cout.precision( 3 ); //float/double precision for couts
 
         std::cout << "? frame, Frame, ASAP, ALAP, weight, newcon, oldcon, force = " << i << ", " << frame << ", " << compVec_[n].asapFrame_ << ", " << compVec_[n].alapFrame_ << ", " << weight << ", " << newcon << ", " << oldcon << ", " << force << std::endl;
     }
 
-
-    force = weight * (newcon - oldcon);
-
+    //build vector of individual forces to sum later
     forces_.push_back( force );
 
     std::cout.precision( 3 ); //float/double precision for couts
