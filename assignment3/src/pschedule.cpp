@@ -166,7 +166,7 @@ void pschedule::recurse_firstNodes(int nodeidx)
     }
 
     //Go on to child nodes. If no children, we're done!
-    if(compVec_[nodeidx].child_.size() <= 0)
+    if(compVec_[nodeidx].child_.size() > 0)
     {
         std::cout << "inside check for childies" << std::endl;
         for (int i = 0; i< compVec_[nodeidx].child_.size(); i++){
@@ -414,7 +414,7 @@ void pschedule::FDS(){
     }
     
     //debug prints- Leaving these in until ASAP + ALAP verified together. Doesn't work well after adding time frame loop
-    debugPrints();
+    //debugPrints();
 
     return;
 }
@@ -533,14 +533,14 @@ void pschedule::calcSelfForce(int frame, int n)
         force += weight * (newcon - oldcon);
         std::cout.precision( 3 ); //float/double precision for couts
 
-        std::cout << "? frame, Frame, ASAP, ALAP, weight, newcon, oldcon, force = " << i << ", " << frame << ", " << compVec_[n].asapFrame_ << ", " << compVec_[n].alapFrame_ << ", " << weight << ", " << newcon << ", " << oldcon << ", " << force << std::endl;
+        //std::cout << "? frame, Frame, ASAP, ALAP, weight, newcon, oldcon, force = " << i << ", " << frame << ", " << compVec_[n].asapFrame_ << ", " << compVec_[n].alapFrame_ << ", " << weight << ", " << newcon << ", " << oldcon << ", " << force << std::endl;
     }
 
     //build vector of individual forces to sum later
     forces_.push_back( force );
 
     std::cout.precision( 3 ); //float/double precision for couts
-    std::cout << "Frame " << frame << ": Force calculated as " << force << std::endl;
+    //std::cout << "Frame " << frame << ": Force calculated as " << force << std::endl;
 
     return;
 
@@ -600,7 +600,7 @@ void pschedule::buildFDSTable(std::vector<double>& FDSTable, std::vector<double>
         probVec.push_back(sumTF);
     }
 
-    std::cout << "Printing probs. FDSTable size = " << FDSTable.size() <<  ", NumProbs = " << probVec.size() << ", NodeVec size = " << nodeVec.size() << std::endl;
+    //std::cout << "Printing probs. FDSTable size = " << FDSTable.size() <<  ", NumProbs = " << probVec.size() << ", NodeVec size = " << nodeVec.size() << std::endl;
 
     for (int i = 0; i < probVec.size(); i ++)
     {
