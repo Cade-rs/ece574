@@ -49,39 +49,11 @@ int main(int argc, char *argv[])
 
     fillStates(testStates);
 
-    filewriter fw(outfile, pscheduler.compVec_, testStates, fp.ifStatements_);
+    filewriter fw(outfile, latConstraint, pscheduler.compVec_, fp.ifStatements_);
 
     fw.writeFile();
 
     std::cout << std::endl << std::endl << outfile << " Verilog file successfully created" << std::endl;
 
     return 0;
-}
-
-
-void fillStates(std::vector<std::vector<int>>& states)
-{
-    std::vector<int> state1;
-    state1.push_back(4);
-    state1.push_back(5);
-    state1.push_back(6);
-    state1.push_back(7);
-
-    std::vector<int> state2;
-    state2.push_back(8);
-    state2.push_back(9);
-    state2.push_back(10);
-
-    std::vector<int> state3;
-    state3.push_back(10);
-    state3.push_back(11);
-    state3.push_back(12);
-    state3.push_back(13);
-    state3.push_back(14);
-    state3.push_back(15);
-
-    states.push_back(state1);
-    states.push_back(state2);
-    states.push_back(state3);
-
 }

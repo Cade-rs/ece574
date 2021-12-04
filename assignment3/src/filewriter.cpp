@@ -7,17 +7,21 @@
 #include <regex>
 #include <string>
 
+void fillStates(std::vector<std::vector<int>>& states);
 
 // -------------------------------------------------------------------------------
 // 
 // -------------------------------------------------------------------------------
-filewriter::filewriter(std::string outfile, std::vector<component> compVec, std::vector<std::vector<int>> states, std::vector<ifStatement> ifStatements)
+filewriter::filewriter(std::string outfile, int latConstraint, std::vector<component> compVec, std::vector<ifStatement> ifStatements)
 {
     outfile_        = outfile;
+    latConstraint_  = latConstraint;
     compVec_        = compVec;
-    states_         = states;
+    //states_         = states;
     ifStatements_   = ifStatements;
     error_          = false;
+
+    createStateVector();
 
     fout_.open(outfile);
 
@@ -89,7 +93,7 @@ void filewriter::writeFile()
         fout_ << "S" << i << "=" << i << ", ";
     }
     // Last line for dat semicolon
-    fout_ << "S" << stateBits << "=" << stateBits << ";" << std::endl;
+    fout_ << "S" << stateSize-1 << "=" << stateSize-1 << ";" << std::endl;
 
     // Write always begin
     fout_ << "\talways @(posedge Clk) begin" << std::endl << std::endl;
@@ -134,7 +138,6 @@ void filewriter::writeFile()
             // Check for if statements
             if ( currComp.withinIf_ >= 0 )
             {
-                std::cout << "first if" << std::endl;
                 writeIf(currComp.withinIf_, compNum);
             }
             else
@@ -165,21 +168,21 @@ void filewriter::writeFile()
 
 void filewriter::writeIf(int ifNum, int compNum)
 {
-    std::cout << "in function" << std::endl;
-    std::cout << "if num " << ifNum << std::endl;
+    //std::cout << "in function" << std::endl;
+    //std::cout << "if num " << ifNum << std::endl;
     static int recurseNum = 0;
     ifStatement currIf = ifStatements_[ifNum];
 
     if( currIf.withinIf >= 0 )
     {
-        std::cout << "recurse" << std::endl;
+        //std::cout << "recurse" << std::endl;
         writeIf(currIf.withinIf);
         recurseNum++;
     }
 
     if(currIf.isElse)
     {
-        std::cout << "is else" << std::endl;
+        //std::cout << "is else" << std::endl;
         ifStatement pairedIf =  ifStatements_[currIf.correspondingIfElse];
         fout_ << "\t\t\t" << "if ( " << pairedIf.condition << " ) begin"<< std::endl;
         fout_ << "\t\t\t" << "end" << std::endl;
@@ -192,7 +195,7 @@ void filewriter::writeIf(int ifNum, int compNum)
     }
     else
     {
-        std::cout << "not else" << std::endl;
+        //std::cout << "not else" << std::endl;
         fout_ << "\t\t\t" << "if ( " << currIf.condition << " ) begin"<< std::endl;
         if( compNum >= 0 )
         {
@@ -206,5 +209,69 @@ void filewriter::writeIf(int ifNum, int compNum)
         fout_ << "\t\t\t" << "end" << std::endl;
         recurseNum--;
     }
+
+}
+
+
+void filewriter::createStateVector()
+{
+    // Create a vector of vectors of ints stating which state contains which components
+    for( int i=0; i < latConstraint_; i++ )
+    {
+        std::vector<int> state;
+        for( int j = 0; j < compVec_.size(); j++ )
+        {
+            if( compVec_[j].fdsFrame_ == i )
+            {
+                state.push_back(j);
+            }
+            else if( compVec_[j].fdsFrame_ == -1 && compVec_[j].type_ >= comp_type::REG )
+            {
+                std::cout << "Error: Component not scheduled: " << j << std::endl;
+                error_ = true;
+                continue;
+            }
+        }
+        states_.push_back(state);
+    }
+
+    if( error_ && DEBUG )
+    {
+        std::cout << "Falling back on pre-canned scheduling" << std::endl;
+        states_.clear();
+        fillStates(states_);
+    }
+}
+
+
+
+
+
+void fillStates(std::vector<std::vector<int>>& states)
+{
+    std::vector<int> state1;
+    state1.push_back(4);
+    state1.push_back(5);
+    state1.push_back(6);
+    state1.push_back(7);
+
+    std::vector<int> state2;
+    state2.push_back(8);
+    state2.push_back(9);
+    state2.push_back(10);
+
+    std::vector<int> state3;
+    state3.push_back(11);
+    state3.push_back(12);
+    state3.push_back(13);
+    state3.push_back(14);
+    state3.push_back(15);
+    state3.push_back(16);
+    state3.push_back(17);
+    state3.push_back(18);
+
+    states.push_back(state1);
+    states.push_back(state2);
+    states.push_back(state3);
 
 }
