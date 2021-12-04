@@ -279,12 +279,14 @@ int pschedule::calculateForces(int TF, int n)
         //determine predecessor or successor
 
         //Call Recursive function through predecessors and sucessors, calculate force and return
-
-            //call calcSelfForce
-
-            //determine next predecessor or successor
-
-            //call Recursive function again recursively
+        for( int i = 0; i < compVec_[n].parent_.size(); i++ )
+        {
+            calcPredecessorForces( frame, compVec_[n].parent_[i] );
+        }
+        for( int i = 0; i < compVec_[n].child_.size(); i++ )
+        {
+            calcSuccessorForces( frame, compVec_[n].child_[i] );
+        }
 
         //Store off total force
         totalForces.push_back( std::accumulate(forces_.begin(), forces_.end(), 0.0) );
@@ -297,10 +299,31 @@ int pschedule::calculateForces(int TF, int n)
     return bestFrame;
 }
 
-void pschedule::calcPrePostForce()
+void pschedule::calcPredecessorForces(int frame, int n)
 {
+    // calc self force
+    calcSelfForce(frame, n);
 
+    // recurse
+    for( int i = 0; i < compVec_[n].parent_.size(); i++ )
+    {
+        calcPredecessorForces( frame, compVec_[n].parent_[i] );
+    }
 }
+
+
+void pschedule::calcSuccessorForces(int frame, int n)
+{
+    // calc self force
+    calcSelfForce(frame, n);
+
+    // recurse
+    for( int i = 0; i < compVec_[n].child_.size(); i++ )
+    {
+        calcSuccessorForces( frame, compVec_[n].child_[i] );
+    }
+}
+
 
 void pschedule::calcSelfForce(int frame, int n)
 {
