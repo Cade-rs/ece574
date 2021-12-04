@@ -140,9 +140,13 @@ void pschedule::recurse_firstNodes(int nodeidx){
             break;
         }
         else{
-            std::cout<<"oh damn I'm a baby daddy again"<<endl;
+            /*std::cout<<"oh damn I'm a baby daddy again"<<endl;
             int time_2_child=findasaptf(compVec_[nodeidx].restype_, compVec_[nodeidx].asapFrame_);  
-            compVec_[compVec_[nodeidx].child_[i]].asapFrame_+=time_2_child;
+            compVec_[compVec_[nodeidx].child_[i]].asapFrame_+=time_2_child;*/
+
+            //Adding functionality from call on 03DEC2021
+            //compVec_[compVec_[nodeidx].child_[i]].asapFrame_;
+
         }
     }
 
@@ -151,32 +155,9 @@ void pschedule::recurse_firstNodes(int nodeidx){
         for (int i = 0; i< compVec_[nodeidx].child_.size(); i++){
             recurse_firstNodes(compVec_[nodeidx].child_[i]);
         }
-    }
-    else{
-        /*compVec_[4].asapFrame_ = -1;
-        compVec_[4].child_.push_back(8);
-
-        compVec_[5].asapFrame_ = -1;
-        compVec_[5].child_.push_back(8);
-
-        compVec_[6].asapFrame_ = -1;
-        compVec_[6].child_.push_back(7);
-
-        compVec_[7].asapFrame_ = -1;
-        compVec_[7].parent_.push_back(6);
-        compVec_[7].child_.push_back(8);
-
-        compVec_[8].asapFrame_ = -1;
-        compVec_[8].parent_.push_back(4);
-        compVec_[8].parent_.push_back(5);
-        compVec_[8].parent_.push_back(7);*/
-        std::cout<<compVec_[4].asapFrame_<<endl;
-        std::cout<<compVec_[5].asapFrame_<<endl;
-        std::cout<<compVec_[6].asapFrame_<<endl;
-        std::cout<<compVec_[7].asapFrame_<<endl;
-        std::cout<<compVec_[8].asapFrame_<<endl;
-        return;
-    }
+    }        
+    return;
+    
 }
 
 
