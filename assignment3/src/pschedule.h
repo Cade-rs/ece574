@@ -18,7 +18,8 @@ public:
     void recurse(int nodeidx);
     void FDS();
     void calcSelfForce(int frame, int n);
-    void calcPrePostForce();
+    void calcPredecessorForces(int frame, int n);
+    void calcSuccessorForces(int frame, int n);
     void buildFDSTable(std::vector<double>& FDSTable, std::vector<double>& probVec,  std::vector<int> nodeVec);
     void outputDebug();
     void debugPrints();

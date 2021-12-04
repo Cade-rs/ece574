@@ -8,7 +8,6 @@
 #include "filewriter.h"
 #include "common.h"
 #include "variable.h"
-#include "latencycalculator.h"
 #include "pschedule.h"
 
 
@@ -38,9 +37,6 @@ int main(int argc, char *argv[])
         std::cout << "Encountered error" << std:: endl;
         return 1;
     }
-
-    // critical path calculations (and test component list)
-    //latencycalculator lc(fp.compVec_);
 
     pschedule pscheduler(latConstraint);
     pscheduler.performScheduling(fp.compVec_);

@@ -1,7 +1,6 @@
 #include "pschedule.h"
 #include "component.h"
 #include "fileparser.h"
-#include "latencycalculator.h"
 
 #include <algorithm>
 #include <iostream>
@@ -319,7 +318,8 @@ void pschedule::FDS(){
         //If possible to schedule node at current time frame, calculate forces and find the minimum
         for (int i=0; i< compVec_.size(); i++)
         {
-            if (compVec_[i].alapFrame_ > 0 && compVec_[i].asapFrame_ > 0 && compVec_[i].fdsFrame_ <= 0)
+            if (compVec_[i].alapFrame_ > 0 && compVec_[i].asapFrame_ > 0 && compVec_[i].asapFrame_ <= TF 
+                 && compVec_[i].fdsFrame_ < 0)
             {
                 int bestFrame = 0;
                 //If we've reached our max frame (ALAP), schedule the node
@@ -368,7 +368,17 @@ int pschedule::calculateForces(int TF, int n)
         //calculate self force for one time frame
         calcSelfForce(frame, n);
 
-        //Recursive through predecessors and sucessors, calculate force and return
+        //determine predecessor or successor
+
+        //Call Recursive function through predecessors and sucessors, calculate force and return
+        for( int i = 0; i < compVec_[n].parent_.size(); i++ )
+        {
+            calcPredecessorForces( frame, compVec_[n].parent_[i] );
+        }
+        for( int i = 0; i < compVec_[n].child_.size(); i++ )
+        {
+            calcSuccessorForces( frame, compVec_[n].child_[i] );
+        }
 
         //Store off total force
         totalForces.push_back( std::accumulate(forces_.begin(), forces_.end(), 0.0) );
@@ -381,47 +391,79 @@ int pschedule::calculateForces(int TF, int n)
     return bestFrame;
 }
 
-void pschedule::calcPrePostForce()
+void pschedule::calcPredecessorForces(int frame, int n)
 {
+    // calc self force
+    calcSelfForce(frame, n);
 
+    // recurse
+    for( int i = 0; i < compVec_[n].parent_.size(); i++ )
+    {
+        calcPredecessorForces( frame, compVec_[n].parent_[i] );
+    }
 }
+
+
+void pschedule::calcSuccessorForces(int frame, int n)
+{
+    // calc self force
+    calcSelfForce(frame, n);
+
+    // recurse
+    for( int i = 0; i < compVec_[n].child_.size(); i++ )
+    {
+        calcSuccessorForces( frame, compVec_[n].child_[i] );
+    }
+}
+
 
 void pschedule::calcSelfForce(int frame, int n)
 {
     double oldcon, newcon, weight, force;
+    force = 0.0;
+    newcon = 0.0;
+    oldcon = 0.0;
 
-    //find old and new contributions
-    oldcon = 1/(compVec_[n].alapFrame_ - compVec_[n].asapFrame_ + 1);
+    //find old contributions
+    oldcon = 1 / static_cast<double>(compVec_[n].alapFrame_ - compVec_[n].asapFrame_ + 1);
 
-    newcon = 1/(compVec_[n].alapFrame_ - frame + 1);
-
-    //find weight of operation distribution at current frame
-    switch (compVec_[n].restype_)
+    for  (int i=compVec_[n].asapFrame_; i <= compVec_[n].alapFrame_ ; i++)
     {
-        case resource::ADD_SUB:
+        //find weight of operation distribution at current frame
+        switch (compVec_[n].restype_)
         {
-            weight = addProbs_[frame - 1];
-            break;
+            case resource::ADD_SUB:
+            {
+                weight = addProbs_[i - 1];
+                break;
+            }
+            case resource::MULT:
+            {
+                weight = multProbs_[i - 1];
+                break;
+            }
+            case resource::LOGIC:
+            {
+                weight = logicProbs_[i - 1];
+                break;
+            }
+            case resource::DIV_MOD:
+            {
+                weight = divProbs_[i - 1];
+                break;
+            }
         }
-        case resource::MULT:
-        {
-            weight = multProbs_[frame - 1];
-            break;
-        }
-        case resource::LOGIC:
-        {
-            weight = logicProbs_[frame - 1];
-            break;
-        }
-        case resource::DIV_MOD:
-        {
-            weight = divProbs_[frame - 1];
-            break;
-        }
+
+        // new contribution value to time frame distribution is 1.0 for current frame of interest
+        newcon = i == frame ? 1.0 : 0.0;
+
+        force += weight * (newcon - oldcon);
+        std::cout.precision( 3 ); //float/double precision for couts
+
+        std::cout << "? frame, Frame, ASAP, ALAP, weight, newcon, oldcon, force = " << i << ", " << frame << ", " << compVec_[n].asapFrame_ << ", " << compVec_[n].alapFrame_ << ", " << weight << ", " << newcon << ", " << oldcon << ", " << force << std::endl;
     }
 
-    force = weight * (newcon - oldcon);
-
+    //build vector of individual forces to sum later
     forces_.push_back( force );
 
     std::cout.precision( 3 ); //float/double precision for couts
