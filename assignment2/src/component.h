@@ -23,6 +23,7 @@ public:
     bool containsOutput(std::string var);
     bool containsOutput(variable& var);
     double findLatency(void);
+<<<<<<< Updated upstream
     std::string writeLine();
     std::string comp2Str();
     std::string dw2Str();
@@ -30,6 +31,9 @@ public:
     std::string cPadd();
 
     void printComponent(std::ofstream& fout);
+=======
+    std::string writeLine(const component& in_comp);
+>>>>>>> Stashed changes
 
     comp_type type_;
     comp_size dw_;

@@ -839,7 +839,8 @@ void fileparser::constructMUX(std::string& line)
     varIdx = findVariableIndex(varName);
     if( varIdx >= 0 )
     {
-        outputs.push_back( variable( varVec_[varIdx] ) );
+        //Handle inputs
+        
     }
     else
     {
@@ -1124,45 +1125,13 @@ bool fileparser::checkCompForSignedVariable(std::vector<variable>& varVec)
 
 void fileparser::writeFile()
 {
+    fout_.open(outfile.txt);
+    fout_<<"'timescale 1ns / 1ps\n";
+    //module declaration. C_num is circuit number
+    std::string mod,c_num;
+    mod = "\tmodule circuit";
 
-    //fout_.open();
-    fout_<<"\n`timescale 1ns / 1ps";
-    std::string ofile,mod;
-    //need to include the outfile name in the writefile function for module name
-    ofile =outfile_;
-    //Cutting off the file type to grab the name
-    // Trim off the folder paths
-    std::size_t pos;
-    
-    if( ofile.find("/") != std::string::npos )
-    {
-        pos = ofile.find_last_of("/");
-        ofile.erase(0,pos+1);
-    }
-
-    // trim off the file extension
-    pos = ofile.find_last_of(".");
-    ofile = ofile.substr(0,pos);
-
-    //Writing the first line
-    mod = "\nmodule ";
-    std::string opn = "("; //open parentheses
-    std::string cls = ");";//close parentheses
-    std::string semi = ";";
-    std::string com=",";
-    std::string clk = "Clk", rst = "Rst";
-    std::string nL="\n",tab = "\t",iput="input",spc = " ";
-    mod.append(ofile);
-    mod.append(opn);
-
-    for(int i=0;i<compVec_.size();i++){
-        if(compVec_[i].type_==comp_type::Inputs||compVec_[i].type_==comp_type::Outputs){
-            for(int j=0;j<compVec_[i].in_.size();j++){              
-                
-                mod.append(compVec_[i].in_[j].name_);
-                mod.append(com);
-            }
-            for(int j=0;j<compVec_[i].out_.size();j++){
+    mod.append(/*/l_inputs)*/);
 
                 mod.append(compVec_[i].out_[j].name_);
                 mod.append(com);
