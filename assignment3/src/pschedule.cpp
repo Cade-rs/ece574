@@ -24,15 +24,101 @@ void pschedule::performScheduling(std::vector<component>& compVec){
 
     compVec_ = compVec;
 
+    buildFamily();
+
     FDS();
 
     outputDebug();
 
+
     return;
 }
 
+void pschedule::buildFamily()
+{
+    for (int i=0; i < compVec_.size(); i++)
+    {
+        //determine if valid component (ie no I/O/Reg/Wire)
+        if (compVec_[i].type_ > 0)
+        {
+            //Find parents
+            for (int j=0; j < compVec_[i].in_.size(); j++) //check all inputs
+            {
+                for (int k=0; k < compVec_.size(); k++) //check all other comps
+                {
+                    for (int l=0; l < compVec_[k].out_.size(); l++) //check other comp outs
+                    {
+                        //check if potential parent is valid component, has outputs, and is match
+                        if (compVec_[k].type_ > 0 &&
+                            compVec_[i].in_[j].name_ == compVec_[k].out_[l].name_)
+                        {
+                            compVec_[i].parent_.push_back ( compVec_[k].compNum_ );
+                        }
+                    }
+                }
+            }
+
+            //Find children
+            for (int j=0; j < compVec_[i].out_.size(); j++) //check all inputs
+            {
+                for (int k=0; k < compVec_.size(); k++) //check all other comps
+                {
+                    for (int l=0; l < compVec_[k].in_.size(); l++) //check other comp outs
+                    {
+                        //check if potential parent is valid component, and is match
+                        if (compVec_[k].type_ > 0 &&
+                            compVec_[i].out_[j].name_ == compVec_[k].in_[l].name_)
+                        {
+                            compVec_[i].child_.push_back ( compVec_[k].compNum_ );
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
 
 void pschedule::asap(){
+/*
+    if (DEBUG){
+        compVec_[4].asapFrame_ = -1;//1
+        compVec_[4].child_.push_back(8);
+
+        compVec_[5].asapFrame_ = -1;//1
+        compVec_[5].child_.push_back(8);
+
+        compVec_[6].asapFrame_ = -1;//1
+        compVec_[6].child_.push_back(7);
+
+        compVec_[7].asapFrame_ = -1;//2
+        compVec_[7].parent_.push_back(6);
+        compVec_[7].child_.push_back(8);
+
+        compVec_[8].asapFrame_ = -1;//4
+        compVec_[8].parent_.push_back(4);
+        compVec_[8].parent_.push_back(5);
+        compVec_[8].parent_.push_back(7);
+    }
+*/
+    std::vector <int> firstnodes;
+
+    //iterate through the nodes to find the initial nodes. These nodes will have two inputs that are NOT outputs of any other node
+    for (int compidx=0; compidx < compVec_.size(); compidx++){
+        if (compVec_[compidx].compNum_ >= 0 && (compVec_[compidx].parent_.size() == 0 || compVec_[compidx].parent_.empty())){
+            compVec_[compidx].asapFrame_=1;
+            firstnodes.push_back(compidx);
+        }
+        else if(compVec_[compidx].compNum_>=0 && (compVec_[compidx].parent_.size()!=0 || !compVec_[compidx].parent_.empty())){
+            compVec_[compidx].asapFrame_=0;
+        }
+    }
+    
+    //Start at initial nodes. Recurse through children to determine time frames
+    for (int i=0; i < firstnodes.size(); i++){
+        std::vector<int> foo_path;
+        recurse_firstNodes(firstnodes[i]);
+    }
+
     return;
 }
 
@@ -45,29 +131,30 @@ to the preceding time frame of the end node. Repeat this process recursively unt
 we've mapped out all the upstream nodes
 */
 // -------------------------------------------------------------------------------
-void pschedule::alap(){
-
+void pschedule::alap()
+{
+/*
     if (DEBUG) //ASAP test case for circuit 5
     {
-        compVec_[4].asapFrame_ = 1;
+        compVec_[4].asapFrame_ = -1;
         compVec_[4].child_.push_back(8);
 
-        compVec_[5].asapFrame_ = 1;
+        compVec_[5].asapFrame_ = -1;
         compVec_[5].child_.push_back(8);
 
-        compVec_[6].asapFrame_ = 1;
+        compVec_[6].asapFrame_ = -1;
         compVec_[6].child_.push_back(7);
 
-        compVec_[7].asapFrame_ = 2;
+        compVec_[7].asapFrame_ = -1;
         compVec_[7].parent_.push_back(6);
         compVec_[7].child_.push_back(8);
 
-        compVec_[8].asapFrame_ = 4;
+        compVec_[8].asapFrame_ = -1;
         compVec_[8].parent_.push_back(4);
         compVec_[8].parent_.push_back(5);
         compVec_[8].parent_.push_back(7);
     }
-
+*/
     std::vector<int> endnodes;
 
     //iterate through components and find the end nodes. End nodes will have zero children
@@ -75,7 +162,7 @@ void pschedule::alap(){
     {
         if (compVec_[compidx].asapFrame_ > 0 && compVec_[compidx].child_.size() <= 0)
         {
-            endnodes.push_back( compidx );
+            endnodes.push_back(compidx);
         }
     }
 
@@ -87,6 +174,37 @@ void pschedule::alap(){
 
     return;
 }
+//--------------------------------------------------------------------------------
+//Writing the Recursion Function For Initial Nodes
+void pschedule::recurse_firstNodes(int nodeidx){
+    std::cout<<"Recurse again muthafucka"<<endl;
+    
+    for(int i=0; compVec_[nodeidx].child_.size();i++){
+        if (compVec_[compVec_[nodeidx].child_[i]].asapFrame_>0){
+            std::cout<<"A child was already accounted for"<<endl;
+            break;
+        }
+        else{
+            /*std::cout<<"oh damn I'm a baby daddy again"<<endl;
+            int time_2_child=findasaptf(compVec_[nodeidx].restype_, compVec_[nodeidx].asapFrame_);  
+            compVec_[compVec_[nodeidx].child_[i]].asapFrame_+=time_2_child;*/
+
+            //Adding functionality from call on 03DEC2021
+            //compVec_[compVec_[nodeidx].child_[i]].asapFrame_;
+
+        }
+    }
+
+    //Go on to child nodes. If no children, we're done!
+    if(compVec_[nodeidx].child_.empty()){
+        for (int i = 0; i< compVec_[nodeidx].child_.size(); i++){
+            recurse_firstNodes(compVec_[nodeidx].child_[i]);
+        }
+    }        
+    return;
+    
+}
+
 
 
 // -------------------------------------------------------------------------------
@@ -153,7 +271,27 @@ int pschedule::findalaptf( resource restype, int childtf){
 
     return newframe;
 }
+// -------------------------------------------------------------------------------
+// Find the ASAP time frame
+// -------------------------------------------------------------------------------
+int pschedule::findasaptf( resource restype, int parenttf){
 
+    int delay;
+    int newframe;
+
+    switch (restype)
+    {
+        case resource::ADD_SUB: delay = 1; break;
+        case resource::MULT: delay = 2; break;
+        case resource::DIV_MOD: delay = 3; break;
+        case resource::LOGIC: delay = 1; break;
+        default: delay = 100; break;
+    }
+
+    newframe = parenttf + delay;
+
+    return newframe;
+}
 
 /* -------------------------------------------------------------------------------
   Force Directed Scheduling Hierarchy
@@ -174,7 +312,8 @@ void pschedule::FDS(){
     
 
     //FDS scheduling, 1 frame at a time
-    for (int TF = 1; TF < latconstrnt_; TF++)
+    //for (int TF = 1; TF < latconstrnt_; TF++)
+    for (int TF = 1; TF < 2; TF++)
     {   
         //reset resource compVecs, tables, probabilities, and nodes to be scheduled
         addVec_.clear(); multVec_.clear(); logicVec_.clear(); divVec_.clear();
