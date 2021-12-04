@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
 
     fillStates(testStates);
 
-    filewriter fw(outfile, pscheduler.compVec_, testStates);
+    filewriter fw(outfile, pscheduler.compVec_, testStates, fp.ifStatements_);
 
     fw.writeFile();
 

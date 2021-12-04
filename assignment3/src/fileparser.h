@@ -41,7 +41,6 @@ private:
     std::string line_;
 
     int lastIfLeft_;
-    std::vector<ifStatement> ifStatements_;
     std::vector<int> currentIfs_;
     bool error_;
 
@@ -51,6 +50,7 @@ public:
 
     std::vector<component> compVec_;
     std::vector<variable>  varVec_;
+    std::vector<ifStatement> ifStatements_;
     std::string outfile_;
 
 };
