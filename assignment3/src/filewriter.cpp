@@ -221,7 +221,7 @@ void filewriter::createStateVector()
         std::vector<int> state;
         for( int j = 0; j < compVec_.size(); j++ )
         {
-            if( compVec_[j].fdsFrame_ == i )
+            if( compVec_[j].fdsFrame_ == i+1 )
             {
                 state.push_back(j);
             }
