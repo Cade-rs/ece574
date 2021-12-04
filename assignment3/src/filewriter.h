@@ -17,12 +17,14 @@ private:
     std::vector<component> compVec_;
     std::vector<std::vector<int>> states_;
     std::vector<ifStatement> ifStatements_;
+    int latConstraint_;
     bool error_;
 
+    void createStateVector();
     void writeIf(int ifNum, int compNum = -1);
 
 public:
-    filewriter(std::string outfile, std::vector<component> compVec, std::vector<std::vector<int>> states, std::vector<ifStatement> ifStatements);
+    filewriter(std::string outfile, int latConstraint, std::vector<component> compVec, std::vector<ifStatement> ifStatements);
     void writeFile();
 
 };
