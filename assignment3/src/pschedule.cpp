@@ -1,7 +1,6 @@
 #include "pschedule.h"
 #include "component.h"
 #include "fileparser.h"
-#include "latencycalculator.h"
 
 #include <algorithm>
 #include <iostream>
