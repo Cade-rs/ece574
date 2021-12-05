@@ -120,7 +120,7 @@ void pschedule::asap(int TF){
     //Find previously scheduled nodes
     for (int i=0; i < compVec_.size(); i++)
     {
-        if (compVec_[i].fdsFrame_ == TF - 1)
+        if (compVec_[i].fdsFrame_ > 0 && ( compVec_[i].fdsFrame_ < TF - 1 ))
         {
             prevnodes.push_back( i );
         }
@@ -147,7 +147,13 @@ void pschedule::asap(int TF){
                     //add children to headnodes but don't repeat
                     for(int j=0; j < compVec_[prevnodes[i]].child_.size(); j++)
                     {
-                        int ifexists = std::find(firstnodes.begin(), firstnodes.end(),compVec_[prevnodes[i]].child_[j])!=firstnodes.end();
+                        int ifexists = 0;
+                        int successor = compVec_[prevnodes[i]].child_[j];
+                        
+                        if (compVec_[successor].fdsFrame_ < 0)
+                        {
+                            ifexists = std::find(firstnodes.begin(), firstnodes.end(),successor)!=firstnodes.end();
+                        }
 
                         if (!ifexists)
                         {
@@ -167,6 +173,13 @@ void pschedule::asap(int TF){
         }
         */
     }
+
+    std::cout << "Printing firstnodes: " ;
+    for (int i=0; i < firstnodes.size(); i++)
+    {
+        std::cout << firstnodes[i] << ", " ;
+    }
+    std::cout << std::endl;
 
     //Start at initial nodes. Recurse through children to determine time frames
     for (int i=0; i < firstnodes.size(); i++)
