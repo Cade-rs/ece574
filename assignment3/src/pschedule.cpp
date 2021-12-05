@@ -28,7 +28,7 @@ void pschedule::performScheduling(std::vector<component>& compVec){
 
     FDS();
 
-    outputDebug();
+    //outputDebug();
 
     return;
 }
@@ -83,7 +83,7 @@ void pschedule::buildFamily()
     }
 }
 
-void pschedule::asap(){
+void pschedule::asap(int TF){
 /*
     if (DEBUG){
         compVec_[4].asapFrame_ = -1;//1
@@ -105,24 +105,81 @@ void pschedule::asap(){
         compVec_[8].parent_.push_back(7);
     }
 */
-    std::vector <int> firstnodes;
+    std::vector <int> firstnodes, prevnodes;
     firstnodes.clear();
+    prevnodes.clear();
+
+    std::cout << "Inside ASAP, TF = " << TF << std::endl;
+
+    //reset asap frames
+    for (int i=0; i<compVec_.size(); i++)
+    {
+        compVec_[i].asapFrame_ = -1;
+    }
+
+    //Find previously scheduled nodes
+    for (int i=0; i < compVec_.size(); i++)
+    {
+        if (compVec_[i].fdsFrame_ > 0 && ( compVec_[i].fdsFrame_ < TF - 1 ))
+        {
+            prevnodes.push_back( i );
+        }
+
+    }
 
     //iterate through the nodes to find the initial nodes. These nodes will have two inputs that are NOT outputs of any other node
     for (int compidx=0; compidx < compVec_.size(); compidx++)
     {
-        if (compVec_[compidx].type_ > 0 &&
-             (compVec_[compidx].parent_.size() == 0 || compVec_[compidx].parent_.empty()))
+        
+        if (compVec_[compidx].type_ > 0 && compVec_[compidx].fdsFrame_ < 0 )
         {
-            compVec_[compidx].asapFrame_=1;
-            firstnodes.push_back(compidx);
+            //Look for initial headnodes
+            if ( (compVec_[compidx].parent_.size() == 0 || compVec_[compidx].parent_.empty()) ) 
+            {
+                compVec_[compidx].asapFrame_=TF;
+                firstnodes.push_back(compidx);
+            }
+            //Look for children of previously scheduled nodes
+            else
+            {
+                for (int i=0; i<prevnodes.size(); i++)
+                {
+                    //add children to headnodes but don't repeat
+                    for(int j=0; j < compVec_[prevnodes[i]].child_.size(); j++)
+                    {
+                        int ifexists = 0;
+                        int successor = compVec_[prevnodes[i]].child_[j];
+                        
+                        if (compVec_[successor].fdsFrame_ < 0)
+                        {
+                            ifexists = std::find(firstnodes.begin(), firstnodes.end(),successor)!=firstnodes.end();
+                        }
+
+                        if (!ifexists)
+                        {
+                            firstnodes.push_back( compVec_[prevnodes[i]].child_[j] );
+                        }
+                    }
+                }
+
+                //compVec_[compidx].asapFrame_=compVec_[compidx].fdsFrame_;
+            }
         }
-        else if(compVec_[compidx].compNum_>=0 && 
+        /*else if(compVec_[compidx].type_>=0 && 
+                 compVec_[compidx].fdsFrame_ < 0 &&
                  (compVec_[compidx].parent_.size()!=0 || !compVec_[compidx].parent_.empty()))
         {
             compVec_[compidx].asapFrame_=0;
         }
+        */
     }
+
+    std::cout << "Printing firstnodes: " ;
+    for (int i=0; i < firstnodes.size(); i++)
+    {
+        std::cout << firstnodes[i] << ", " ;
+    }
+    std::cout << std::endl;
 
     //Start at initial nodes. Recurse through children to determine time frames
     for (int i=0; i < firstnodes.size(); i++)
@@ -336,8 +393,8 @@ void pschedule::FDS(){
     
 
     //FDS scheduling, 1 frame at a time
-    //for (int TF = 1; TF < latconstrnt_; TF++)
-    for (int TF = 1; TF < 2; TF++)
+    for (int TF = 1; TF < latconstrnt_; TF++)
+    //for (int TF = 1; TF < 2; TF++)
     {   
         //reset resource compVecs, tables, probabilities, and nodes to be scheduled
         addVec_.clear(); multVec_.clear(); logicVec_.clear(); divVec_.clear();
@@ -348,11 +405,9 @@ void pschedule::FDS(){
         std::cout << "On Time Frame " << TF << std::endl;
 
         //Run ASAP
-        asap();
+        asap(TF);
 
-            //If node has already been scheduled (check time frame?), set ASAP frame to scheduled time frame
-
-        std::cout << "Now running ASAP" << std::endl;
+        std::cout << "Now running ALAP" << std::endl;
 
         //Run ALAP. Shouldn't need to rerun this every time but might as well
         alap();
@@ -410,7 +465,9 @@ void pschedule::FDS(){
                 //Set FDS time frames/cycle numbers if the least force frame matches current time frame
                 if (bestFrame == TF) compVec_[i].fdsFrame_=  bestFrame;
             }
-        }    
+        }   
+
+        outputDebug(TF); 
     }
     
     //debug prints- Leaving these in until ASAP + ALAP verified together. Doesn't work well after adding time frame loop
@@ -615,9 +672,9 @@ void pschedule::buildFDSTable(std::vector<double>& FDSTable, std::vector<double>
 // -------------------------------------------------------------------------------
 // This was moved from fileparser
 // -------------------------------------------------------------------------------
-void pschedule::outputDebug()
+void pschedule::outputDebug(int TF)
 {
-    std::string outfile="./debug_out.txt";
+    std::string outfile="./debug_out" + std::to_string(TF) + ".txt";
     std::ofstream fout;
 
     if (DEBUG)
