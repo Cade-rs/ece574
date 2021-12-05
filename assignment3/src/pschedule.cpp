@@ -679,12 +679,11 @@ void pschedule::what_if_branch(){
     for(int i=0;i<compVec_.size();i++){
         if(compVec_[i].withinIf_>=0){
             if_node = i;
-            break;
-        }
-    }
-    for (int i = if_node;i<compVec_.size();i++){
-        if( compVec_[i].withinIf_ < compVec_[if_node].withinIf_ ){
-            compVec_[i].parent_.push_back(compVec_[if_node].compNum_);
+            for (int i = if_node;i<compVec_.size();i++){
+                if( compVec_[i].withinIf_ != compVec_[if_node].withinIf_ ){
+                    compVec_[i].parent_.push_back(compVec_[if_node].compNum_);
+                }
+            }
         }
     }
 }   
