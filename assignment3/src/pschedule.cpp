@@ -46,7 +46,7 @@ void pschedule::buildFamily()
         compVec_[i].parent_.clear();
         compVec_[i].child_.clear();
         //determine if valid component (ie no I/O/Reg/Wire)
-        if (compVec_[i].type_ > 0)
+        if (compVec_[i].type_ >= 0)
         {
             //Find parents
             for (int j=0; j < compVec_[i].in_.size(); j++) //check all inputs
@@ -56,7 +56,7 @@ void pschedule::buildFamily()
                     for (int l=0; l < compVec_[k].out_.size(); l++) //check other comp outs
                     {
                         //check if potential parent is valid component, has outputs, and is match
-                        if (compVec_[k].type_ > 0 &&
+                        if (compVec_[k].type_ >= 0 &&
                             compVec_[i].in_[j].name_ == compVec_[k].out_[l].name_)
                         {
                             compVec_[i].parent_.push_back ( compVec_[k].compNum_ );
@@ -73,7 +73,7 @@ void pschedule::buildFamily()
                     for (int l=0; l < compVec_[k].in_.size(); l++) //check other comp outs
                     {
                         //check if potential parent is valid component, and is match
-                        if (compVec_[k].type_ > 0 &&
+                        if (compVec_[k].type_ >= 0 &&
                             compVec_[i].out_[j].name_ == compVec_[k].in_[l].name_)
                         {
                             compVec_[i].child_.push_back ( compVec_[k].compNum_ );
@@ -123,20 +123,20 @@ void pschedule::asap(int TF){
     //Find previously scheduled nodes
     for (int i=0; i < compVec_.size(); i++)
     {
-        if (compVec_[i].fdsFrame_ > 0 && ( compVec_[i].fdsFrame_ < TF - 1 ))
+        if (compVec_[i].fdsFrame_ > 0 && ( compVec_[i].fdsFrame_ < TF ))
         {
             prevnodes.push_back( i );
         }
 
     }
 
-    //iterate through the nodes to find the initial nodes. These nodes will have two inputs that are NOT outputs of any other node
+    //iterate through the nodes to find headnodes
     for (int compidx=0; compidx < compVec_.size(); compidx++)
     {
-        
-        if (compVec_[compidx].type_ > 0 && compVec_[compidx].fdsFrame_ < 0 )
+        //Only consider true components (ie no I/O/reg/wire) and non-scheduled nodes
+        if (compVec_[compidx].type_ >= 0 && compVec_[compidx].fdsFrame_ < 0 )
         {
-            //Look for initial headnodes
+            //Look for initial headnodes (ie no parents)
             if ( (compVec_[compidx].parent_.size() == 0 || compVec_[compidx].parent_.empty()) ) 
             {
                 compVec_[compidx].asapFrame_=TF;
@@ -147,12 +147,19 @@ void pschedule::asap(int TF){
             {
                 for (int i=0; i<prevnodes.size(); i++)
                 {
+                    int newframe = -1;
+
                     //add children to headnodes but don't repeat
                     for(int j=0; j < compVec_[prevnodes[i]].child_.size(); j++)
                     {
                         int ifexists = 0;
                         int successor = compVec_[prevnodes[i]].child_[j];
-                        
+
+                        newframe = findasaptf( compVec_[prevnodes[i]].restype_, compVec_[prevnodes[i]].fdsFrame_ );
+
+                        compVec_[successor].asapFrame_ = (newframe > compVec_[successor].asapFrame_) ?
+                                newframe : compVec_[successor].asapFrame_;
+
                         if (compVec_[successor].fdsFrame_ < 0)
                         {
                             ifexists = std::find(firstnodes.begin(), firstnodes.end(),successor)!=firstnodes.end();
@@ -176,6 +183,13 @@ void pschedule::asap(int TF){
         }
         */
     }
+
+    std::cout << "Printing prevnodes: " ;
+    for (int i=0; i < prevnodes.size(); i++)
+    {
+        std::cout << prevnodes[i] << ", " ;
+    }
+    std::cout << std::endl;
 
     std::cout << "Printing firstnodes: " ;
     for (int i=0; i < firstnodes.size(); i++)
@@ -206,6 +220,8 @@ void pschedule::recurse_firstNodes(int nodeidx)
     for(int i=0; i < compVec_[nodeidx].child_.size();i++)
     {
         child = compVec_[nodeidx].child_[i];
+
+        std::cout << "New child in question is: " << child << std::endl;
 
         if (compVec_[child].fdsFrame_ > 0)
         {
@@ -396,7 +412,7 @@ void pschedule::FDS(){
     
 
     //FDS scheduling, 1 frame at a time
-    for (int TF = 1; TF < latconstrnt_; TF++)
+    for (int TF = 1; TF <= latconstrnt_; TF++)
     //for (int TF = 1; TF < 2; TF++)
     {   
         //reset resource compVecs, tables, probabilities, and nodes to be scheduled
@@ -456,7 +472,7 @@ void pschedule::FDS(){
                 //If we've reached our max frame (ALAP), schedule the node
                 if (compVec_[i].alapFrame_ == TF)
                 {
-                    bestFrame = i;
+                    bestFrame = TF;
                     std::cout << "TF == ALAP Frame" << std::endl;
                 }
                 else
@@ -517,7 +533,14 @@ int pschedule::calculateForces(int TF, int n)
         totalForces.push_back( std::accumulate(forces_.begin(), forces_.end(), 0.0) );
     }
 
-    bestFrameIdx = min_element(totalForces.begin(), totalForces.end()) - totalForces.begin();
+    if (totalForces.size() > 1)
+    {
+        bestFrameIdx = min_element(totalForces.begin(), totalForces.end()) - totalForces.begin();
+    }
+    else
+    {
+        bestFrameIdx = 0;
+    }
 
     bestFrame = compVec_[n].asapFrame_ + bestFrameIdx;
 
