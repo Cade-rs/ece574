@@ -680,8 +680,15 @@ void pschedule::what_if_branch(){
         if(compVec_[i].withinIf_>=0){
             if_node = i;
             for (int i = if_node;i<compVec_.size();i++){
-                if( compVec_[i].withinIf_ != compVec_[if_node].withinIf_ ){
+                //Checking if the If Statement number is equal and if the node already exists in the parent vector
+                if( (compVec_[i].withinIf_ != compVec_[if_node].withinIf_))
+                /*&& std::find(compVec_[i].parent_.begin(),compVec_[i].parent_.end(),if_node)!=compVec_[i].parent_.end())*/{
                     compVec_[i].parent_.push_back(compVec_[if_node].compNum_);
+                /*    break;
+                }
+                else{
+                    compVec_[i].parent_.push_back(compVec_[if_node].compNum_);                    
+                }*/
                 }
             }
         }
