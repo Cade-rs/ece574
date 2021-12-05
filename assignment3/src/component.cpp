@@ -423,7 +423,6 @@ resource component::whichResource(){
 
     switch(type_)
     {
-        case comp_type::REG:        return resource::ADD_SUB;
         case comp_type::ADD:        return resource::ADD_SUB;
         case comp_type::SUB:        return resource::ADD_SUB;
         case comp_type::MUL:        return resource::MULT;
@@ -431,6 +430,7 @@ resource component::whichResource(){
         case comp_type::MUX:        return resource::LOGIC;
         case comp_type::SHR:        return resource::LOGIC;
         case comp_type::SHL:        return resource::LOGIC;
+        case comp_type::REG:        return resource::LOGIC;
         case comp_type::DIV:        return resource::DIV_MOD;
         case comp_type::MOD:        return resource::DIV_MOD;
         case comp_type::INC:        return resource::ADD_SUB;
