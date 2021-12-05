@@ -71,7 +71,7 @@ component::component(const component& in_comp)
 
     for (int i=0; i<in_comp.parent_.size(); i++)
     {
-        parent_.push_back( in_comp.parent_[i] ) ;
+        parent_.push_back( in_comp.parent_[i] );
     }
 
     for (int i=0; i<in_comp.child_.size(); i++)

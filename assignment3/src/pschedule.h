@@ -24,6 +24,7 @@ public:
     void buildFDSTable(std::vector<double>& FDSTable, std::vector<double>& probVec,  std::vector<int> nodeVec);
     void outputDebug(int TF);
     void debugPrints();
+    void what_if_branch();
     int calculateForces(int TF, int n);
     int findalaptf( resource restype, int childtf);
     int findasaptf( resource restype, int parenttf);

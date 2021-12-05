@@ -26,6 +26,9 @@ void pschedule::performScheduling(std::vector<component>& compVec){
 
     buildFamily();
 
+    //Should this go here?
+    what_if_branch();
+
     FDS();
 
     //outputDebug();
@@ -668,7 +671,23 @@ void pschedule::buildFDSTable(std::vector<double>& FDSTable, std::vector<double>
     return;
 }
 
-
+//--------------------------------------------------------------------------------
+//Handle adding the if statement parents
+//--------------------------------------
+void pschedule::what_if_branch(){
+    int if_node = -1;
+    for(int i=0;i<compVec_.size();i++){
+        if(compVec_[i].withinIf_>=0){
+            if_node = i;
+            break;
+        }
+    }
+    for (int i = if_node;i<compVec_.size();i++){
+        if( compVec_[i].withinIf_ < compVec_[if_node].withinIf_ ){
+            compVec_[i].parent_.push_back(compVec_[if_node].compNum_);
+        }
+    }
+}   
 // -------------------------------------------------------------------------------
 // This was moved from fileparser
 // -------------------------------------------------------------------------------

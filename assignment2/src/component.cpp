@@ -229,6 +229,7 @@ std::string component::cPadd(){
 
 std::string component::writeLine()
 {
+<<<<<<< Updated upstream
     std::string nL = "\n";
     std::string tab="\t";
     std::string spc = " ";
@@ -364,4 +365,16 @@ void component::printComponent(std::ofstream& fout)
         fout << "      " << out_[i].name_ << std::endl;
     }
     fout << std::endl ;
+=======
+    //creating the instantiation of the components
+    std::string c_type = in_comp.type_;
+    std::string d_width= in_comp.dw_;
+    std::string c_setup= "\t#(.DATAWIDTH(";
+    std::string c_sclose="))";
+    std::string c_ivar = in_comp.in_;
+    std::string c_ovar = in_comp.out_;
+
+    return(c_type+c_setup+d_width+c_sclose+)
+    //return( "THANKS FOR BREAKING THE CODE BRANDON");
+>>>>>>> Stashed changes
 }
