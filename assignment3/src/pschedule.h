@@ -13,7 +13,7 @@ public:
     pschedule(int latencyConstraint);
     void buildFamily();
     void performScheduling(std::vector<component>& compVec);
-    void asap();
+    void asap(int TF);
     void alap();
     void recurse_firstNodes(int nodeidx);
     void recurse(int nodeidx);
@@ -22,7 +22,7 @@ public:
     void calcPredecessorForces(int frame, int n);
     void calcSuccessorForces(int frame, int n);
     void buildFDSTable(std::vector<double>& FDSTable, std::vector<double>& probVec,  std::vector<int> nodeVec);
-    void outputDebug();
+    void outputDebug(int TF);
     void debugPrints();
     void what_if_branch();
     int calculateForces(int TF, int n);
