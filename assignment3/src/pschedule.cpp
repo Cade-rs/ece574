@@ -450,7 +450,7 @@ void pschedule::FDS(){
         addProbs_.clear(); multProbs_.clear(); logicProbs_.clear(); divProbs_.clear();
         chosenOnes_.clear();
 
-        std::cout << "On Time Frame " << TF << std::endl;
+        //std::cout << "On Time Frame " << TF << std::endl;
 
         //Run ASAP
         asap(TF);
@@ -663,7 +663,7 @@ void pschedule::calcSelfForce(int frame, int n)
         newcon = i == frame ? 1.0 : 0.0;
 
         force += weight * (newcon - oldcon);
-        std::cout.precision( 3 ); //float/double precision for couts
+        //std::cout.precision( 3 ); //float/double precision for couts
 
         //std::cout << "? frame, Frame, ASAP, ALAP, weight, newcon, oldcon, force = " << i << ", " << frame << ", " << compVec_[n].asapFrame_ << ", " << compVec_[n].alapFrame_ << ", " << weight << ", " << newcon << ", " << oldcon << ", " << force << std::endl;
     }
@@ -671,7 +671,7 @@ void pschedule::calcSelfForce(int frame, int n)
     //build vector of individual forces to sum later
     forces_.push_back( force );
 
-    std::cout.precision( 3 ); //float/double precision for couts
+    //std::cout.precision( 3 ); //float/double precision for couts
     //std::cout << "Frame " << frame << ": Force calculated as " << force << std::endl;
 
     return;
@@ -688,7 +688,7 @@ void pschedule::buildFDSTable(std::vector<double>& FDSTable, std::vector<double>
 
     double prob = 0.0;
 
-    std::cout.precision( 3 ); //float/double precision for couts
+    //std::cout.precision( 3 ); //float/double precision for couts
 
     //Determine operator probabilities for each node
     for (int nodeidx = 0; nodeidx < nodeVec.size(); nodeidx++)
