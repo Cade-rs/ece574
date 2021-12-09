@@ -43,7 +43,6 @@ int main(int argc, char *argv[])
 
     if (error)
     {
-        std::cout << "Encountered error: Latency constraint insufficient" << std:: endl;
         return 1;
     }
 

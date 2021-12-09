@@ -351,8 +351,8 @@ void pschedule::recurse(int nodeidx)
     else
     {
         //find the youngest frame of possible children
-        int age = 0;
-        int youngestage = 0;
+        int age = -1;
+        int youngestage = -1;
         int newframe = 0;
 
         for (int i=0; i < compVec_[nodeidx].child_.size(); i++)
@@ -459,6 +459,16 @@ void pschedule::FDS(){
 
         //Run ALAP. Shouldn't need to rerun this every time but might as well
         alap();
+
+        for (int i=0; i< compVec_.size(); i++)
+        {
+            if (compVec_[i].asapFrame_ > compVec_[i].alapFrame_)
+            {
+                error_ = true;
+                std::cout << "Error condition: ASAP > ALAP frame. Cannot schedule" << std::endl;
+                return;
+            }
+        }
 
         //Update node resource vectors, only considering non-scheduled nodes (ignoring non-nodal components ie I/O/Reg)
         for (int i=0; i< compVec_.size(); i++)
