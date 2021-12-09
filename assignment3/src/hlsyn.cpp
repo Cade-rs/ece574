@@ -55,6 +55,11 @@ int main(int argc, char *argv[])
 
     fw.writeFile();
 
+    if ( fw.error_ )
+    {
+        std::cout << std::endl << "Encountered error" << std::endl;
+        return 1;
+    }
     std::cout << std::endl << std::endl << outfile << " Verilog file successfully created" << std::endl;
 
     return 0;

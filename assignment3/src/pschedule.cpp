@@ -182,14 +182,14 @@ void pschedule::asap(int TF){
         {
             compVec_[compidx].asapFrame_=0;
         }
-        */
+        
 
        if (compVec_[compidx].asapFrame_ > latconstrnt_)
        {
            error_ =  true;
        }
 
-       return;
+       return;*/
     }
 
     std::cout << "Printing prevnodes: " ;
