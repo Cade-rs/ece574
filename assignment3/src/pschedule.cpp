@@ -28,7 +28,7 @@ bool pschedule::performScheduling(std::vector<component>& compVec){
     buildFamily();
 
     //Should this go here?
-    what_if_branch();
+    //what_if_branch();
 
     FDS();
 
@@ -549,7 +549,7 @@ int pschedule::calculateForces(int TF, int n)
         //Call Recursive function through predecessors/sucessors, calculate force and return
         for( int i = 0; i < compVec_[n].parent_.size(); i++ )
         {
-            calcPredecessorForces( frame, compVec_[n].parent_[i] );
+            //calcPredecessorForces( frame, compVec_[n].parent_[i] );
         }
         for( int i = 0; i < compVec_[n].child_.size(); i++ )
         {
