@@ -756,7 +756,7 @@ int pschedule::findConditionParent(std::string condition, int compNum)
             return i;
         }
     }
-    std::cout << "Couldn't find the parent of the condition: " << condition << " with comp num " << compNum << std::endl; 
+    //std::cout << "Couldn't find the parent of the condition: " << condition << " with comp num " << compNum << std::endl; 
     return -1;
 }
 
