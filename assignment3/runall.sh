@@ -1,4 +1,4 @@
-!/bin/bash
+#!/bin/bash
 
 #NOTE: need to be in the build directory in order for this to run properly
 
