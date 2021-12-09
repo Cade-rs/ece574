@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
 
     if (error)
     {
-        std::cout << "Encountered error converting " << infile << " to " << outfile << ": Latency constraint insufficient" << std:: endl;
+        std::cout << "Encountered error converting " << infile << " to " << outfile << ": ASAP > ALAP" << std:: endl;
         return 1;
     }
 
