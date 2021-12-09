@@ -19,9 +19,12 @@ int main(int argc, char *argv[])
         return 1;
     }
 
+
     std::string infile  = argv[1];
     std::string latStr  = argv[2];
     std::string outfile = argv[3];
+
+    std::cout << "Converting " << infile << " to " << outfile << " with latency constraint " << latStr << "..." << std::endl << std::endl;
 
     int latConstraint   = std::stoi(latStr);
 

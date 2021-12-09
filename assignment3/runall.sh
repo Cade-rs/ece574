@@ -17,8 +17,8 @@
 ./src/hlsyn "../assignment3_testfiles_new/standard tests/hls_test1.c"       1    ../output/hls_test1_out.v
 
 ./src/hlsyn "../assignment3_testfiles_new/if tests/test_if1.c"              4    ../output/test_if1_out.v
-./src/hlsyn "../assignment3_testfiles_new/if tests/test_if2.c"              4    ../output/test_if2_out.v
-./src/hlsyn "../assignment3_testfiles_new/if tests/test_if3.c"              8    ../output/test_if3_out.v
+./src/hlsyn "../assignment3_testfiles_new/if tests/test_if2.c"              15    ../output/test_if2_out.v
+./src/hlsyn "../assignment3_testfiles_new/if tests/test_if3.c"              20    ../output/test_if3_out.v
 ./src/hlsyn "../assignment3_testfiles_new/if tests/test_if4.c"              4    ../output/test_if4_out.v
 
 ./src/hlsyn "../assignment3_testfiles_new/latency tests/hls_lat_test1.c"    4    ../output/hls_lat_test1_out.v
