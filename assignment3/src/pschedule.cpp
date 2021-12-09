@@ -517,16 +517,19 @@ int pschedule::calculateForces(int TF, int n)
         //calculate self force for one time frame
         calcSelfForce(frame, n);
 
-        //determine predecessor or successor
-
-        //Call Recursive function through predecessors and sucessors, calculate force and return
+        //Call Recursive function through predecessors/sucessors, calculate force and return
         for( int i = 0; i < compVec_[n].parent_.size(); i++ )
         {
             calcPredecessorForces( frame, compVec_[n].parent_[i] );
         }
         for( int i = 0; i < compVec_[n].child_.size(); i++ )
         {
-            calcSuccessorForces( frame, compVec_[n].child_[i] );
+            //Check for implicitly scheduled successors
+            int child = compVec_[n].child_[i];
+            if (compVec_[child].asapFrame_ == frame + 1)
+            {
+                calcSuccessorForces( frame + 1, child );
+            }
         }
 
         //Store off total force
@@ -549,6 +552,7 @@ int pschedule::calculateForces(int TF, int n)
 
 void pschedule::calcPredecessorForces(int frame, int n)
 {
+    //if component doesn't have to move, set force to zero
     // calc self force
     calcSelfForce(frame, n);
 
@@ -562,13 +566,19 @@ void pschedule::calcPredecessorForces(int frame, int n)
 
 void pschedule::calcSuccessorForces(int frame, int n)
 {
+
     // calc self force
     calcSelfForce(frame, n);
 
     // recurse
     for( int i = 0; i < compVec_[n].child_.size(); i++ )
     {
-        calcSuccessorForces( frame, compVec_[n].child_[i] );
+        //Check for implicitly scheduled successors
+        int child = compVec_[n].child_[i];
+        if (compVec_[child].asapFrame_ == frame + 1)
+        {
+            calcSuccessorForces( frame + 1, child );
+        }
     }
 }
 
