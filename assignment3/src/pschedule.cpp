@@ -113,23 +113,29 @@ void pschedule::asap(int TF){
     firstnodes.clear();
     prevnodes.clear();
 
-    std::cout << "Inside ASAP, TF = " << TF << std::endl;
+    //std::cout << "Inside ASAP, TF = " << TF << std::endl;
 
     //reset asap frames
     for (int i=0; i<compVec_.size(); i++)
     {
         compVec_[i].asapFrame_ = -1;
+
+        //std::cout << "asap begin. Comp, parent size, child size =" << compVec_[i].compNum_ << ", " << compVec_[i].parent_.size() << ", " << compVec_[i].child_.size() << std::endl;
+
     }
 
+    //std::cout << "Finding previously scheduled nodes: " ;
     //Find previously scheduled nodes
     for (int i=0; i < compVec_.size(); i++)
     {
         if (compVec_[i].fdsFrame_ > 0 && ( compVec_[i].fdsFrame_ < TF ))
         {
             prevnodes.push_back( i );
+            //std::cout << i << ", " ;
+            
         }
-
     }
+    //std::cout << std::endl;
 
     //iterate through the nodes to find headnodes
     for (int compidx=0; compidx < compVec_.size(); compidx++)
@@ -140,23 +146,32 @@ void pschedule::asap(int TF){
             //Look for initial headnodes (ie no parents)
             if ( (compVec_[compidx].parent_.size() == 0 || compVec_[compidx].parent_.empty()) ) 
             {
+                //std::cout << "Printing initial node : " << compidx << std::endl;
+
+
                 compVec_[compidx].asapFrame_=TF;
                 firstnodes.push_back(compidx);
             }
             //Look for children of previously scheduled nodes
             else
             {
+                //std::cout << "Looking for children out of for loop" << std::endl;
+
                 for (int i=0; i<prevnodes.size(); i++)
                 {
+                    //Looking for children at 
                     int newframe = -1;
 
                     //add children to headnodes but don't repeat
                     for(int j=0; j < compVec_[prevnodes[i]].child_.size(); j++)
                     {
+
                         int ifexists = 0;
                         int successor = compVec_[prevnodes[i]].child_[j];
 
+
                         newframe = findasaptf( compVec_[prevnodes[i]].restype_, compVec_[prevnodes[i]].fdsFrame_ );
+
 
                         compVec_[successor].asapFrame_ = (newframe > compVec_[successor].asapFrame_) ?
                                 newframe : compVec_[successor].asapFrame_;
@@ -223,11 +238,15 @@ void pschedule::asap(int TF){
 //Writing the Recursion Function For Initial Nodes
 void pschedule::recurse_firstNodes(int nodeidx)
 {
-    //std::cout<<"Recurse again muthaclucka. Node is " << nodeidx << endl;
     int child;
     int newframe;
 
-    for(int i=0; i < compVec_[nodeidx].child_.size();i++)
+    for(int i=0; i<compVec_[nodeidx].child_.size(); i++)
+    {
+        //std::cout << "comp, child= " << nodeidx << ", " << compVec_[nodeidx].child_[i] << std::endl;
+    }
+
+    for(int i=0; i < compVec_[nodeidx].child_.size(); i++)
     {
         child = compVec_[nodeidx].child_[i];
 
@@ -247,7 +266,7 @@ void pschedule::recurse_firstNodes(int nodeidx)
                         newframe : compVec_[child].asapFrame_;
 
             //std::cout<<"New child asap frame = " << compVec_[child].asapFrame_ <<endl;
-            break;
+            //break;
         }
     }
 
