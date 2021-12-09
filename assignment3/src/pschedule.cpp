@@ -1,6 +1,7 @@
 #include "pschedule.h"
 #include "component.h"
 #include "fileparser.h"
+#include "common.h"
 
 #include <algorithm>
 #include <iostream>
@@ -20,15 +21,16 @@ pschedule::pschedule(int latencyConstraint){
 // -------------------------------------------------------------------------------
 //
 // -------------------------------------------------------------------------------
-bool pschedule::performScheduling(std::vector<component>& compVec){
+bool pschedule::performScheduling(std::vector<component>& compVec, std::vector<ifStatement>& ifStatements){
 
     compVec_ = compVec;
+    ifStatements_ = ifStatements;
     error_ = false;
 
     buildFamily();
 
     //Should this go here?
-    //what_if_branch();
+    what_if_branch();
 
     FDS();
 
@@ -736,17 +738,39 @@ void pschedule::buildFDSTable(std::vector<double>& FDSTable, std::vector<double>
 //--------------------------------------------------------------------------------
 //Handle adding the if statement parents
 //--------------------------------------
-void pschedule::what_if_branch(){
-    int if_node = -1;
-    for(int i=0;i<compVec_.size();i++){
-        if(compVec_[i].withinIf_>=0){
-            if_node = i;
-            break;
+int pschedule::findConditionParent(std::string condition, int compNum)
+{
+
+    for( int i = compNum - 1; i >= 0; i--)
+    {
+        if( compVec_[i].out_[0] == condition )
+        {
+            return i;
         }
     }
-    for (int i = if_node;i<compVec_.size();i++){
-        if( compVec_[i].withinIf_ < compVec_[if_node].withinIf_ ){
-            compVec_[i].parent_.push_back(compVec_[if_node].compNum_);
+    std::cout << "Couldn't find the parent of the condition" << std::endl;
+    return 0;
+}
+
+void pschedule::what_if_branch()
+{
+    int if_node = -1;
+    for(int i=0;i<compVec_.size();i++)
+    {
+        if(compVec_[i].withinIf_>=0)
+        {
+            if_node = i;
+            std::string condition = ifStatements_[compVec_[i].withinIf_].condition;
+            int parentNode = findConditionParent(condition, if_node);
+            compVec_[i].parent_.push_back(parentNode);
+            compVec_[parentNode].child_.push_back(i);
+            /*for (int j = if_node+1; j<compVec_.size(); j++)
+            {
+                if( compVec_[j].withinIf_ < compVec_[if_node].withinIf_ )
+                {
+                    compVec_[j].parent_.push_back(compVec_[if_node].compNum_);
+                }
+            }*/
         }
     }
 }   

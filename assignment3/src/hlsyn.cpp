@@ -11,8 +11,6 @@
 #include "pschedule.h"
 
 
-void fillStates(std::vector<std::vector<int>>& states);
-
 int main(int argc, char *argv[])
 {
     if( (argc-1) != 3 ) // First input is exe name, handle that
@@ -27,6 +25,12 @@ int main(int argc, char *argv[])
 
     int latConstraint   = std::stoi(latStr);
 
+    if ( latConstraint <= 0 )
+    {
+        std::cout << "Encountered error converting " << infile << " to " << outfile << ": Latency constraint is zero or negative" << std:: endl;
+        return 1;
+    }
+
     fileparser fp(infile, outfile);
     
 
@@ -34,22 +38,18 @@ int main(int argc, char *argv[])
 
     if (error)
     {
-        std::cout << "Encountered error" << std:: endl;
+        std::cout << "Encountered error converting " << infile << " to " << outfile << std:: endl;
         return 1;
     }
 
     pschedule pscheduler(latConstraint);
-    error = pscheduler.performScheduling(fp.compVec_);
+    error = pscheduler.performScheduling(fp.compVec_, fp.ifStatements_);
 
     if (error)
     {
-        std::cout << "Encountered error: Latency constraint insufficient" << std:: endl;
+        std::cout << "Encountered error converting " << infile << " to " << outfile << ": Latency constraint insufficient" << std:: endl;
         return 1;
     }
-
-    std::vector<std::vector<int>> testStates;
-
-    fillStates(testStates);
 
     filewriter fw(outfile, latConstraint, pscheduler.compVec_, fp.ifStatements_);
 
@@ -57,7 +57,7 @@ int main(int argc, char *argv[])
 
     if ( fw.error_ )
     {
-        std::cout << std::endl << "Encountered error" << std::endl;
+        std::cout << "Encountered error converting " << infile << " to " << outfile << std:: endl;
         return 1;
     }
     std::cout << std::endl << std::endl << outfile << " Verilog file successfully created" << std::endl;
