@@ -78,7 +78,7 @@ void pschedule::buildFamily()
                             compVec_[i].out_[j].name_ == compVec_[k].in_[l].name_)
                         {
                             compVec_[i].child_.push_back ( compVec_[k].compNum_ );
-                            std::cout << "setting child as " << compVec_[k].compNum_ << std::endl;
+                            //std::cout << "setting child as " << compVec_[k].compNum_ << std::endl;
                         }
                     }
                 }
@@ -113,23 +113,29 @@ void pschedule::asap(int TF){
     firstnodes.clear();
     prevnodes.clear();
 
-    std::cout << "Inside ASAP, TF = " << TF << std::endl;
+    //std::cout << "Inside ASAP, TF = " << TF << std::endl;
 
     //reset asap frames
     for (int i=0; i<compVec_.size(); i++)
     {
         compVec_[i].asapFrame_ = -1;
+
+        //std::cout << "asap begin. Comp, parent size, child size =" << compVec_[i].compNum_ << ", " << compVec_[i].parent_.size() << ", " << compVec_[i].child_.size() << std::endl;
+
     }
 
+    //std::cout << "Finding previously scheduled nodes: " ;
     //Find previously scheduled nodes
     for (int i=0; i < compVec_.size(); i++)
     {
         if (compVec_[i].fdsFrame_ > 0 && ( compVec_[i].fdsFrame_ < TF ))
         {
             prevnodes.push_back( i );
+            //std::cout << i << ", " ;
+            
         }
-
     }
+    //std::cout << std::endl;
 
     //iterate through the nodes to find headnodes
     for (int compidx=0; compidx < compVec_.size(); compidx++)
@@ -140,23 +146,32 @@ void pschedule::asap(int TF){
             //Look for initial headnodes (ie no parents)
             if ( (compVec_[compidx].parent_.size() == 0 || compVec_[compidx].parent_.empty()) ) 
             {
+                //std::cout << "Printing initial node : " << compidx << std::endl;
+
+
                 compVec_[compidx].asapFrame_=TF;
                 firstnodes.push_back(compidx);
             }
             //Look for children of previously scheduled nodes
             else
             {
+                //std::cout << "Looking for children out of for loop" << std::endl;
+
                 for (int i=0; i<prevnodes.size(); i++)
                 {
+                    //Looking for children at 
                     int newframe = -1;
 
                     //add children to headnodes but don't repeat
                     for(int j=0; j < compVec_[prevnodes[i]].child_.size(); j++)
                     {
+
                         int ifexists = 0;
                         int successor = compVec_[prevnodes[i]].child_[j];
 
+
                         newframe = findasaptf( compVec_[prevnodes[i]].restype_, compVec_[prevnodes[i]].fdsFrame_ );
+
 
                         compVec_[successor].asapFrame_ = (newframe > compVec_[successor].asapFrame_) ?
                                 newframe : compVec_[successor].asapFrame_;
@@ -184,6 +199,8 @@ void pschedule::asap(int TF){
         }
         
 
+       std::cout << "comp num, asap = " << compVec_[compidx].compNum_ << ", " << compVec_[compidx].asapFrame_ << std::endl;
+
        if (compVec_[compidx].asapFrame_ > latconstrnt_)
        {
            error_ =  true;
@@ -191,7 +208,7 @@ void pschedule::asap(int TF){
 
        return;*/
     }
-
+/*
     std::cout << "Printing prevnodes: " ;
     for (int i=0; i < prevnodes.size(); i++)
     {
@@ -205,7 +222,7 @@ void pschedule::asap(int TF){
         std::cout << firstnodes[i] << ", " ;
     }
     std::cout << std::endl;
-
+*/
     //Start at initial nodes. Recurse through children to determine time frames
     for (int i=0; i < firstnodes.size(); i++)
     {
@@ -221,20 +238,24 @@ void pschedule::asap(int TF){
 //Writing the Recursion Function For Initial Nodes
 void pschedule::recurse_firstNodes(int nodeidx)
 {
-    std::cout<<"Recurse again muthaclucka. Node is " << nodeidx << endl;
     int child;
     int newframe;
 
-    for(int i=0; i < compVec_[nodeidx].child_.size();i++)
+    for(int i=0; i<compVec_[nodeidx].child_.size(); i++)
+    {
+        //std::cout << "comp, child= " << nodeidx << ", " << compVec_[nodeidx].child_[i] << std::endl;
+    }
+
+    for(int i=0; i < compVec_[nodeidx].child_.size(); i++)
     {
         child = compVec_[nodeidx].child_[i];
 
-        std::cout << "New child in question is: " << child << std::endl;
+        //std::cout << "New child in question is: " << child << std::endl;
 
         if (compVec_[child].fdsFrame_ > 0)
         {
             compVec_[child].asapFrame_ = compVec_[child].fdsFrame_;
-            std::cout<<"New child asap frame as FDS frame = " << compVec_[child].asapFrame_ <<endl;
+            //std::cout<<"New child asap frame as FDS frame = " << compVec_[child].asapFrame_ <<endl;
 
         }
         else
@@ -244,15 +265,15 @@ void pschedule::recurse_firstNodes(int nodeidx)
             compVec_[child].asapFrame_ = (newframe > compVec_[child].asapFrame_) ? 
                         newframe : compVec_[child].asapFrame_;
 
-            std::cout<<"New child asap frame = " << compVec_[child].asapFrame_ <<endl;
-            break;
+            //std::cout<<"New child asap frame = " << compVec_[child].asapFrame_ <<endl;
+            //break;
         }
     }
 
     //Go on to child nodes. If no children, we're done!
     if(compVec_[nodeidx].child_.size() > 0)
     {
-        std::cout << "inside check for childies" << std::endl;
+        //std::cout << "inside check for childies" << std::endl;
         for (int i = 0; i< compVec_[nodeidx].child_.size(); i++){
             recurse_firstNodes(compVec_[nodeidx].child_[i]);
         }
@@ -434,7 +455,7 @@ void pschedule::FDS(){
         //Run ASAP
         asap(TF);
 
-        std::cout << "Now running ALAP" << std::endl;
+        //std::cout << "Now running ALAP" << std::endl;
 
         //Run ALAP. Shouldn't need to rerun this every time but might as well
         alap();
@@ -481,11 +502,11 @@ void pschedule::FDS(){
                 if (compVec_[i].alapFrame_ == TF)
                 {
                     bestFrame = TF;
-                    std::cout << "TF == ALAP Frame" << std::endl;
+                    //std::cout << "TF == ALAP Frame" << std::endl;
                 }
                 else
                 {
-                    std::cout << "Calculating forces" << std::endl;
+                    //std::cout << "Calculating forces" << std::endl;
                     bestFrame = calculateForces(TF, i);
                 }
 
@@ -666,7 +687,7 @@ void pschedule::buildFDSTable(std::vector<double>& FDSTable, std::vector<double>
         if ( (compVec_[nodeVec[nodeidx]].alapFrame_ - compVec_[nodeVec[nodeidx]].asapFrame_) == 0)
         {
             prob = 1.0;
-            std::cout << "Printing prob = 1.0 for comp" << nodeVec[nodeidx] << std::endl;
+            //std::cout << "Printing prob = 1.0 for comp" << nodeVec[nodeidx] << std::endl;
         }
         else
         {
@@ -702,13 +723,13 @@ void pschedule::buildFDSTable(std::vector<double>& FDSTable, std::vector<double>
     }
 
     //std::cout << "Printing probs. FDSTable size = " << FDSTable.size() <<  ", NumProbs = " << probVec.size() << ", NodeVec size = " << nodeVec.size() << std::endl;
-
+/*
     for (int i = 0; i < probVec.size(); i ++)
     {
         std::cout << probVec[i] << ", ";
     }
     std::cout << std::endl;
-
+*/
     return;
 }
 
