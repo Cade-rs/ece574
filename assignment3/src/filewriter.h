@@ -18,7 +18,6 @@ private:
     std::vector<std::vector<int>> states_;
     std::vector<ifStatement> ifStatements_;
     int latConstraint_;
-    bool error_;
 
     void createStateVector();
     void writeIf(int ifNum, int compNum = -1);
@@ -26,6 +25,7 @@ private:
 public:
     filewriter(std::string outfile, int latConstraint, std::vector<component> compVec, std::vector<ifStatement> ifStatements);
     void writeFile();
+    bool error_;
 
 };
 

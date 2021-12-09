@@ -23,6 +23,11 @@ filewriter::filewriter(std::string outfile, int latConstraint, std::vector<compo
 
     createStateVector();
 
+    if( error_ )
+    {
+        return;
+    }
+
     fout_.open(outfile);
 
     if ( !fout_.is_open() )
@@ -134,15 +139,19 @@ void filewriter::writeFile()
                 std::cout << std::endl << "State vector contains a non-existent component" << std::endl;
                 continue;
             }
-            component currComp(compVec_[compNum]);
+
             // Check for if statements
-            if ( currComp.withinIf_ >= 0 )
+            if( compVec_[compNum].alreadyPrinted_ )
             {
-                writeIf(currComp.withinIf_, compNum);
+                fout_ << "\t\t\t" << "// Placeholder for " << compVec_[compNum].writeLine() << std::endl;
+            }
+            else if ( compVec_[compNum].withinIf_ >= 0 )
+            {
+                writeIf(compVec_[compNum].withinIf_, compNum);
             }
             else
             {
-                fout_ << "\t\t\t" << currComp.writeLine() << std::endl;
+                fout_ << "\t\t\t" << compVec_[compNum].writeLine() << std::endl;
             }
         }
         // Print end of state
@@ -221,25 +230,48 @@ void filewriter::createStateVector()
         std::vector<int> state;
         for( int j = 0; j < compVec_.size(); j++ )
         {
-            if( compVec_[j].fdsFrame_ == i+1 )
+            if( ( compVec_[j].fdsFrame_ == i+1 ) ||
+                ( compVec_[j].fdsFrame_ == i && compVec_[j].restype_ == resource::MULT ) || 
+                ( compVec_[j].fdsFrame_ == i && compVec_[j].restype_ == resource::DIV_MOD ) || 
+                ( compVec_[j].fdsFrame_ == i-1 && compVec_[j].restype_ == resource::DIV_MOD ) )
             {
                 state.push_back(j);
+            }
+            else if( compVec_[j].fdsFrame_ > latConstraint_ )
+            {
+                std::cout << "Error: Component not scheduled within latency constraint: " << j << std::endl;
+                error_ = true;
             }
             else if( compVec_[j].fdsFrame_ == -1 && compVec_[j].type_ >= comp_type::REG )
             {
                 std::cout << "Error: Component not scheduled: " << j << std::endl;
                 error_ = true;
-                continue;
+                if( DEBUG )
+                {
+                    continue;
+                }
+                break;
             }
         }
-        states_.push_back(state);
+        
+        if( state.size() > 0 )
+        {
+            states_.push_back(state);
+        }
     }
 
-    if( error_ && DEBUG )
+    if( error_  )
     {
-        std::cout << "Falling back on pre-canned scheduling" << std::endl;
-        states_.clear();
-        fillStates(states_);
+        if( DEBUG )
+        {
+            std::cout << "Falling back on pre-canned scheduling" << std::endl;
+            states_.clear();
+            fillStates(states_);
+        }
+        else 
+        {
+            std::cout << "Scheduling failed. Exiting..." << std::endl;
+        }
     }
 }
 
