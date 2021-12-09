@@ -268,16 +268,7 @@ void filewriter::createStateVector()
 schedule_error:
     if( error_  )
     {
-        if( DEBUG )
-        {
-            std::cout << "Falling back on pre-canned scheduling" << std::endl;
-            states_.clear();
-            fillStates(states_);
-        }
-        else 
-        {
-            std::cout << "Scheduling failed. Exiting..." << std::endl;
-        }
+        std::cout << "Scheduling failed. Exiting..." << std::endl;
     }
 }
 

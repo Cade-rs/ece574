@@ -267,6 +267,7 @@ std::string component::writeLine()
     std::string wire = "wire";
     std::string cOpen = "{", cCls="}", zBit = "1'b0";
     std::string out = "";
+    std::string lineCopy = line_;
 
     if(type_<comp_type::REG){
         out = tab+comp2Str();
@@ -290,7 +291,7 @@ std::string component::writeLine()
     }
     else
     {
-        out = replaceString(line_, "=", "<=") + ";";
+        out = replaceString(lineCopy, "=", "<=") + ";";
     }
     alreadyPrinted_ = true;
     return out;
