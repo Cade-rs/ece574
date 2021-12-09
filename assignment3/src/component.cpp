@@ -27,6 +27,7 @@ component::component(comp_type type, comp_size datawidth, vector<variable> in, v
     alapFrame_  = -1;
     fdsFrame_   = -1;
     restype_    = whichResource();
+    alreadyPrinted_ = false;
 
 
     for (int i=0; i<in.size(); i++)
@@ -58,6 +59,7 @@ component::component(const component& in_comp)
     alapFrame_  = in_comp.alapFrame_;
     fdsFrame_   = in_comp.fdsFrame_;
     restype_    = in_comp.restype_;
+    alreadyPrinted_ = in_comp.alreadyPrinted_;
 
     for (int i=0; i<in_comp.in_.size(); i++)
     {
@@ -290,87 +292,7 @@ std::string component::writeLine()
     {
         out = replaceString(line_, "=", "<=") + ";";
     }
-    /*
-    else if(type_!=comp_type::COMP)
-    {
-        out = tab+comp2Str();
-        out.append(tab+dw2Str());
-        std::string compNumS = to_string(compNum_);
-        out.append(spc+comp2Str()+compNumS);
-        out.append(opn);
-        
-        for(int i=0;i < in_.size(); i++){
-            //out.append(in_[i].name_);
-            if(in_[i].size_<dw_){
-                if (isSigned_){
-                    std::string signc_="$signed(";
-                    out.append(signc_+in_[i].name_+cls);
-                }
-                else{
-                    out.append(cOpen+cOpen+cPadd()+in_[i].iPadd()+cOpen+zBit+cCls+cCls+com+in_[i].name_+cCls);
-                }
-            }
-            else if(in_[i].size_>dw_){
-                out.append(in_[i].name_);
-                out.append(trunc());
-            }
-            else{
-                out.append(in_[i].name_);
-            }
-            out.append(com);
-        }
-        if (type_==comp_type::REG){
-            std::string clk="Clk", rst="Rst";
-            out.append(clk+com+rst+com);
-        }
-        if(out_[0].size_<dw_){
-            if(isSigned_){
-                std::string signc_="$signed(";
-                out.append(signc_+out_[0].name_+cls);
-            }
-            else{
-                out.append(cOpen+cOpen+cPadd()+out_[0].iPadd()+cCls+cCls+com+out_[0].name_+cCls);
-            }
-        }
-        else if(out_[0].size_>dw_){
-            out.append(out_[0].name_);
-            out.append(trunc());
-        }
-        else{
-            out.append(out_[0].name_);
-        }
-        out.append(clsc);
-    }
-    else{
-        out = tab+comp2Str();
-        out.append(tab+dw2Str());
-        std::string compNumS = to_string(compNum_);
-        out.append(spc+comp2Str()+compNumS);
-        out.append(opn);
-        
-        for(int i=0;i < in_.size(); i++){
-            out.append(in_[i].name_);
-            out.append(com);
-        }
-        for(int i=0; i<3;i++){
-            if(i!=outputPos_-1){
-                out.append(spc);
-                out.append(com);
-            }           
-            else{
-                out.append(out_[0].name_);
-                if(out_[0].size_ != comp_size::ONE){
-                    out.append("[0]");
-                }
-                out.append(com);
-            }
-        }
-        int _trailingComma=out.size();
-        out = out.substr(0,_trailingComma-1);
-        out.append(clsc);
-
-    }
-    */
+    alreadyPrinted_ = true;
     return out;
 }
 

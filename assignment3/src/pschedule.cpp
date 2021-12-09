@@ -182,7 +182,7 @@ void pschedule::asap(int TF){
         {
             compVec_[compidx].asapFrame_=0;
         }
-        */
+        
 
        std::cout << "comp num, asap = " << compVec_[compidx].compNum_ << ", " << compVec_[compidx].asapFrame_ << std::endl;
 
@@ -191,6 +191,7 @@ void pschedule::asap(int TF){
            error_ =  true;
        }
 
+       return;*/
     }
 /*
     std::cout << "Printing prevnodes: " ;

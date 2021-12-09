@@ -46,6 +46,7 @@ public:
     int alapFrame_;
     int fdsFrame_;
     resource restype_;
+    bool alreadyPrinted_;
     vector<variable> in_;
     vector<variable> out_;
     vector<int> parent_;
