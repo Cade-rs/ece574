@@ -241,6 +241,11 @@ void filewriter::createStateVector()
             {
                 std::cout << "Error: Component not scheduled within latency constraint: " << j << std::endl;
                 error_ = true;
+                if( DEBUG )
+                {
+                    continue;
+                }
+                goto schedule_error;
             }
             else if( compVec_[j].fdsFrame_ == -1 && compVec_[j].type_ >= comp_type::REG )
             {
@@ -250,7 +255,7 @@ void filewriter::createStateVector()
                 {
                     continue;
                 }
-                break;
+                goto schedule_error;
             }
         }
         
@@ -260,6 +265,7 @@ void filewriter::createStateVector()
         }
     }
 
+schedule_error:
     if( error_  )
     {
         if( DEBUG )
