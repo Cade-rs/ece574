@@ -11,7 +11,7 @@
 class pschedule{
 public:
     pschedule(int latencyConstraint);
-    bool performScheduling(std::vector<component>& compVec);
+    bool performScheduling(std::vector<component>& compVec, std::vector<ifStatement>& ifStatements);
     void buildFamily();
     void asap(int TF);
     void alap();
@@ -28,8 +28,10 @@ public:
     int calculateForces(int TF, int n);
     int findalaptf( resource restype, int childtf);
     int findasaptf( resource restype, int parenttf);
+    int findConditionParent(std::string condition, int compNum);
     
     std::vector<component> compVec_;
+    std::vector<ifStatement> ifStatements_;
     
     bool error_;
     int latconstrnt_;
