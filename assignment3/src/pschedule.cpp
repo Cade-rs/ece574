@@ -20,9 +20,10 @@ pschedule::pschedule(int latencyConstraint){
 // -------------------------------------------------------------------------------
 //
 // -------------------------------------------------------------------------------
-void pschedule::performScheduling(std::vector<component>& compVec){
+bool pschedule::performScheduling(std::vector<component>& compVec){
 
     compVec_ = compVec;
+    error_ = false;
 
     buildFamily();
 
@@ -33,7 +34,7 @@ void pschedule::performScheduling(std::vector<component>& compVec){
 
     //outputDebug();
 
-    return;
+    return error_;
 }
 
 // -------------------------------------------------------------------------------
@@ -182,6 +183,13 @@ void pschedule::asap(int TF){
             compVec_[compidx].asapFrame_=0;
         }
         */
+
+       if (compVec_[compidx].asapFrame_ > latconstrnt_)
+       {
+           error_ =  true;
+       }
+
+       return;
     }
 
     std::cout << "Printing prevnodes: " ;

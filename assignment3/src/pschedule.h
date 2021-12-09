@@ -11,8 +11,8 @@
 class pschedule{
 public:
     pschedule(int latencyConstraint);
+    bool performScheduling(std::vector<component>& compVec);
     void buildFamily();
-    void performScheduling(std::vector<component>& compVec);
     void asap(int TF);
     void alap();
     void recurse_firstNodes(int nodeidx);
@@ -28,7 +28,6 @@ public:
     int calculateForces(int TF, int n);
     int findalaptf( resource restype, int childtf);
     int findasaptf( resource restype, int parenttf);
-    
     
     std::vector<component> compVec_;
     

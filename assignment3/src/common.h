@@ -3,7 +3,7 @@
 
 #include <vector>
 
-static const bool DEBUG = true;
+static const bool DEBUG = false;
 
 enum comp_type{
     Variables   = -50,

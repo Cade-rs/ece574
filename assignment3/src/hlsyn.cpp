@@ -39,7 +39,13 @@ int main(int argc, char *argv[])
     }
 
     pschedule pscheduler(latConstraint);
-    pscheduler.performScheduling(fp.compVec_);
+    error = pscheduler.performScheduling(fp.compVec_);
+
+    if (error)
+    {
+        std::cout << "Encountered error: Latency constraint insufficient" << std:: endl;
+        return 1;
+    }
 
     std::vector<std::vector<int>> testStates;
 
