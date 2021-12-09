@@ -749,16 +749,15 @@ void pschedule::buildFDSTable(std::vector<double>& FDSTable, std::vector<double>
 //--------------------------------------
 int pschedule::findConditionParent(std::string condition, int compNum)
 {
-
     for( int i = compNum - 1; i >= 0; i--)
     {
-        if( compVec_[i].out_[0] == condition )
+        if( compVec_[i].out_.size() > 0 && compVec_[i].out_[0] == condition )
         {
             return i;
         }
     }
-    std::cout << "Couldn't find the parent of the condition" << std::endl;
-    return 0;
+    //std::cout << "Couldn't find the parent of the condition: " << condition << " with comp num " << compNum << std::endl; 
+    return -1;
 }
 
 void pschedule::what_if_branch()
@@ -770,9 +769,18 @@ void pschedule::what_if_branch()
         {
             if_node = i;
             std::string condition = ifStatements_[compVec_[i].withinIf_].condition;
+
+            if( ifStatements_[compVec_[i].withinIf_].isElse )
+            {
+                condition = ifStatements_[ifStatements_[compVec_[i].withinIf_].correspondingIfElse].condition;
+            }
+
             int parentNode = findConditionParent(condition, if_node);
-            compVec_[i].parent_.push_back(parentNode);
-            compVec_[parentNode].child_.push_back(i);
+            if( parentNode >= 0 )
+            {
+                compVec_[i].parent_.push_back(parentNode);
+                compVec_[parentNode].child_.push_back(i);
+            }
             /*for (int j = if_node+1; j<compVec_.size(); j++)
             {
                 if( compVec_[j].withinIf_ < compVec_[if_node].withinIf_ )

@@ -67,7 +67,7 @@ void filewriter::writeFile()
     }
 
     // Wrap up
-    fout_ << mod << ")" << std::endl << std::endl;
+    fout_ << mod << ");" << std::endl << std::endl;
 
     // Write inputs, outputs, registers
     fout_ << "    input Clk, Rst, Start;" << std::endl;
@@ -155,7 +155,7 @@ void filewriter::writeFile()
             }
         }
         // Print end of state
-        fout_ << "\t\t\tState <= S" << i+2 << ":" << std::endl;
+        fout_ << "\t\t\tState <= S" << i+2 << ";" << std::endl;
         fout_ << "\t\tend" << std::endl << std::endl;
 
     }

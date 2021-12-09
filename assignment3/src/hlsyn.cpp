@@ -19,9 +19,12 @@ int main(int argc, char *argv[])
         return 1;
     }
 
+
     std::string infile  = argv[1];
     std::string latStr  = argv[2];
     std::string outfile = argv[3];
+
+    std::cout << "Converting " << infile << " to " << outfile << " with latency constraint " << latStr << "..." << std::endl;
 
     int latConstraint   = std::stoi(latStr);
 
@@ -60,7 +63,7 @@ int main(int argc, char *argv[])
         std::cout << "Encountered error converting " << infile << " to " << outfile << std:: endl;
         return 1;
     }
-    std::cout << std::endl << std::endl << outfile << " Verilog file successfully created" << std::endl;
+    std::cout << std::endl << outfile << " Verilog file successfully created!" << std::endl << std::endl;
 
     return 0;
 }
